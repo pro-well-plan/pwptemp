@@ -1,4 +1,4 @@
-# WELLBORE TEMPERATE MODELLING  (ON PROGRESS)
+# WELLBORE TEMPERATURE MODELLING  (ON PROGRESS)
 
 The target of this project is to build a software able to calculate the temperature distribution for an entire well. 
 
@@ -18,59 +18,76 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Libraries used in the project:
 
 ```
-Give examples
+Numpy, Matplotlib, Math...
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+### Inputs
 
 ```
-Give the example
+1. Inlet Fluid Temperature
+2. Surface Temperature
+3. Well Depth
+4. Water Depth
+5. Drill Pipe Inner Diameter
+6. Drill Pipe Outer Diameter
+7. Casing Inner Diameter
+8. Surrounding Space Diameter
+9. Riser Inner Diameter
+10. Riser Outer Diameter
+11. Nearby Formation Diameter
+12. Circulation Rate
+13. Fluid Thermal Conductivity (Default Value Provided)
+14. Casing Thermal Conductivity (Default Value Provided)
+15. Drill Pipe Thermal Conductivity (Default Value Provided)
+16. Comprehensive Csg-Fm Thermal Conductivity (Default Value Provided)
+17. Riser Thermal Conductivity (Default Value Provided)
+18. Comprehensive Riser-Water Thermal Conductivity (Default Value Provided)
+19. Seawater Thermal Conductivity (Default Value Provided)
+20. Fluid Heat Capacity (Default Value Provided)
+21. Casing Heat Capacity (Default Value Provided)
+22. Drill Pipe Heat Capacity (Default Value Provided)
+23. Riser Heat Capacity (Default Value Provided)
+24. Seawater Heat Capacity (Default Value Provided)
+25. Surrounding Space Heat Capacity (Default Value Provided)
+26. Convective Heat Transfer Coefficient at the Inner Face of Drill Pipe (Default Value Provided)
+27. Convective Heat Transfer Coefficient at the Outer Face of Drill Pipe (Default Value Provided)
+28. Convective Heat Transfer Coefficient at the Inner Face of Casing (Default Value Provided)
+29. Convective Heat Transfer Coefficient at the Inner Face of Riser (Default Value Provided)
+30. Geothermal Gradient (Default Value Provided)
+31. Seawater Thermal Gradient (Default Value Provided)
+32. Fluid Density (Default Value Provided)
+33. Drill Pipe Density (Default Value Provided)
+34. Casing Density (Default Value Provided)
+35. Riser Density (Default Value Provided)
+36. Formation Density (Default Value Provided)
+37. Seawater Density (Default Value Provided)
+38. Surrouding Average Density (Default Value Provided)
+Pending: WOB, ROP, RPM...
 ```
 
-And repeat
+### Outputs
 
 ```
-until finished
+Tdsi
+Tds
+Ta
+Tcsg
+Triser
+Tsr
+Tfm
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
 Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
 ```
-Give an example
+- unittest
+- nose or nose2
+- pytest
 ```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
 ## Contributing
 
@@ -88,8 +105,7 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## License
 
-This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the GNU Lesser General Public License v3.0 - see the [LICENSE](LICENSE) file for details
 
-## Acknowledgments
 
 
