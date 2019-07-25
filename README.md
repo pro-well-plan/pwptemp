@@ -1,16 +1,6 @@
-# WELLBORE TEMPERATURE MODELLING  (ON PROGRESS)
+# WELL TEMPERATURE MODELLING 
 
-The target of this project is to build a software able to calculate the temperature distribution for an entire well. 
-
-
-> **Note:** Example.
-
-
-|          |Example      |Example   |
-|----------|-------------|----------|
-|Example   |`Example`    |Example   |
-|Example   |`Example`    |Example   |
-|Example   |`Example`    |Example   |
+This project aim to create a module able to calculate the temperature distribution for an entire well. 
 
 ## Getting Started
 
@@ -20,9 +10,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 Libraries used in the project:
 
-```
-Numpy, Matplotlib, Math...
-```
+> Numpy, Matplotlib, Math...
+
 
 ### Inputs
 
@@ -99,7 +88,10 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
+* **Eirik Lyngvi** - *Initial work* - [elyngvi](https://github.com/elyngvi)
 * **Juan Camilo Gonzalez Angarita** - *Initial work* - [jcamiloangarita](https://github.com/jcamiloangarita)
+* **Muhammad Suleman** - *Initial work* - [msfazal](https://github.com/msfazal)
+
 
 See also the list of [contributors](https://github.com/jcamiloangarita/WT/graphs/contributors) who participated in this project.
 
