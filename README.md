@@ -1,6 +1,6 @@
 # WELL TEMPERATURE MODELLING 
 
-This project aim to create a module able to calculate the temperature distribution for an entire well. 
+This project aims to create a module able to calculate the temperature distribution for an entire well. 
 
 ## Getting Started
 
