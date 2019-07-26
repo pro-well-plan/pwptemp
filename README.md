@@ -60,13 +60,13 @@ Pending: WOB, ROP, RPM...
 ### Outputs
 
 ```
-Tdsi
-Tds
-Ta
-Tcsg
-Triser
-Tsr
-Tfm
+1. Temperature of the fluid inside the Drill String (Tdsi)
+2. Temperature of the Drill String Wall (Tds)
+3. Temperature of the fluid inside the Annular (Ta)
+4. Temperature of the Casing (Tcsg)
+5. Temperature of the Riser (Tr)
+6. Temperature of the Surrounding Space (Tsr)
+7. Temperature of the Formation (Tfm)
 ```
 
 ## Running the tests
@@ -98,6 +98,3 @@ See also the list of [contributors](https://github.com/jcamiloangarita/WT/graphs
 ## License
 
 This project is licensed under the GNU Lesser General Public License v3.0 - see the [LICENSE](LICENSE.md) file for details
-
-
-
