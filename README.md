@@ -71,7 +71,8 @@ Pending: WOB, ROP, RPM...
 ![Diapositiva1](https://user-images.githubusercontent.com/52009346/62273419-d4efc980-b43d-11e9-974e-4cbbf086c0ff.JPG)
 
 > Note 1: Above seabed, casing section is replaced with the riser and surrounding space would be sea water.
-> Note 2: Beyond the 'undisturbed formation zone' the temperature keeps constant (Tfm)     
+
+> Note 2: Beyond the 'undisturbed formation zone' the temperature keeps constant (Tfm).     
 
 ## Running the tests
 
