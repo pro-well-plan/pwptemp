@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 Libraries used in the project:
 
-> Numpy, Matplotlib, Math...
+> Numpy, Matplotlib, Math and Tkinter.
 
 
 ### Inputs
@@ -56,8 +56,12 @@ Libraries used in the project:
 36. Formation Density (Default Value Provided)
 37. Seawater Density (Default Value Provided)
 38. Surrouding Average Density (Default Value Provided)
-Pending: WOB, ROP, RPM...
-```
+39. Weight on bit (WOB)
+40. Rate of Penetration (ROP)
+41. Area of Nuzzles
+42. Reynolds
+43. Measured Depth at Target
+
 
 ### Outputs
 
