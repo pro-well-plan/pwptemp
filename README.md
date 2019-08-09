@@ -1,3 +1,5 @@
+![OSP](https://user-images.githubusercontent.com/52009346/62771366-56c69f00-ba9d-11e9-9c86-a868bf3a1180.png)
+
 # WELL TEMPERATURE MODELLING 
 
 This project aims to create a module able to calculate the temperature distribution for an entire well. 
