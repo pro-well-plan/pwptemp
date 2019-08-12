@@ -21,6 +21,5 @@ def init_cond(Ts,riser,wtg,gt,zstep,tvd,deltaz):
         Tao.append(deltaT)
         Tcsgo.append(deltaT)
         Tsro.append(deltaT)
-        #if j < zstep:
         Tfm.append(deltaT)
     return Tdsio, Tdso, Tao, Tcsgo, Tsro, Tfm
