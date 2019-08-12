@@ -84,11 +84,31 @@ Temperature of the Formation (Tfm)
 
 <img src="https://user-images.githubusercontent.com/52009346/62863045-fbe4b000-bd07-11e9-9bda-30330dc612d1.PNG" width="450" height="400"> <img src="https://user-images.githubusercontent.com/52009346/62856722-f4b4a680-bcf5-11e9-80ef-751e03b4dbc2.PNG" width="200" height="180">
 
+### Code Distribution
 
+The code is compound by 8 files:
+
+> Wellpath.py ▷ contains a function to define the MD, and TVD values from the wellpath.
+
+> temp_dict.json ▷ contains the parameters required for the temperature calculation.
+
+> Input.py ▷ creates a class (WellTemperature) to have access to the parameters of the case.
+
+> InitCond.py ▷ defines the initial and boundary conditions.
+
+> HeatCoefficients.py ▷ contains a function to calculate the coefficients for the heat tranfer equations that will be used.
+
+> LinearSystem.py ▷ contains a function to generate the entire temperature profile. 
+
+> Graph.py ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time and also Temperature profile at stabilization time.
+
+> Main.py ▷ contains a function to determine the temperature profile when it is already stabilized.
+
+### Deployment
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+How to run the automated tests for this system...
 ```
 - unittest
 - nose or nose2
