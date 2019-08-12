@@ -82,7 +82,7 @@ Temperature of the Formation (Tfm)
 
 ### Distribution Scheme
 
-<img src="https://user-images.githubusercontent.com/52009346/62862861-6ea15b80-bd07-11e9-81ac-24323fdd034b.PNG" width="450" height="400"> <img src="https://user-images.githubusercontent.com/52009346/62856722-f4b4a680-bcf5-11e9-80ef-751e03b4dbc2.PNG" width="200" height="180">
+<img src="https://user-images.githubusercontent.com/52009346/62863045-fbe4b000-bd07-11e9-9bda-30330dc612d1.PNG" width="450" height="400"> <img src="https://user-images.githubusercontent.com/52009346/62856722-f4b4a680-bcf5-11e9-80ef-751e03b4dbc2.PNG" width="200" height="180">
 
 
 
