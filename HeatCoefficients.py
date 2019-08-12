@@ -5,38 +5,38 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
 
     #HEATCOEFFICIENTS
     # Eq coefficients - Inside Drill String
-    c1z = ((rhol * cl * vp) / deltaz) / 2
-    c1e = (2 * h1 / r1) / 2
-    c1 = qp / (math.pi * (r1 ** 2))
-    c1t = rhol * cl / deltat
+    c1z = ((rhol * cl * vp) / deltaz) / 2    # Vertical component (North-South) for fluid inside drill string
+    c1e = (2 * h1 / r1) / 2   # East component for fluid inside drill string
+    c1 = qp / (math.pi * (r1 ** 2))   # Heat source term for fluid inside drill string
+    c1t = rhol * cl / deltat    # Time component for fluid inside drill string
 
     # Eq coefficients - Drill String Wall
-    c2z = (lambdal / (deltaz ** 2)) / 2
-    c2e = (2 * r2 * h2 / ((r2 ** 2) - (r1 ** 2))) / 2
-    c2w = (2 * r1 * h1 / ((r2 ** 2) - (r1 ** 2))) / 2
-    c2t = rhod * cd / deltat
+    c2z = (lambdal / (deltaz ** 2)) / 2     # Vertical component (North-South) for drill string wall
+    c2e = (2 * r2 * h2 / ((r2 ** 2) - (r1 ** 2))) / 2   # East component for drill string wall
+    c2w = (2 * r1 * h1 / ((r2 ** 2) - (r1 ** 2))) / 2   # West component for drill string wall
+    c2t = rhod * cd / deltat    # Time component for drill string wall
 
     # Eq coefficients - Inside Annular
-    c3z = (rhol * cl * va / deltaz) / 2
-    c3e = (2 * r3 * h3 / ((r3 ** 2) - (r2 ** 2))) / 2
-    c3w = (2 * r2 * h2 / ((r3 ** 2) - (r2 ** 2))) / 2
-    c3 = qa / (math.pi * ((r3 ** 2) - (r2 ** 2)))
-    c3t = rhol * cl / deltat
+    c3z = (rhol * cl * va / deltaz) / 2     # Vertical component (North-South) for fluid inside annular
+    c3e = (2 * r3 * h3 / ((r3 ** 2) - (r2 ** 2))) / 2   # East component for fluid inside annular
+    c3w = (2 * r2 * h2 / ((r3 ** 2) - (r2 ** 2))) / 2   # West component for fluid inside annular
+    c3 = qa / (math.pi * ((r3 ** 2) - (r2 ** 2)))   # Heat source term for fluid inside annular
+    c3t = rhol * cl / deltat    # Time component for fluid inside annular
 
     # Casing
-    c4z=[]
-    c4e=[]
-    c4w=[]
-    c4t=[]
+    c4z=[]    # Vertical component (North-South) for casing 
+    c4e=[]    # East component for casing
+    c4w=[]    # West component for casing
+    c4t=[]    # Time component for casing
 
     # Surrounding Space
-    c5z=[]
-    c5w=[]
-    c5e=[]
-    c5t=[]
+    c5z=[]    # Vertical component (North-South) for surrounding space
+    c5w=[]    # West component for surrounding space
+    c5e=[]    # East component for surrounding space
+    c5t=[]    # Time component for surrounding space
 
     #j < Riser:
-    lambda4=lambdar
+    lambda4=lambdar   
     lambda45=lambdarw
     lambda5=lambdaw
     lambda56=lambdarw
