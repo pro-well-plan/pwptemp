@@ -35,7 +35,7 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c5e=[]    # East component for surrounding space
     c5t=[]    # Time component for surrounding space
 
-    #j < Riser:
+    #j < Riser:   (This is the seawater/riser section)
     lambda4=lambdar   
     lambda45=lambdarw
     lambda5=lambdaw
@@ -44,18 +44,18 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c5=cw
     rho4=rhor
     rho5=rhow
-    #Casing:
+    #Casing: (in this section casing=riser)
     c4z1=(lambda4 / (deltaz ** 2)) / 2
     c4e1=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4w1=(2 * r3 * h3 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4t1=rho4 * c4 / deltat
-    #Surrounding:
+    #Surrounding space: (in this section surrounding space is only seawater )
     c5z1=(lambda5 / (deltaz ** 2)) / 2
     c5w1=(2 * lambda56 / (r5 * (r5 - r4) * math.log(r5 / r4))) / 2
     c5e1=(2 * lambda56 / (r5 * (r5 - r4) * math.log(rfm / r5))) / 2
     c5t1=rho5 * c5 / deltat
 
-    #Riser<=j<csgc:
+    #Riser<=j<csgc:  (This section has intermediate casing + cement + surface casing + cement + conductor casing + cement )
     lambda4 = lambdac
     lambda45=lambdacsr
     lambda5=lambdasr
@@ -69,13 +69,13 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c4e2=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4w2=(2 * r3 * h3 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4t2=rho4 * c4 / deltat
-    # Surrounding:
+    # Surrounding space:  (cement + surface casing + cement + conductor casing + cement )
     c5z2=(lambda5 / (deltaz ** 2)) / 2
     c5w2=(2 * lambda56 / (r5 * (r5 - r4) * math.log(r5 / r4))) / 2
     c5e2=(2 * lambda56 / (r5 * (r5 - r4) * math.log(rfm / r5))) / 2
     c5t2=rho5 * c5 / deltat
 
-    #csgc<=j<csgs:
+    #csgc<=j<csgs:  (This section has intermediate casing + cement + surface casing + cement + formation)
     lambda4 = lambdac
     lambda45 = lambdacsr-2
     lambda5 = lambdasr-2
@@ -89,13 +89,13 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c4e3=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4w3=(2 * r3 * h3 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4t3=rho4 * c4 / deltat
-    # Surrounding:
+    # Surrounding:   (cement + surface casing + cement + formation)
     c5z3=(lambda5 / (deltaz ** 2)) / 2
     c5w3=(2 * lambda56 / (r5 * (r5 - r4) * math.log(r5 / r4))) / 2
     c5e3=(2 * lambda56 / (r5 * (r5 - r4) * math.log(rfm / r5))) / 2
     c5t3=rho5 * c5 / deltat
 
-    #csgs<=j<csgi:
+    #csgs<=j<csgi:   (This section has intermediate casing + cement + formation)
     lambda4 = lambdac
     lambda45 = lambdacsr-2
     lambda5 = lambdasr-2
@@ -109,13 +109,13 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c4e4=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4w4=(2 * r3 * h3 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4t4=rho4 * c4 / deltat
-    # Surrounding:
+    # Surrounding space:   (cement + formation)
     c5z4=(lambda5 / (deltaz ** 2)) / 2
     c5w4=(2 * lambda56 / (r5 * (r5 - r4) * math.log(r5 / r4))) / 2
     c5e4=(2 * lambda56 / (r5 * (r5 - r4) * math.log(rfm / r5))) / 2
     c5t4=rho5 * c5 / deltat
 
-    #j >= csgi:
+    #j >= csgi:    (This section is open hole)
     lambda4 = lambdafm
     lambda45 = lambdafm
     lambda5 = lambdafm
@@ -129,7 +129,7 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c4e5=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4w5=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
     c4t5=rho4 * c4 / deltat
-    # Surrounding:
+    # Surrounding space:     (only formation)
     c5z5=(lambda5 / (deltaz ** 2)) / 2
     c5w5=(2 * lambda56 / (r5 * (r5 - r4) * math.log(r5 / r4))) / 2
     c5e5=(2 * lambda56 / (r5 * (r5 - r4) * math.log(rfm / r5))) / 2
