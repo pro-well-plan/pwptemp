@@ -80,6 +80,12 @@ Temperature of the Formation (Tfm)
 
 > Note 2: Beyond the 'undisturbed formation zone' the temperature keeps constant (Tfm).     
 
+### Distribution Scheme
+
+<img src="https://user-images.githubusercontent.com/52009346/62856684-e8c8e480-bcf5-11e9-8b36-d1b5b5428f5d.PNG" width="600" height="400"> <img src="https://user-images.githubusercontent.com/52009346/62856722-f4b4a680-bcf5-11e9-80ef-751e03b4dbc2.PNG" width="200" height="200">
+
+
+
 ## Running the tests
 
 Explain how to run the automated tests for this system
