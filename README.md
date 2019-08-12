@@ -88,23 +88,37 @@ Temperature of the Formation (Tfm)
 
 The code is compound by 8 files:
 
-> Wellpath.py ▷ contains a function to define the MD, and TVD values from the wellpath.
+> **Wellpath.py** ▷ contains a function to define the MD, and TVD values from the wellpath.
 
-> temp_dict.json ▷ contains the parameters required for the temperature calculation.
+> **temp_dict.json** ▷ contains the parameters required for the temperature calculation.
 
-> Input.py ▷ creates a class (WellTemperature) to have access to the parameters of the case.
+> **Input.py** ▷ creates a class (WellTemperature) to have access to the parameters of the case.
 
-> InitCond.py ▷ defines the initial and boundary conditions.
+> **InitCond.py** ▷ defines the initial and boundary conditions.
 
-> HeatCoefficients.py ▷ contains a function to calculate the coefficients for the heat tranfer equations that will be used.
+> **HeatCoefficients.py** ▷ contains a function to calculate the coefficients for the heat tranfer equations that will be used.
 
-> LinearSystem.py ▷ contains a function to generate the entire temperature profile. 
+> **LinearSystem.py** ▷ contains a function to generate the entire temperature profile. 
 
-> Graph.py ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time and also Temperature profile at stabilization time.
+> **Graph.py** ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time and also Temperature profile at stabilization time.
 
-> Main.py ▷ contains a function to determine the temperature profile when it is already stabilized.
+> **Main.py** ▷ contains a function to determine the temperature profile when it is already stabilized.
 
 ### Deployment
+**1.** If you have already the values of TVD and MD from your own wellpath, then you can skip the calculation in the wellpath function:
+```
+md=range(mdt)  # Measured Depth from RKB, m
+    tvd=[]   # True Vertical Depth from RKB, m
+
+    for z in md:
+        tvd.append(z)
+```
+And then you only need to define these two lists (tvd and md) instead, and the shoes depths of the casings of course.
+
+**2.** You can check and modify all the parameters from the file temp_dict.json or call the value from a variable/object directly to the file Input.py. 
+
+**3.** Run the file Main.py and you will get the entire temperature profile at stabilization time (Tdsi,Ta,Tr,Tcsg,Tsr,Tfm), the temperature at the bottom through the time (Tbot),the temperature at the outlet (Annular) through the time (Tout) and the stabilization temperature (finaltime).
+
 
 ## Running the tests
 
