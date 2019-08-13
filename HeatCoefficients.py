@@ -1,5 +1,6 @@
 def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lambdarw,lambdaw,cr,cw,rhor,rhow,r4,r5,rfm,lambdac,lambdacsr,
-              lambdasr,lambdasrfm,cc,csr,rhoc,rhosr,lambdafm,cfm,rhofm,deltaz,deltat):
+              lambdasr,lambdasrfm,cc,csr,rhoc,rhosr,lambdafm,cfm,rhofm,deltaz,deltat,lambdasr2,lambdasr3,lambdacsr2,lambdacsr3,lambdasrfm2,
+              lambdasrfm3,csr2,csr3):
 
     import math
 
@@ -77,11 +78,11 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
 
     #csgc<=j<csgs:  (This section has intermediate casing + cement + surface casing + cement + formation)
     lambda4 = lambdac   #Thermal conductivity of the casing 
-    lambda45 = lambdacsr-2    #Comprehensive Thermal conductivity of the casing and surrounding space
-    lambda5 = lambdasr-2    #Thermal conductivity of the surrounding space
-    lambda56 = lambdasrfm-1   #Comprehensive Thermal conductivity of the surrounding space and formation
+    lambda45 = lambdacsr2    #Comprehensive Thermal conductivity of the casing and surrounding space
+    lambda5 = lambdasr2    #Thermal conductivity of the surrounding space
+    lambda56 = lambdasrfm2   #Comprehensive Thermal conductivity of the surrounding space and formation
     c4 = cc   #Specific Heat Capacity of the casing
-    c5 = csr+200    #Specific Heat Capacity of the surrounding space 
+    c5 = csr2    #Specific Heat Capacity of the surrounding space
     rho4 = rhoc   #Density of the casing
     rho5 = rhosr-600    #Density of the surrounding space
     # Casing:
@@ -97,11 +98,11 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
 
     #csgs<=j<csgi:   (This section has intermediate casing + cement + formation)
     lambda4 = lambdac   #Thermal conductivity of the casing 
-    lambda45 = lambdacsr-2    #Comprehensive Thermal conductivity of the casing and surrounding space
-    lambda5 = lambdasr-2    #Thermal conductivity of the surrounding space
-    lambda56 = lambdasrfm-1   #Comprehensive Thermal conductivity of the surrounding space and formation
+    lambda45 = lambdacsr3    #Comprehensive Thermal conductivity of the casing and surrounding space
+    lambda5 = lambdasr3    #Thermal conductivity of the surrounding space
+    lambda56 = lambdasrfm3   #Comprehensive Thermal conductivity of the surrounding space and formation
     c4 = cc   #Specific Heat Capacity of the casing
-    c5 = csr+400    #Specific Heat Capacity of the surrounding space
+    c5 = csr3    #Specific Heat Capacity of the surrounding space
     rho4 = rhoc   #Density of the casing
     rho5 = rhosr-1200   #Density of the surrounding space
     # Casing:

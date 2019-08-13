@@ -34,6 +34,11 @@ class WellTemperature(object):
         self.rfm = self.dfm / 2  # Undisturbed Formation Radius, m
         self.tcsr = (self.dcsgco-self.dcsgci)/2 + (self.dcsgso-self.dcsgsi)/2
         self.tcem = (self.dcsgsi-self.dcsgo)/2 + (self.dcsgci-self.dcsgso)/2 + (self.dcemo-self.dcsgco)/2
+        self.tcsr2 = (self.dcsgso-self.dcsgsi)/2
+        self.tcem2 = (self.dcsgsi-self.dcsgo)/2 + (self.dcsgci-self.dcsgso)/2
+        self.tcsr3 = 0
+        self.tcem3 = (self.dcsgsi - self.dcsgo) / 2
+        self.tcem4 = 0
     # Flow Rate
         self.q = temp_dict["q"]     # Flow rate, m^3/h
         self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600        # Fluid velocity through the annular
@@ -45,19 +50,34 @@ class WellTemperature(object):
         self.lambdacem = temp_dict["lambdacem"]     #Cement
         self.lambdad = temp_dict["lambdad"]     # Drill Pipe
         self.lambdasr = (self.lambdac*(self.tcsr) + self.lambdacem*(self.tcem))/(self.r5-self.r4)       # Surrounding space
-        self.lambdacsr = (self.lambdac*(self.r4-self.r3)+self.lambdasr*(self.r5-self.r4))/(self.r5-self.r3)  # Comprehensive Casing - Surrounding space
+        self.lambdasr2 = (self.lambdac*(self.tcsr2) + self.lambdacem*(self.tcem2))/(self.r5 - self.r4)     # Surrounding space
+        self.lambdasr3 = (self.lambdac*(self.tcsr3) + self.lambdacem*(self.tcem3))/(self.r5 - self.r4)  # Surrounding space
+        self.lambdacsr = (self.lambdac * (self.r4 - self.r3) + self.lambdasr * (self.r5 - self.r4)) / (
+                    self.r5 - self.r3)  # Comprehensive Casing - Surrounding space
+        self.lambdacsr2 = (self.lambdac * (self.r4 - self.r3) + self.lambdasr2 * (self.r5 - self.r4)) / (
+                    self.r5 - self.r3)  # Comprehensive Casing - Surrounding space
+        self.lambdacsr3 = (self.lambdac * (self.r4 - self.r3) + self.lambdasr3 * (self.r5 - self.r4)) / (
+                    self.r5 - self.r3)  # Comprehensive Casing - Surrounding space
         self.lambdafm = temp_dict["lambdafm"]       # Formation
-        self.lambdasrfm = (self.lambdac*(self.r5-self.r4)+self.lambdasr*(self.rfm-self.r5))/(self.rfm-self.r4)       # Comprehensive Surrounding space - Formation
+        self.lambdasrfm = (self.lambdac * (self.r5 - self.r4) + self.lambdasr * (self.rfm - self.r5)) / (
+                    self.rfm - self.r4)  # Comprehensive Surrounding space - Formation
+        self.lambdasrfm2 = (self.lambdac * (self.r5 - self.r4) + self.lambdasr2 * (self.rfm - self.r5)) / (
+                    self.rfm - self.r4)  # Comprehensive Surrounding space - Formation
+        self.lambdasrfm3 = (self.lambdac * (self.r5 - self.r4) + self.lambdasr3 * (self.rfm - self.r5)) / (
+                    self.rfm - self.r4)  # Comprehensive Surrounding space - Formation
         self.lambdar = temp_dict["lambdar"]     # Riser
         self.lambdarw = temp_dict["lambdarw"]       # Comprehensive Riser - Seawater 
         self.lambdaw = temp_dict["lambdaw"]     # Seawater
     # Specific Heat Capacity, J/(kg*°C)
         self.cl = temp_dict["cl"]       # Fluid
         self.cc = temp_dict["cc"]     # Casing
+        self.ccem = temp_dict["ccem"]     # Cement
         self.cd = temp_dict["cd"]     # Drill Pipe
         self.cr = temp_dict["cr"]     # Riser
         self.cw = temp_dict["cw"]       # Seawater
-        self.csr = temp_dict["csr"]       # Surrounding space
+        self.csr = (self.cc*(self.tcsr) + self.ccem*(self.tcem))/(self.r5-self.r4)       # Surrounding space
+        self.csr2 = (self.cc * (self.tcsr2) + self.ccem * (self.tcem2)) / (self.r5 - self.r4)  # Surrounding space
+        self.csr3 = (self.cc * (self.tcsr3) + self.ccem * (self.tcem3)) / (self.r5 - self.r4)  # Surrounding space
         self.cfm = temp_dict["cfm"]       # Formation
     # Convective Heat Transfer Coefficient, W/(m^2*°C)
         self.h1 = temp_dict["h1"]       # Drill Pipe inner wall

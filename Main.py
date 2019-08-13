@@ -34,7 +34,8 @@ def temp_time(n):
     mywell.h2,mywell.rhod,mywell.cd,mywell.va,mywell.r3,mywell.h3,mywell.qa,mywell.lambdar,mywell.lambdarw,
     mywell.lambdaw,mywell.cr,mywell.cw,mywell.rhor,mywell.rhow,mywell.r4,mywell.r5,mywell.rfm,mywell.lambdac,
     mywell.lambdacsr,mywell.lambdasr,mywell.lambdasrfm,mywell.cc,mywell.csr,mywell.rhoc,mywell.rhosr,
-    mywell.lambdafm,mywell.cfm,mywell.rhofm,deltaz,deltat)
+    mywell.lambdafm,mywell.cfm,mywell.rhofm,deltaz,deltat,mywell.lambdasr2,mywell.lambdasr3,mywell.lambdacsr2,
+    mywell.lambdacsr3,mywell.lambdasrfm2,mywell.lambdasrfm3,mywell.csr2,mywell.csr3)
 
     from LinearSystem import temp_calc
     Tdsiv,Tav,Trv,Tcsgv,Tsrv=temp_calc(mywell.tin,Tdsio,Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c3z,c3e,c3w,c3,
