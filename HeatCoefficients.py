@@ -36,14 +36,14 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c5t=[]    # Time component for surrounding space
 
     #j < Riser:   (This is the seawater/riser section)
-    lambda4=lambdar   
-    lambda45=lambdarw
-    lambda5=lambdaw
-    lambda56=lambdarw
-    c4=cr
-    c5=cw
-    rho4=rhor
-    rho5=rhow
+    lambda4=lambdar  #Thermal conductivity of the casing (riser in this section) 
+    lambda45=lambdarw   #Comprehensive Thermal conductivity of the casing (riser) and surrounding space (seawater)
+    lambda5=lambdaw   #Thermal conductivity of the surrounding space (seawater)
+    lambda56=lambdaw   #Comprehensive Thermal conductivity of the surrounding space (seawater) and formation (seawater)
+    c4=cr   #Specific Heat Capacity of the casing (riser)
+    c5=cw   #Specific Heat Capacity of the surrounding space (seawater)
+    rho4=rhor   #Density of the casing (riser)
+    rho5=rhow   #Density of the surrounding space (seawater)
     #Casing: (in this section casing=riser)
     c4z1=(lambda4 / (deltaz ** 2)) / 2
     c4e1=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
@@ -56,14 +56,14 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c5t1=rho5 * c5 / deltat
 
     #Riser<=j<csgc:  (This section has intermediate casing + cement + surface casing + cement + conductor casing + cement )
-    lambda4 = lambdac
-    lambda45=lambdacsr
-    lambda5=lambdasr
-    lambda56=lambdasrfm
-    c4 = cc
-    c5 = csr
-    rho4 = rhoc
-    rho5 = rhosr
+    lambda4 = lambdac   #Thermal conductivity of the casing 
+    lambda45=lambdacsr    #Comprehensive Thermal conductivity of the casing and surrounding space
+    lambda5=lambdasr    #Thermal conductivity of the surrounding space (seawater)
+    lambda56=lambdasrfm   #Comprehensive Thermal conductivity of the surrounding space and formation
+    c4 = cc   #Specific Heat Capacity of the casing
+    c5 = csr    #Specific Heat Capacity of the surrounding space 
+    rho4 = rhoc   #Density of the casing
+    rho5 = rhosr    #Density of the surrounding space
     # Casing:
     c4z2=(lambda4 / (deltaz ** 2)) / 2
     c4e2=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
@@ -76,14 +76,14 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c5t2=rho5 * c5 / deltat
 
     #csgc<=j<csgs:  (This section has intermediate casing + cement + surface casing + cement + formation)
-    lambda4 = lambdac
-    lambda45 = lambdacsr-2
-    lambda5 = lambdasr-2
-    lambda56 = lambdasrfm-1
-    c4 = cc
-    c5 = csr+200
-    rho4 = rhoc
-    rho5 = rhosr-600
+    lambda4 = lambdac   #Thermal conductivity of the casing 
+    lambda45 = lambdacsr-2    #Comprehensive Thermal conductivity of the casing and surrounding space
+    lambda5 = lambdasr-2    #Thermal conductivity of the surrounding space
+    lambda56 = lambdasrfm-1   #Comprehensive Thermal conductivity of the surrounding space and formation
+    c4 = cc   #Specific Heat Capacity of the casing
+    c5 = csr+200    #Specific Heat Capacity of the surrounding space 
+    rho4 = rhoc   #Density of the casing
+    rho5 = rhosr-600    #Density of the surrounding space
     # Casing:
     c4z3=(lambda4 / (deltaz ** 2)) / 2
     c4e3=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
@@ -96,14 +96,14 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c5t3=rho5 * c5 / deltat
 
     #csgs<=j<csgi:   (This section has intermediate casing + cement + formation)
-    lambda4 = lambdac
-    lambda45 = lambdacsr-2
-    lambda5 = lambdasr-2
-    lambda56 = lambdasrfm-1
-    c4 = cc
-    c5 = csr+400
-    rho4 = rhoc
-    rho5 = rhosr-1200
+    lambda4 = lambdac   #Thermal conductivity of the casing 
+    lambda45 = lambdacsr-2    #Comprehensive Thermal conductivity of the casing and surrounding space
+    lambda5 = lambdasr-2    #Thermal conductivity of the surrounding space
+    lambda56 = lambdasrfm-1   #Comprehensive Thermal conductivity of the surrounding space and formation
+    c4 = cc   #Specific Heat Capacity of the casing
+    c5 = csr+400    #Specific Heat Capacity of the surrounding space
+    rho4 = rhoc   #Density of the casing
+    rho5 = rhosr-1200   #Density of the surrounding space
     # Casing:
     c4z4=(lambda4 / (deltaz ** 2)) / 2
     c4e4=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
@@ -116,14 +116,14 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     c5t4=rho5 * c5 / deltat
 
     #j >= csgi:    (This section is open hole)
-    lambda4 = lambdafm
-    lambda45 = lambdafm
-    lambda5 = lambdafm
-    lambda56 = lambdafm
-    c4 = cfm
-    c5 = cfm
-    rho4 = rhofm
-    rho5 = rhofm
+    lambda4 = lambdafm    #Thermal conductivity of the casing (formation in this section) 
+    lambda45 = lambdafm   #Comprehensive Thermal conductivity of the casing (formation) and surrounding space (formation)
+    lambda5 = lambdafm    #Thermal conductivity of the surrounding space (formation)
+    lambda56 = lambdafm   #Comprehensive Thermal conductivity of the surrounding space and formation
+    c4 = cfm    #Specific Heat Capacity of the casing (formation)
+    c5 = cfm    #Specific Heat Capacity of the surrounding space (formation)
+    rho4 = rhofm    #Density of the casing (formation)
+    rho5 = rhofm    #Density of the surrounding space (formation)
     # Casing:
     c4z5=(lambda4 / (deltaz ** 2)) / 2
     c4e5=(2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
