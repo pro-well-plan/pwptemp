@@ -6,12 +6,12 @@ from WellPath import wellpath
 pr = cProfile.Profile()
 pr.enable()
 
-md,tvd,deltaz,zstep,csgc,csgs,csgi=wellpath(5000)
-
 with open('temp_dict.json') as f:
     tempdict = json.load(f)
 
 mywell=WellTemperature(tempdict)
+
+md,tvd,deltaz,zstep,csgc,csgs,csgi=wellpath(mywell.mdt)
 
 # Initial Conditions
 from InitCond import init_cond
@@ -45,16 +45,10 @@ def temp_time(n):
     return Tdsiv,Tav,Trv,Tcsgv,Tsrv
 
 for n in range(1,3):
-    #Tdsi.append(temp_time(n)[0])
     Ta.append(temp_time(n)[1])
-    #Tr.append(temp_time(n)[2])
-    #Tcsg.append(temp_time(n)[3])
-    #Tsr.append(temp_time(n)[4])
-
 
 from statistics import mean
 
-#print(mean(Ta))
 valor = mean(Ta[0]) - mean(Ta[1])
 finaltime=2
 while abs(valor) >= 0.01:
@@ -76,10 +70,10 @@ pr.disable()
 pr.print_stats(sort="tottime")
 
 from Graph import temp_plot
-temp_plot(finaltime,Tbot,Tout,Tfm,Tdsi,md,Ta,Tr,Tcsg,Tsr)
+temp_plot(finaltime,Tbot,Tout,Tfm,Tdsi,md,Ta,Tr,Tcsg,Tsr,mywell.riser)
 
 print("It's stable at %i hours" % finaltime)
 
-
+print(mywell.tcsr,mywell.tcem)
 
 
