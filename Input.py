@@ -27,55 +27,56 @@ class WellTemperature(object):
         self.r5 = self.dsro / 2  # Surrounding Space Outer Radius, m
         self.rfm = self.dfm / 2  # Undisturbed Formation Radius, m
     # Flow Rate
-        self.q = temp_dict["q"]
-        self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600
-        self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600
+        self.q = temp_dict["q"]     # Flow rate, m^3/h
+        self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600        # Fluid velocity through the annular
+        self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600       # Fluid velocity through the drill pipe
     # Heat Coefficients
-    # Thermal Conductivity
-        self.lambdal = temp_dict["lambdal"]
-        self.lambdac = temp_dict["lambdac"]
-        self.lambdad = temp_dict["lambdad"]
-        self.lambdacsr = temp_dict["lambdacsr"]
-        self.lambdasr = temp_dict["lambdasr"]
-        self.lambdafm = temp_dict["lambdafm"]
-        self.lambdasrfm = temp_dict["lambdasrfm"]
-        self.lambdar = temp_dict["lambdar"]
-        self.lambdarw = temp_dict["lambdarw"]
-        self.lambdaw = temp_dict["lambdaw"]
-    # Specific Heat Capacity
-        self.cl = temp_dict["cl"]
-        self.cc = temp_dict["cc"]
-        self.cd = temp_dict["cd"]
-        self.cr = temp_dict["cr"]
-        self.cw = temp_dict["cw"]
-        self.csr = temp_dict["csr"]
-        self.cfm = temp_dict["cfm"]
-    # Convective Heat Transfer Coefficient
-        self.h1 = temp_dict["h1"]
-        self.h2 = temp_dict["h2"]
-        self.h3 = temp_dict["h3"]
-        self.h3r = temp_dict["h3r"]
-    # Densities
-        self.rhol = temp_dict["rhol"]
-        self.rhod = temp_dict["rhod"]
-        self.rhoc = temp_dict["rhoc"]
-        self.rhor = temp_dict["rhor"]
-        self.rhofm = temp_dict["rhofm"]
-        self.rhow = temp_dict["rhow"]
-        self.rhosr = temp_dict["rhosr"]
+    # Thermal Conductivity, W/(m*°C)
+        self.lambdal = temp_dict["lambdal"]     # Fluid
+        self.lambdac = temp_dict["lambdac"]     # Casing
+        self.lambdad = temp_dict["lambdad"]     # Drill Pipe
+        self.lambdacsr = temp_dict["lambdacsr"]     # Comprehensive Casing - Surrounding space
+        self.lambdasr = temp_dict["lambdasr"]       # Surrounding space
+        self.lambdafm = temp_dict["lambdafm"]       # Formation
+        self.lambdasrfm = temp_dict["lambdasrfm"]       # Comprehensive Surrounding space - Formation
+        self.lambdar = temp_dict["lambdar"]     # Riser
+        self.lambdarw = temp_dict["lambdarw"]       # Comprehensive Riser - Seawater 
+        self.lambdaw = temp_dict["lambdaw"]     # Seawater
+    # Specific Heat Capacity, J/(kg*°C)
+        self.cl = temp_dict["cl"]       # Fluid
+        self.cc = temp_dict["cc"]     # Casing
+        self.cd = temp_dict["cd"]     # Drill Pipe
+        self.cr = temp_dict["cr"]     # Riser
+        self.cw = temp_dict["cw"]       # Seawater
+        self.csr = temp_dict["csr"]       # Surrounding space
+        self.cfm = temp_dict["cfm"]       # Formation
+    # Convective Heat Transfer Coefficient, W/(m^2*°C)
+        self.h1 = temp_dict["h1"]       # Drill Pipe inner wall
+        self.h2 = temp_dict["h2"]       # Drill Pipe outer wall
+        self.h3 = temp_dict["h3"]       # Casing inner wall
+        self.h3r = temp_dict["h3r"]     # Riser inner wall
+    # Densities, kg/m3
+        self.rhol = temp_dict["rhol"]       # Fluid
+        self.rhod = temp_dict["rhod"]       # Drill Pipe
+        self.rhoc = temp_dict["rhoc"]       # Casing
+        self.rhor = temp_dict["rhor"]       # Riser
+        self.rhofm = temp_dict["rhofm"]     # Formation
+        self.rhow = temp_dict["rhow"]       # Seawater
+        self.rhosr = temp_dict["rhosr"]     # Surrounding Space
     # Thermal Gradients
         self.gt = temp_dict["gt"] * deltaz  # Geothermal gradient, °C/m
         self.wtg = temp_dict["wtg"] * deltaz  # Seawater thermal gradient, °C/m
-        self.rpm = temp_dict["RPM"]
-        self.t = temp_dict["T"]
-        self.tbit = temp_dict["Tbit"]
-        self.wob = temp_dict["WOB"]
-        self.rop = temp_dict["ROP"]
-        self.an = temp_dict["An"]
-        self.mdt = temp_dict["mdt"]
-        # Heat Source Terms
+    # Operational Parameters    
+        self.rpm = temp_dict["RPM"]     # Revolutions per minute
+        self.t = temp_dict["T"]     # Torque on the drill string, kN*m
+        self.tbit = temp_dict["Tbit"]       # Torque on the bit, kN*m
+        self.wob = temp_dict["WOB"]     # Weight on bit, kN
+        self.rop = temp_dict["ROP"]     # Rate of Penetration, m/h
+        self.an = temp_dict["An"]       # Area of the nozzles, m^2
+        self.mdt = temp_dict["mdt"]     # Measured Depth of the Target, m
+    # Heat Source Terms
         self.qp = 2*pi * (self.rpm/60) * self.t * 2 * 0.24 * self.rhol * (self.vp ** 2) * (self.mdt / (self.ddi*127.094*10**6)) * (1/0.24**.5)
-        self.qa = 0.05*(self.wob*self.rop+2*pi*(self.rpm/60)*self.tbit) + (self.rhol/2*9.81)*((self.q/3600)/(0.095*self.an)) \
+        self.qa = 0.05*(self.wob*(self.rop/3600)+2*pi*(self.rpm/60)*self.tbit) + (self.rhol/2*9.81)*((self.q/3600)/(0.095*self.an)) \
                 + (2*0.3832*self.mdt/((self.r3-self.r2)*(127.094*10**6)))*((2*(0.7+1)*self.va)/(0.7*pi*(self.r3+self.r2)
                 * (self.r3-self.r2)**2))**0.7
 
