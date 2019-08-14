@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+from statistics import mean
 import json
 import cProfile
 from Input import WellTemperature
@@ -9,15 +9,13 @@ pr.enable()
 with open('temp_dict.json') as f:
     tempdict = json.load(f)
 
-mywell=WellTemperature(tempdict)
+mywell = WellTemperature(tempdict)
 
-md,tvd,deltaz,zstep,csgc,csgs,csgi=wellpath(mywell.mdt)
+md, tvd, deltaz, zstep, csgc, csgs, csgi = wellpath(mywell.mdt)
 
 # Initial Conditions
 from InitCond import init_cond
 Tdsio, Tdso, Tao, Tcsgo, Tsro, Tfm=init_cond(mywell.ts,mywell.riser,mywell.wtg,mywell.gt,zstep,tvd,deltaz)
-
-Ta=[]
 
 def temp_time(n):
     # Simulation main parameters
@@ -45,36 +43,18 @@ def temp_time(n):
 
     return Tdsiv,Tav,Trv,Tcsgv,Tsrv
 
-for n in range(1,3):
-    Ta.append(temp_time(n)[1])
 
-from statistics import mean
-
-valor = mean(Ta[0]) - mean(Ta[1])
-finaltime=2
-while abs(valor) >= 0.01:
-    Ta.append(temp_time(finaltime+1)[1])
-    valor = mean(Ta[finaltime]) - mean(Ta[finaltime-1])
-    finaltime=finaltime+1
-Tdsi=temp_time(finaltime)[0]
-Tr=temp_time(finaltime)[2]
-Tcsg=temp_time(finaltime)[3]
-Tsr=temp_time(finaltime)[4]
-
-Tbot=[]
-Tout=[]
-for n in range(finaltime):
-    Tbot.append(Ta[n][-1])
-    Tout.append(Ta[n][0])
+Tdsi, Ta, Tr, Tcsg, Tsr = temp_time(200)        # At time n=200 it should be already stabilized
 
 pr.disable()
 pr.print_stats(sort="tottime")
 
-from Graph import temp_plot
-temp_plot(finaltime,Tbot,Tout,Tfm,Tdsi,md,Ta,Tr,Tcsg,Tsr,mywell.riser)
 
-print("It's stable at %i hours" % finaltime)
+from Graph import plot_temp_profile
 
-print(mywell.tcsr,mywell.tcem)
+plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,mywell.riser,md)
 
-
+from TimeStab import stab_time
+finaltime,Tbot,Tout=stab_time()
+from Graph import plot_temp_time
+plot_temp_time(finaltime, Tbot, Tout, Tfm)     # Active this line to plot Tbot up to Tstabilized
