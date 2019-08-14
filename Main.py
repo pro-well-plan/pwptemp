@@ -54,7 +54,28 @@ from Graph import plot_temp_profile
 
 plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,mywell.riser,md)
 
-from TimeStab import stab_time
-finaltime,Tbot,Tout=stab_time()
-from Graph import plot_temp_time
-plot_temp_time(finaltime, Tbot, Tout, Tfm)     # Active this line to plot Tbot up to Tstabilized
+
+def stab_time():
+    Ta = []
+    for n in range(1,3):
+        Ta.append(temp_time(n)[1])
+
+    valor = mean(Ta[0]) - mean(Ta[1])
+    finaltime = 2
+
+    while abs(valor) >= 0.01:
+        Ta.append(temp_time(finaltime+1)[1])
+        valor = mean(Ta[finaltime]) - mean(Ta[finaltime-1])
+        finaltime = finaltime+1
+
+    Tbot = []
+    Tout = []
+
+    for n in range(finaltime):
+        Tbot.append(Ta[n][-1])
+        Tout.append(Ta[n][0])
+
+    from Graph import plot_temp_time
+    plot_temp_time(finaltime, Tbot, Tout, Tfm)
+
+stab_time()   # Active this line to plot Tbot up to Tstabilized
