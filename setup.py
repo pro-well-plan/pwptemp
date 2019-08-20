@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='pwptemp',
     packages=['pwptemp'],
-    version='0.1',
+    version='0.1.1',
     license='LGPL v3',
     description='Well Temperature Distribution',
     author='jcamiloangarita',
