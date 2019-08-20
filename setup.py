@@ -9,7 +9,7 @@ setup(
     author='jcamiloangarita',
     author_email='camiloangarita94@gmail.com',
     url='https://github.com/pro-well-plan/pwptemp',
-    download_url='https://github.com/pro-well-plan/pwptemp/archive/v0.1.1.tar.gz',
+    download_url='https://github.com/pro-well-plan/pwptemp/archive/0.1.1.tar.gz',
     keywords='well temperature distribution',
     classifiers=['Programming Language :: Python',
                  'Programming Language :: Python :: 2.7',
