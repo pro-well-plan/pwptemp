@@ -1,8 +1,21 @@
 ![OSP](https://user-images.githubusercontent.com/52009346/62771366-56c69f00-ba9d-11e9-9c86-a868bf3a1180.png)
 
-# WELL TEMPERATURE MODELLING 
+## Index ##
 
-This project aims to create a module able to calculate the temperature distribution for an entire well. 
+* [Introduction](#introduction)
+* [Getting started](#getting-started)
+* [Running Tests](#running-tests)
+* [Versioning](#versioning)
+* [Authors](#authors)
+* [History](#history)
+* [License](#license)
+
+## Introduction
+Pwptemp is a small LGPL licensed library for easy calculation of the
+temperature distribution along the well. Features are added as they
+are needed; suggestions and contributions of all kinds are very welcome.
+
+To catch up on the latest development and features, see the [changelog](CHANGELOG.md).
 
 ## Getting Started
 
@@ -121,7 +134,7 @@ And then you only need to define these two lists (tvd and md) instead, and the s
 **3.** Run the file Main.py and you will get the entire temperature profile at stabilization time (Tdsi,Ta,Tr,Tcsg,Tsr,Tfm), the temperature at the bottom through the time (Tbot),the temperature at the outlet (Annular) through the time (Tout) and the stabilization temperature (finaltime).
 
 
-## Running the tests
+## Running Tests
 
 How to run the automated tests for this system...
 ```
@@ -146,6 +159,12 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 
 See also the list of [contributors](https://github.com/jcamiloangarita/WT/graphs/contributors) who participated in this project.
+
+## History ##
+Pwptemp was initially written and is maintained by [Pro Well plan
+AS](http://www.prowellplan.com/) as a free, simple, easy-to-use way of getting
+temperature data that can be tailored to our needs, and as contribution to the
+free software community.
 
 ## License
 
