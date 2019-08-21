@@ -1,21 +1,25 @@
 from setuptools import setup
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
 setup(
     name='pwptemp',
     packages=['pwptemp'],
-    version='0.1.3',
+    version='0.0.1',
     license='LGPL v3',
     description='Well Temperature Distribution',
-    author='jcamiloangarita',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    author='Pro Well Plan AS',
     author_email='camiloangarita94@gmail.com',
     url='https://github.com/pro-well-plan/pwptemp',
-    download_url='https://github.com/pro-well-plan/pwptemp/archive/v0.1.3.tar.gz',
+    download_url='https://github.com/pro-well-plan/pwptemp/archive/v0.0.1.tar.gz',
     keywords='well temperature distribution',
-    classifiers=['Programming Language :: Python',
-                 'Programming Language :: Python :: 2.7',
-                 'Programming Language :: Python :: 3.3',
-                 'Programming Language :: Python :: 3.4',
-                 'Programming Language :: Python :: 3.5',
-                 'Programming Language :: Python :: 3.6',
-                 'Programming Language :: Python :: 3.7'],
+    classifiers=['Programming Language :: Python ::3',
+                 'License :: OSI Approved :: GNU LGPL v3',
+                 'Natural Language :: English',
+                 'Topic :: Scientific/Engineering',
+                 'Topic :: Software Development',
+                 'Topic :: Libraries',
+                 'Topic :: Utilities'],
 )
