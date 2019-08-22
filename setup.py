@@ -15,7 +15,7 @@ setup(
     url='https://github.com/pro-well-plan/pwptemp',
     download_url='https://github.com/pro-well-plan/pwptemp/archive/v0.0.2.tar.gz',
     keywords='well temperature distribution',
-    classifiers=['Programming Language :: Python ::3',
+    classifiers=['Programming Language :: Python :: 3',
                  'License :: OSI Approved :: GNU LGPL v3',
                  'Natural Language :: English',
                  'Topic :: Scientific/Engineering',
