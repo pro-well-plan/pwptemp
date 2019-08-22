@@ -1,1 +1,7 @@
-__all__ = ["WellPath", "InitCond", "Input", "Main", "HeatCoefficients", "LinearSystem", "Graph"]
+from WellPath import *
+from Input import *
+from InitCond import *
+from Main import *
+from HeatCoefficients import *
+from LinearSystem import *
+from Graph import *
