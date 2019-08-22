@@ -20,6 +20,6 @@ setup(
                  'Natural Language :: English',
                  'Topic :: Scientific/Engineering',
                  'Topic :: Software Development',
-                 'Topic :: Libraries',
+                 'Topic :: Software Development :: Libraries',
                  'Topic :: Utilities'],
 )
