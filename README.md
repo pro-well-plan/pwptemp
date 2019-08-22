@@ -4,7 +4,6 @@
 
 * [Introduction](#introduction)
 * [Getting started](#getting-started)
-* [Running Tests](#running-tests)
 * [Versioning](#versioning)
 * [Authors](#authors)
 * [History](#history)
@@ -28,56 +27,31 @@ These instructions will get you a copy of the project up and running on your loc
 * Source code from [github](https://github.com/pro-well-plan/pwptemp)
     * `git clone https://github.com/pro-well-plan/pwptemp`
 
+### Code Distribution
+
+The code is compound different files as follows:
+
+> **Wellpath.py** ▷ contains a function to define the MD, and TVD values from the wellpath.
+
+> **Input.py** ▷ creates a class (WellTemperature) to have access to the parameters of the case.
+
+> **InitCond.py** ▷ defines the initial and boundary conditions.
+
+> **HeatCoefficients.py** ▷ contains a function to calculate the coefficients for the heat tranfer equations that will be used.
+
+> **LinearSystem.py** ▷ contains a function to generate the entire temperature profile. 
+
+> **Graph.py** ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time. And another function to plot the temperature profile.
+
+> **Main.py** ▷ contains a function to determine the temperature profile at any time and another function to calculate for the stabilization time.
 
 ### Inputs
 
-```
-1. Inlet Fluid Temperature
-2. Surface Temperature
-3. Well Depth
-4. Water Depth
-5. Drill Pipe Inner Diameter
-6. Drill Pipe Outer Diameter
-7. Casing Inner Diameter
-8. Surrounding Space Diameter
-9. Riser Inner Diameter
-10. Riser Outer Diameter
-11. Nearby Formation Diameter
-12. Circulation Rate
-13. Fluid Thermal Conductivity (Default Value Provided)
-14. Casing Thermal Conductivity (Default Value Provided)
-15. Drill Pipe Thermal Conductivity (Default Value Provided)
-16. Comprehensive Csg-Fm Thermal Conductivity (Default Value Provided)
-17. Riser Thermal Conductivity (Default Value Provided)
-18. Comprehensive Riser-Water Thermal Conductivity (Default Value Provided)
-19. Seawater Thermal Conductivity (Default Value Provided)
-20. Fluid Heat Capacity (Default Value Provided)
-21. Casing Heat Capacity (Default Value Provided)
-22. Drill Pipe Heat Capacity (Default Value Provided)
-23. Riser Heat Capacity (Default Value Provided)
-24. Seawater Heat Capacity (Default Value Provided)
-25. Surrounding Space Heat Capacity (Default Value Provided)
-26. Convective Heat Transfer Coefficient at the Inner Face of Drill Pipe (Default Value Provided)
-27. Convective Heat Transfer Coefficient at the Outer Face of Drill Pipe (Default Value Provided)
-28. Convective Heat Transfer Coefficient at the Inner Face of Casing (Default Value Provided)
-29. Convective Heat Transfer Coefficient at the Inner Face of Riser (Default Value Provided)
-30. Geothermal Gradient (Default Value Provided)
-31. Seawater Thermal Gradient (Default Value Provided)
-32. Fluid Density (Default Value Provided)
-33. Drill Pipe Density (Default Value Provided)
-34. Casing Density (Default Value Provided)
-35. Riser Density (Default Value Provided)
-36. Formation Density (Default Value Provided)
-37. Seawater Density (Default Value Provided)
-38. Surrouding Average Density (Default Value Provided)
-39. Weight on bit (WOB)
-40. Rate of Penetration (ROP)
-41. Area of Nuzzles
-42. Reynolds
-43. Measured Depth at Target
-```
+Around 43 data [inputs](inputs.md) (such as depths, diameters, temperatures, densities and operation parameters) are involved in pwptemp. However default values are provided in order to only change the parameters that the user wants to load.
 
 ### Outputs
+
+Pwptemp allows users to count with heat data for different sections of a well and also to calculate the temperature values at certain circulation times (drilling operation).
 
 ```
 Temperature of the fluid inside the Drill String (Tdsi)
@@ -97,51 +71,6 @@ Temperature of the Formation (Tfm)
 ### Distribution Scheme
 
 <img src="https://user-images.githubusercontent.com/52009346/62863045-fbe4b000-bd07-11e9-9bda-30330dc612d1.PNG" width="450" height="400"> <img src="https://user-images.githubusercontent.com/52009346/62856722-f4b4a680-bcf5-11e9-80ef-751e03b4dbc2.PNG" width="200" height="180">
-
-### Code Distribution
-
-The code is compound by 8 files:
-
-> **Wellpath.py** ▷ contains a function to define the MD, and TVD values from the wellpath.
-
-> **temp_dict.json** ▷ contains the parameters required for the temperature calculation.
-
-> **Input.py** ▷ creates a class (WellTemperature) to have access to the parameters of the case.
-
-> **InitCond.py** ▷ defines the initial and boundary conditions.
-
-> **HeatCoefficients.py** ▷ contains a function to calculate the coefficients for the heat tranfer equations that will be used.
-
-> **LinearSystem.py** ▷ contains a function to generate the entire temperature profile. 
-
-> **Graph.py** ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time and also Temperature profile at stabilization time.
-
-> **Main.py** ▷ contains a function to determine the temperature profile when it is already stabilized.
-
-### Deployment
-**1.** If you have already the values of TVD and MD from your own wellpath, then you can skip the calculation in the wellpath function:
-```
-md=range(mdt)  # Measured Depth from RKB, m
-    tvd=[]   # True Vertical Depth from RKB, m
-
-    for z in md:
-        tvd.append(z)
-```
-And then you only need to define these two lists (tvd and md) instead, and the shoes depths of the casings of course.
-
-**2.** You can check and modify all the parameters from the file temp_dict.json or call the value from a variable/object directly to the file Input.py. 
-
-**3.** Run the file Main.py and you will get the entire temperature profile at stabilization time (Tdsi,Ta,Tr,Tcsg,Tsr,Tfm), the temperature at the bottom through the time (Tbot),the temperature at the outlet (Annular) through the time (Tout) and the stabilization temperature (finaltime).
-
-
-## Running Tests
-
-How to run the automated tests for this system...
-```
-- unittest
-- nose or nose2
-- pytest
-```
 
 ## Contributing
 
