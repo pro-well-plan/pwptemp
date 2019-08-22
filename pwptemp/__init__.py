@@ -1,4 +1,4 @@
-from WellPath import *
+from WellPath import wellpath
 from Input import *
 from InitCond import *
 from Main import *
