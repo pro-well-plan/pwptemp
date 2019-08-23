@@ -1,8 +1,10 @@
 from statistics import mean
 
-
 def temp_time(n):
-
+    """
+    :param n: # circulating time, h
+    :return: circulation time values
+    """
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s

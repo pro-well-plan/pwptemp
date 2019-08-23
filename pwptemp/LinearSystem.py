@@ -1,9 +1,86 @@
+import numpy as np
+
 def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c3z,c3e,c3w,c3,c3t,c4z,c4e,c4w,c4t,
             c5z,c5w,c5e,c5t,c4z1,c4e1,c4w1,c4t1,c5z1,c5w1,c5e1,c5t1,c4z2,c4e2,c4w2,c4t2,c5z2,c5w2,c5e2,c5t2,c4z3,
             c4e3,c4w3,c4t3,c5z3,c5w3,c5e3,c5t3,c4z4,c4e4,c4w4,c4t4,c5z4,c5w4,c5e4,c5t4,c4z5,c4e5,c4w5,c4t5,c5z5,
             c5w5,c5e5,c5t5,zstep,Riser,csgc,csgs,csgi):
 
-    import numpy as np
+    """
+    This function build a linear system from the heat transfer equations and solve it using numpy.linalg
+    :param Tin:
+    :param Tdsio:
+    :param Tdso:
+    :param Tao:
+    :param Tcsgo:
+    :param Tsro:
+    :param c1z:
+    :param c1e:
+    :param c1:
+    :param c1t:
+    :param c2z:
+    :param c2e:
+    :param c2w:
+    :param c2t:
+    :param c3z:
+    :param c3e:
+    :param c3w:
+    :param c3:
+    :param c3t:
+    :param c4z:
+    :param c4e:
+    :param c4w:
+    :param c4t:
+    :param c5z:
+    :param c5w:
+    :param c5e:
+    :param c5t:
+    :param c4z1:
+    :param c4e1:
+    :param c4w1:
+    :param c4t1:
+    :param c5z1:
+    :param c5w1:
+    :param c5e1:
+    :param c5t1:
+    :param c4z2:
+    :param c4e2:
+    :param c4w2:
+    :param c4t2:
+    :param c5z2:
+    :param c5w2:
+    :param c5e2:
+    :param c5t2:
+    :param c4z3:
+    :param c4e3:
+    :param c4w3:
+    :param c4t3:
+    :param c5z3:
+    :param c5w3:
+    :param c5e3:
+    :param c5t3:
+    :param c4z4:
+    :param c4e4:
+    :param c4w4:
+    :param c4t4:
+    :param c5z4:
+    :param c5w4:
+    :param c5e4:
+    :param c5t4:
+    :param c4z5:
+    :param c4e5:
+    :param c4w5:
+    :param c4t5:
+    :param c5z5:
+    :param c5w5:
+    :param c5e5:
+    :param c5t5:
+    :param zstep:
+    :param Riser:
+    :param csgc:
+    :param csgs:
+    :param csgi:
+    :return:
+    """
 
     Tdsi = [Tin]
     Tds = []

@@ -4,53 +4,53 @@ def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lamb
     """
     This function calculate the different coefficients involved in the heat transfer equations (e.g. aX1+bX2+cX3=B, in
     this case the function calculate a, b and c)
-    :param rhol:
-    :param cl:
-    :param vp:
-    :param h1:
-    :param r1:
-    :param qp:
-    :param lambdal:
-    :param r2:
-    :param h2:
-    :param rhod:
-    :param cd:
-    :param va:
-    :param r3:
-    :param h3:
-    :param qa:
-    :param lambdar:
-    :param lambdarw:
-    :param lambdaw:
-    :param cr:
-    :param cw:
-    :param rhor:
-    :param rhow:
-    :param r4:
-    :param r5:
-    :param rfm:
-    :param lambdac:
-    :param lambdacsr:
-    :param lambdasr:
-    :param lambdasrfm:
-    :param cc:
-    :param csr:
-    :param rhoc:
-    :param rhosr:
-    :param lambdafm:
-    :param cfm:
-    :param rhofm:
+    :param rhol: fluid density, kg/m3
+    :param cl: fluid specific heat capacity, J/(kg*°C)
+    :param vp: fluid velocity inside the drill pipe, m/s
+    :param h1: convective heat transfer coefficient - Drill Pipe inner wall, W/(m^2*°C)
+    :param r1: Drill String Inner  Radius, m
+    :param qp: heat source term - drill pipe,
+    :param lambdal: fluid thermal conductivity, W/(m*°C)
+    :param r2: Drill String Outer Radius, m
+    :param h2: convective heat transfer coefficient - Drill Pipe outer wall, W/(m^2*°C)
+    :param rhod: drill pipe density, kg/m3
+    :param cd: drill pipe specific heat capacity, J/(kg*°C)
+    :param va: fluid velocity inside the annular, m/s
+    :param r3: Casing Inner Radius, m
+    :param h3: convective heat transfer coefficient - Casing inner wall, W/(m^2*°C)
+    :param qa: heat source term - annulus,
+    :param lambdar: riser thermal conductivity, W/(m*°C)
+    :param lambdarw: comprehensive riser-water thermal conductivity, W/(m*°C)
+    :param lambdaw: water thermal conductivity, W/(m*°C)
+    :param cr: riser specific heat capacity, J/(kg*°C)
+    :param cw: seawater specific heat capacity, J/(kg*°C)
+    :param rhor: riser density, kg/m3
+    :param rhow: seawater density, kg/m3
+    :param r4: Surrounding Space Inner Radius m
+    :param r5: Surrounding Space Outer Radius, m
+    :param rfm: Undisturbed Formation Radius, m
+    :param lambdac: casing thermal conductivity, W/(m*°C)
+    :param lambdacsr: comprehensive casing-surrounding space thermal conductivity, W/(m*°C)
+    :param lambdasr: surrounding space thermal conductivity, W/(m*°C)
+    :param lambdasrfm: comprehensive surrounding space-formation thermal conductivity, W/(m*°C)
+    :param cc: casing specific heat capacity, J/(kg*°C)
+    :param csr: surrounding space specific heat capacity, J/(kg*°C)
+    :param rhoc: casing density, kg/m3
+    :param rhosr: surrounding space density, kg/m3
+    :param lambdafm: formation thermal conductivity, W/(m*°C)
+    :param cfm: formation specific heat capacity, J/(kg*°C)
+    :param rhofm: formation density, kg/m3
     :param deltaz:
-    :param deltat:
-    :param lambdasr2:
-    :param lambdasr3:
-    :param lambdacsr2:
-    :param lambdacsr3:
-    :param lambdasrfm2:
-    :param lambdasrfm3:
-    :param csr2:
-    :param csr3:
-    :return:
+    :param deltat: circulation time, s
+    :param lambdasr2: surrounding space thermal conductivity in section 2 (without conductor casing), W/(m*°C)
+    :param lambdasr3: surrounding space thermal conductivity in section 3 (without conductor and surface casings), W/(m*°C)
+    :param lambdacsr2: comprehensive casing-surrounding space thermal conductivity in section 2 (without conductor casing), W/(m*°C)
+    :param lambdacsr3: comprehensive casing-surrounding space thermal conductivity in section 3 (without conductor and surface casings), W/(m*°C)
+    :param lambdasrfm2: comprehensive surrounding space-formation thermal conductivity in section 2 (without conductor casing), W/(m*°C)
+    :param lambdasrfm3: comprehensive surrounding space-formation thermal conductivity in section 3 (without conductor and surface casings), W/(m*°C)
+    :param csr2: surrounding space specific heat capacity in section 2 (without conductor casing), J/(kg*°C)
+    :param csr3: surrounding space specific heat capacity in section 3 (without conductor and surface casings), J/(kg*°C)
+    :return: coefficients involved in the heat transfer equations
     """
     import math
 
