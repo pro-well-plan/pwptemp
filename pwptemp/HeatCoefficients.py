@@ -1,7 +1,57 @@
 def heat_coef(rhol,cl,vp,h1,r1,qp,lambdal,r2,h2,rhod,cd,va,r3,h3,qa,lambdar,lambdarw,lambdaw,cr,cw,rhor,rhow,r4,r5,rfm,lambdac,lambdacsr,
               lambdasr,lambdasrfm,cc,csr,rhoc,rhosr,lambdafm,cfm,rhofm,deltaz,deltat,lambdasr2,lambdasr3,lambdacsr2,lambdacsr3,lambdasrfm2,
               lambdasrfm3,csr2,csr3):
-
+    """
+    This function calculate the different coefficients involved in the heat transfer equations (e.g. aX1+bX2+cX3=B, in
+    this case the function calculate a, b and c)
+    :param rhol:
+    :param cl:
+    :param vp:
+    :param h1:
+    :param r1:
+    :param qp:
+    :param lambdal:
+    :param r2:
+    :param h2:
+    :param rhod:
+    :param cd:
+    :param va:
+    :param r3:
+    :param h3:
+    :param qa:
+    :param lambdar:
+    :param lambdarw:
+    :param lambdaw:
+    :param cr:
+    :param cw:
+    :param rhor:
+    :param rhow:
+    :param r4:
+    :param r5:
+    :param rfm:
+    :param lambdac:
+    :param lambdacsr:
+    :param lambdasr:
+    :param lambdasrfm:
+    :param cc:
+    :param csr:
+    :param rhoc:
+    :param rhosr:
+    :param lambdafm:
+    :param cfm:
+    :param rhofm:
+    :param deltaz:
+    :param deltat:
+    :param lambdasr2:
+    :param lambdasr3:
+    :param lambdacsr2:
+    :param lambdacsr3:
+    :param lambdasrfm2:
+    :param lambdasrfm3:
+    :param csr2:
+    :param csr3:
+    :return:
+    """
     import math
 
     #HEATCOEFFICIENTS
