@@ -7,6 +7,9 @@ class WellTemperature(object):
         self.wd = temp_dict["wd"]  # Water Depth, m
         deltaz=50  # deltaz is always the same  # Length of each grid cell
         self.riser = round(self.wd / deltaz)  # number of grid cells for the riser
+        self.csgc = round(temp_dict["csgco"] / deltaz)  # Shoe Depth of Conductor Casing, m
+        self.csgs = round(temp_dict["csgso"] / deltaz)  # Shoe Depth of Surface Casing, m
+        self.csgi = round(temp_dict["csgio"] / deltaz)  # Shoe Depth of Intermediate Casing, m
         # Wellbore Geometry
         self.ddi = temp_dict["ddi"]  # Drill String Inner  Diameter, m
         self.ddo = temp_dict["ddo"]  # Drill String Outer Diameter, m
