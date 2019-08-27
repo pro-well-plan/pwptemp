@@ -57,7 +57,7 @@ temp_dict = {
   "wob": 22.41,
   "rop": 14.4,
   "an": 2,
-  "mdt":5000
+  "mdt": 5000
 }
 
 class WellTemperature(object):
