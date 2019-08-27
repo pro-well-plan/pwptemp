@@ -4,6 +4,7 @@
 
 * [Introduction](#introduction)
 * [Getting started](#getting-started)
+* [Tutorial](#tutorial)
 * [Versioning](#versioning)
 * [Authors](#authors)
 * [History](#history)
