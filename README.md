@@ -49,17 +49,23 @@ mw=WellTemperature(tdata)
 
 3. Defining wellpath:
 ```
+from pwptemp.WellPath import wellpath
+
 md,tvd,deltaz,zstep=wellpath(mw.mdt)  # Getting depth values
 ```
 
 4. Calculating temperature distribution:
 ```
+from pwptemp.Main import temp_time
+
 #For circulation time = 5 hours
 Tdsi,Ta,Tr,Tcsg,Tsr,Tfm=temp_time(5,mw,tvd,deltaz,zstep)
 ```
 
 5. Plotting Temperature profile:
 ```
+from pwptemp.Graph import plot_temp_profile
+
 plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,mw.riser,md)
 ```
 
