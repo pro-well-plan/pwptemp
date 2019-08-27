@@ -1,4 +1,8 @@
 from math import pi
+import json
+
+with open('temp_dict.json') as json_file:
+    temp_dict = json.load(json_file)
 
 class WellTemperature(object):
     def __init__(self,temp_dict):
