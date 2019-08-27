@@ -22,10 +22,45 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Get pwptemp
 
-* Wheels for Python from [PyPI](https://pypi.python.org/pypi/pwptemp/)
+* Users: Wheels for Python from [PyPI](https://pypi.python.org/pypi/pwptemp/) 
     * `pip install pwptemp`
-* Source code from [github](https://github.com/pro-well-plan/pwptemp)
+* Developers: Source code from [github](https://github.com/pro-well-plan/pwptemp)
     * `git clone https://github.com/pro-well-plan/pwptemp`
+    
+## Tutorial
+
+You can use the package by creating a new file and by following the instructions provided below.
+   
+### Basics   
+
+1. Installing the package:
+   > Option 1: Go to project interpreter settings and search pwptemp.
+   
+   > Option 2: Go to the terminal and type `pip install pwptemp`
+   
+2. Importing the dictionary and creating a new instance WellTemperature:
+```
+from pwptemp.Input import WellTemperature, temp_dict
+
+tdata=temp_dict 
+mw=WellTemperature(tdata)  
+```
+
+3. Defining wellpath:
+```
+md,tvd,deltaz,zstep=wellpath(mw.mdt)  # Getting depth values
+```
+
+4. Calculating temperature distribution:
+```
+#For circulation time = 5 hours
+Tdsi,Ta,Tr,Tcsg,Tsr,Tfm=temp_time(5,mw,tvd,deltaz,zstep)
+```
+
+5. Plotting Temperature profile:
+```
+plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,mw.riser,md)
+```
 
 ### Code Distribution
 
