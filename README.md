@@ -132,7 +132,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 See also the list of [contributors](https://github.com/jcamiloangarita/WT/graphs/contributors) who participated in this project.
 
 ## History ##
-Pwptemp was initially written and is maintained by [Pro Well plan
+Pwptemp was initially written and is maintained by [Pro Well Plan
 AS](http://www.prowellplan.com/) as a free, simple, easy-to-use way of getting
 temperature data that can be tailored to our needs, and as contribution to the
 free software community.
