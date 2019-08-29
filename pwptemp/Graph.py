@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 def plot_temp_time(finaltime,Tbot,Tout,Tfm):
 
     # Plotting Tbottom and Tout through time
@@ -25,8 +26,16 @@ def plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,Riser,md):
     plt.plot(Tsr, md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
     plt.xlabel('Temperature, °C')
     plt.ylabel('Depth, m')
-    title = 'Temperature profile stabilized ' #at %i hours' % finaltime
-    plt.title(title)
-    plt.ylim(plt.ylim()[::-1])  # reversing y axis
-    plt.legend()  # applying the legend
-    plt.show()
+
+def create_plot(ax, step, mw_riser, md, riser=1):
+    """
+    Takes in an axis and plots the temperature data from the timestep
+    """
+    ax.plot(step['Tdsi'], md, c='r', label='Fluid in Drill String')  # Temp. inside Drillpipe vs Depth
+    ax.plot(step['Ta'], md, 'b', label='Fluid in Annulus')
+    if riser > 0:
+        ax.plot(step['Tr'], md, 'g', label='Temp. - Riser')  # Temp. due to gradient vs Depth
+    ax.plot(step['Tcsg'], md, 'c', label='Casing')  # Temp. due to gradient vs Depth
+    ax.plot(step['Tfm'], md, 'g', label='Formation')  # Temp. due to gradient vs Depth
+    ax.plot(step['Tsr'], md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
+    return ax
