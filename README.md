@@ -68,6 +68,9 @@ from pwptemp.Graph import plot_temp_profile
 
 plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,mw.riser,md)
 ```
+### Web Visualization
+A Flask server runs from `server.py`
+Add environment variable `FLASK_APP=server.py` and run `python -m flask run` from the pwptemp folder and open your browser for visualization.
 
 ### Code Distribution
 
@@ -83,7 +86,7 @@ The code is compound different files as follows:
 
 > **LinearSystem.py** ▷ contains a function to generate the entire temperature profile. 
 
-> **Graph.py** ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time. And another function to plot the temperature profile.
+> **Graph.py** ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time. And another function to plot the temperature profile. Also has a function which create axes for the web server.
 
 > **Main.py** ▷ contains a function to determine the temperature profile at any time and another function to calculate for the stabilization time.
 
