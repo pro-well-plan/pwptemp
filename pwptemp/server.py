@@ -1,3 +1,5 @@
+import io
+
 from flask import Flask, Response, render_template, session, request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -20,7 +22,9 @@ def show_temp_plot():
             session['timesteps']=[float(n) for n in steps.split(',')]
     if 'timesteps' not in session:
         session['timesteps'] = [6]
-    return render_template('plot.html', timesteps = session['timesteps'])
+    if 'show_variables' not in session:
+        session['show_variables'] = True
+    return render_template('plot.html', timesteps = session['timesteps'], show_variables = session['show_variables'], variables=temp_dict)
 
 @app.route('/plot.png')
 def plot_png():

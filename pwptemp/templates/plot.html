@@ -10,3 +10,15 @@
         <input type="submit" value="Submit"></div>
 </form>
 <img src="/plot.png" alt="This should have been a plot">
+<section class='variablelist'>
+{% if show_variables%}
+<table>
+    {% for i in variables %}
+<tr>
+    <td>{{i}}</td>
+    <td>{{variables[i]}}</td>
+</tr>
+    {% endfor %}
+</table>
+{% endif %}
+</section>
