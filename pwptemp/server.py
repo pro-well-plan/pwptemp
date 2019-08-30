@@ -1,7 +1,3 @@
-import io
-
-import json
-
 from flask import Flask, Response, render_template, session, request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
