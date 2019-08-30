@@ -1,21 +1,30 @@
-from flask import Flask, render_template, Response
 import io
+
+import json
+
+from flask import Flask, Response, render_template, session, request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from Input import WellTemperature, temp_dict
-from WellPath import wellpath
-from Main import temp_time
 from Graph import create_plot
+from Input import WellTemperature, temp_dict
+from Main import temp_time
+from WellPath import wellpath
 
 app = Flask(__name__)
+app.secret_key = b'\xba\x1d\x88\x98\xa0\x06\xce\x98g\x1d\xd4s\x81\x92@\xc6'
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def show_temp_plot():
     """
     Renders template which calls for figure
     """
-    return render_template('plot.html', timesteps = [.1,.2,.5,1])
+    if request.method == 'POST':
+            steps=request.form['timesteps']
+            session['timesteps']=[float(n) for n in steps.split(',')]
+    if 'timesteps' not in session:
+        session['timesteps'] = [6]
+    return render_template('plot.html', timesteps = session['timesteps'])
 
 @app.route('/plot.png')
 def plot_png():
@@ -33,11 +42,10 @@ def create_figure():
     """
     tdata=temp_dict 
     mw=WellTemperature(tdata)  
-
     md,tvd,deltaz,zstep=wellpath(mw.mdt)  # Getting depth values
 
     res = []
-    for time in [.1,.2,.5,1]:
+    for time in session['timesteps']:
         Tdsi,Ta,Tr,Tcsg,Tsr,Tfm = temp_time(time,mw,tvd,deltaz,zstep)
         res.append(dict(Tdsi=Tdsi,Ta=Ta,Tr=Tr,Tcsg=Tcsg,Tsr=Tsr,Tfm=Tfm))
 
