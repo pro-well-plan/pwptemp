@@ -1,5 +1,4 @@
 
-
 def heat_coef(rhol, cl, vp, h1, r1, qp, lambdal, r2, h2, rhod, cd, va, r3, h3, qa, lambdar, lambdarw, lambdaw, cr, cw,
               rhor, rhow, r4, r5, rfm, lambdac, lambdacsr, lambdasr, lambdasrfm, cc, csr, rhoc, rhosr, lambdafm, cfm,
               rhofm, deltaz, deltat, lambdasr2 , lambdasr3, lambdacsr2, lambdacsr3, lambdasrfm2, lambdasrfm3, csr2,
