@@ -61,7 +61,7 @@ temp_dict = {
 }
 
 class WellTemperature(object):
-    def __init__(self,temp_dict):
+    def __init__(self, temp_dict):
         self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
         self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
         self.wd = temp_dict["wd"]  # Water Depth, m
