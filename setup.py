@@ -21,5 +21,5 @@ setup(
                  'Topic :: Scientific/Engineering',
                  'Topic :: Software Development',
                  'Topic :: Software Development :: Libraries',
-                 'Topic :: Utilities'],
+                 'Topic :: Utilities'], install_requires=['numpy']
 )

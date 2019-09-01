@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c3z,c3e,c3w,c3,c3t,c4z,c4e,c4w,c4t,
             c5z,c5w,c5e,c5t,c4z1,c4e1,c4w1,c4t1,c5z1,c5w1,c5e1,c5t1,c4z2,c4e2,c4w2,c4t2,c5z2,c5w2,c5e2,c5t2,c4z3,
             c4e3,c4w3,c4t3,c5z3,c5w3,c5e3,c5t3,c4z4,c4e4,c4w4,c4t4,c5z4,c5w4,c5e4,c5t4,c4z5,c4e5,c4w5,c4t5,c5z5,
@@ -87,7 +88,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
     Ta = []
     Tcsg = []
     Tsr = []
-    xi=5
+    xi = 5
 
     # Creating vectors N,W,C,E,S,B
     N = []
@@ -110,7 +111,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
 
     for j in range(zstep):
 
-        if j==Riser:
+        if j == Riser:
             # Casing:
             c4z = c4z2
             c4e = c4e2
@@ -122,7 +123,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
             c5e = c5e2
             c5t = c5t2
 
-        if j==csgc:
+        if j == csgc:
             # Casing:
             c4z = c4z3
             c4e = c4e3
@@ -134,7 +135,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
             c5e = c5e3
             c5t = c5t3
 
-        if j==csgs:
+        if j == csgs:
             # Casing:
             c4z = c4z4
             c4e = c4e4
@@ -146,7 +147,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
             c5e = c5e4
             c5t = c5t4
 
-        if j==csgi:
+        if j == csgi:
             # Casing:
             c4z = c4z5
             c4e = c4e5
@@ -192,7 +193,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
                     B.append(c2t * Tdso[j] + c2w * Tdsi[j] + c2e * (Tao[j] - Tdso[j]) + c2w * (Tdsio[j] - Tdso[j]) + c2z * (
                             Tdso[j + 1] - Tdso[j]))
 
-                if j > 0 and j < zstep - 1:
+                if 0 < j < zstep - 1:
                     N.append(-c2z)
                     W.append(-c2w)
                     C.append(c2t + c2e + c2w + 2 * c2z)
@@ -233,7 +234,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
                         c4t * Tcsgo[j] + c4e * Tsro[j] + c4e * (Tsro[j] - Tcsgo[j]) + c4w * (Tao[j] - Tcsgo[j]) + c4z * (
                                 Tcsgo[j + 1] - Tcsgo[j]))
 
-                if j > 0 and j < zstep - 1:
+                if 0 < j < zstep - 1:
                     N.append(-c4z)
                     W.append(-c4w)
                     C.append(c4t + c4e + c4w + 2 * c4z)
@@ -262,7 +263,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
                     S.append(-c5z)
                     B.append(c5w * (Tcsgo[j] - Tsro[j]) + c5z * (Tsro[j + 1] - Tsro[j]) + c5e * Tsro[j] + c5t * Tsro[j])
 
-                if j > 0 and j < zstep - 1:
+                if 0 < j < zstep - 1:
                     N.append(-c5z)
                     W.append(-c5w)
                     C.append(c5w + c5e + 2 * c5z + c5t)
@@ -331,8 +332,8 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
         if x == zstep - 1:
             Tsr.append(Temp[lenC - 1])
 
-    Tr=Tcsg[:Riser]+[None]*(zstep-Riser)
+    Tr = Tcsg[:Riser]+[None]*(zstep-Riser)
     for x in range(Riser):
-        Tcsg[x]=None
+        Tcsg[x] = None
 
-    return Tdsi,Ta,Tr,Tcsg,Tsr
+    return Tdsi, Ta, Tr, Tcsg, Tsr
