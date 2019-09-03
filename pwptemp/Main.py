@@ -35,28 +35,28 @@ def temp_time(n,well,tvd,deltaz,zstep):
                                         c5e4, c5t4, c4z5, c4e5, c4w5, c4t5, c5z5,
                                         c5w5, c5e5, c5t5, zstep, well.riser, well.csgc, well.csgs, well.csgi)
 
-    return Tdsi, Ta, Tr, Tcsg, Tsr, Tfm
+    return Tdsi, Ta, Tr, Tcsg, Tsr, Tfm, time
 
 
-def stab_time():
+def stab_time(well, tvd, deltaz, zstep):
     Ta = []
     for n in range(1,3):
-        Ta.append(temp_time(n)[1])
+        Ta.append(temp_time(n, well, tvd, deltaz, zstep)[1])
 
     valor = mean(Ta[0]) - mean(Ta[1])
     finaltime = 2
 
     while abs(valor) >= 0.01:
-        Ta.append(temp_time(finaltime+1)[1])
+        Ta.append(temp_time(finaltime+1, well, tvd, deltaz, zstep)[1])
         valor = mean(Ta[finaltime]) - mean(Ta[finaltime-1])
-        finaltime = finaltime+1
+        finaltime = finaltime + 1
 
     Tbot = []
     Tout = []
 
     for n in range(finaltime):
-        Tbot.append(Ta[[n][-1]])
-        Tout.append(Ta[[n][0]])
+        Tbot.append(Ta[n][-1])
+        Tout.append(Ta[n][0])
 
     return finaltime, Tbot, Tout
 

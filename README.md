@@ -43,15 +43,15 @@ You can use the package by creating a new file and by following the instructions
 ```
 from pwptemp.Input import WellTemperature, temp_dict
 
-tdata=temp_dict 
-mw=WellTemperature(tdata)  
+tdata = temp_dict
+well = WellTemperature(tdata)
 ```
 
 3. Defining wellpath:
 ```
 from pwptemp.WellPath import wellpath
 
-md,tvd,deltaz,zstep=wellpath(mw.mdt)  # Getting depth values
+md, tvd, deltaz, zstep = wellpath(well.mdt)  # Getting depth values
 ```
 
 4. Calculating temperature distribution:
@@ -59,15 +59,30 @@ md,tvd,deltaz,zstep=wellpath(mw.mdt)  # Getting depth values
 from pwptemp.Main import temp_time
 
 #For circulation time = 5 hours
-Tdsi,Ta,Tr,Tcsg,Tsr,Tfm=temp_time(5,mw,tvd,deltaz,zstep)
+Tdsi, Ta, Tr, Tcsg, Tsr, Tfm, time = temp_time(5, well, tvd, deltaz, zstep)
 ```
 
 5. Plotting Temperature profile:
 ```
 from pwptemp.Graph import plot_temp_profile
 
-plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,mw.riser,md)
+plot_temp_profile(Tdsi, Ta, Tr, Tcsg, Tfm, Tsr, well.riser, md)
 ```
+
+6. Calculating Stabilization Time (Circulating):
+```
+from pwptemp.Main import stab_time
+
+finaltime, Tbot, Tout = stab_time(well, tvd, deltaz, zstep)
+```
+
+7. Plotting Temperature at bottom/outlet through circulating time:
+```
+from pwptemp.Graph import plot_temp_time
+
+plot_temp_time(finaltime, Tbot, Tout, Tfm)
+```
+
 ### Web Visualization
 A Flask server runs from `server.py`
 Add environment variable `FLASK_APP=server.py` and run `python -m flask run` from the pwptemp folder and open your browser for visualization.
