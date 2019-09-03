@@ -2,6 +2,7 @@ from unittest import TestCase
 from pwptemp.InitCond import init_cond
 from pwptemp.WellPath import wellpath
 
+
 class TestInitCond(TestCase):
     def test_init_cond(self):
         md, tvd, deltaz, zstep = wellpath(5000)
