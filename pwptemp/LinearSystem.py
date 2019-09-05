@@ -182,7 +182,7 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
                     W.append(0)
                     C.append(3 * c1t + c1z + c2z + c3e)
                     E.append(-c3e)
-                    B.append(c1t * Tdsio[j] + c1 + c1z * (Tdsio[j - 1] - Tdsio[j]) + c1t * Tdso[j] + c1t * Tao[j])
+                    B.append(c1t * Tdsio[j] + c1 + c1z * (Tdsio[j - 1] - Tdsio[j]) + c1t * Tdso[j] + c1t * Tao[j] + c3)
 
             if i == 1:  # Drill string wall
 
