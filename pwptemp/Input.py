@@ -48,7 +48,7 @@ temp_dict = {
   "rhor": 9000,
   "rhofm": 2645,
   "rhow": 1029,
-  "rhosr": 4000,
+  "rhocem": 2140,
   "gt": 0.0238,
   "wtg": -0.005,
   "rpm": 100,
@@ -65,7 +65,7 @@ class WellTemperature(object):
         self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
         self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
         self.wd = temp_dict["wd"]  # Water Depth, m
-        deltaz=50  # deltaz is always the same  # Length of each grid cell
+        deltaz = 50  # deltaz is always the same  # Length of each grid cell
         self.riser = round(self.wd / deltaz)  # number of grid cells for the riser
         self.csgc = round(temp_dict["csgco"] / deltaz)  # Shoe Depth of Conductor Casing, m
         self.csgs = round(temp_dict["csgso"] / deltaz)  # Shoe Depth of Surface Casing, m
@@ -149,10 +149,22 @@ class WellTemperature(object):
         self.rhol = temp_dict["rhol"]       # Fluid
         self.rhod = temp_dict["rhod"]       # Drill Pipe
         self.rhoc = temp_dict["rhoc"]       # Casing
+        self.rhocem = temp_dict["rhocem"]
         self.rhor = temp_dict["rhor"]       # Riser
         self.rhofm = temp_dict["rhofm"]     # Formation
         self.rhow = temp_dict["rhow"]       # Seawater
-        self.rhosr = temp_dict["rhosr"]     # Surrounding Space
+        xcsr = self.tcsr / (self.r5 - self.r4)
+        xcem = self.tcem / (self.r5 - self.r4)
+        xfm = 1 - xcsr - xcem
+        self.rhosr = xcsr*self.rhoc + xcem*self.rhocem + xfm*self.rhofm  # Surrounding Space
+        xcsr = self.tcsr2 / (self.r5 - self.r4)
+        xcem = self.tcem2 / (self.r5 - self.r4)
+        xfm = 1 - xcsr - xcem
+        self.rhosr2 = xcsr*self.rhoc + xcem*self.rhocem + xfm*self.rhofm  # Surrounding Space
+        xcsr = self.tcsr3 / (self.r5 - self.r4)
+        xcem = self.tcem3 / (self.r5 - self.r4)
+        xfm = 1 - xcsr - xcem
+        self.rhosr3 = xcsr*self.rhoc + xcem*self.rhocem + xfm*self.rhofm  # Surrounding Space
     # Thermal Gradients
         self.gt = temp_dict["gt"] * deltaz  # Geothermal gradient, °C/m
         self.wtg = temp_dict["wtg"] * deltaz  # Seawater thermal gradient, °C/m

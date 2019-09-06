@@ -1,8 +1,8 @@
 
 def heat_coef(rhol, cl, vp, h1, r1, qp, lambdal, r2, h2, rhod, cd, va, r3, h3, qa, lambdar, lambdarw, lambdaw, cr, cw,
-              rhor, rhow, r4, r5, rfm, lambdac, lambdacsr, lambdasr, lambdasrfm, cc, csr, rhoc, rhosr, lambdafm, cfm,
-              rhofm, deltaz, deltat, lambdasr2, lambdasr3, lambdacsr2, lambdacsr3, lambdasrfm2, lambdasrfm3, csr2,
-              csr3):
+              rhor, rhow, r4, r5, rfm, lambdac, lambdacsr, lambdasr, lambdasrfm, cc, csr, rhoc, rhosr, rhosr2, rhosr3,
+              lambdafm, cfm, rhofm, deltaz, deltat, lambdasr2, lambdasr3, lambdacsr2, lambdacsr3, lambdasrfm2,
+              lambdasrfm3, csr2, csr3):
     """
     This function calculate the different coefficients involved in the heat transfer equations (e.g. aX1+bX2+cX3=B, in
     this case the function calculate a, b and c)
@@ -136,7 +136,7 @@ def heat_coef(rhol, cl, vp, h1, r1, qp, lambdal, r2, h2, rhod, cd, va, r3, h3, q
     c4 = cc   #Specific Heat Capacity of the casing
     c5 = csr2    #Specific Heat Capacity of the surrounding space
     rho4 = rhoc   #Density of the casing
-    rho5 = rhosr-600    #Density of the surrounding space
+    rho5 = rhosr2    #Density of the surrounding space
     # Casing:
     c4z3 = (lambda4 / (deltaz ** 2)) / 2
     c4e3 = (2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2
@@ -156,7 +156,7 @@ def heat_coef(rhol, cl, vp, h1, r1, qp, lambdal, r2, h2, rhod, cd, va, r3, h3, q
     c4 = cc   #Specific Heat Capacity of the casing
     c5 = csr3    #Specific Heat Capacity of the surrounding space
     rho4 = rhoc   #Density of the casing
-    rho5 = rhosr-1200   #Density of the surrounding space
+    rho5 = rhosr3   #Density of the surrounding space
     # Casing:
     c4z4 = (lambda4 / (deltaz ** 2)) / 2
     c4e4 = (2 * lambda45 / ((r4 ** 2) - (r3 ** 2))) / 2

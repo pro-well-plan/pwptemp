@@ -22,9 +22,9 @@ def temp_time(n, well, tvd, deltaz, zstep):
     c5t5 = heat_coef(well.rhol, well.cl, well.vp, well.h1, well.r1, well.qp, well.lambdal, well.r2, well.h2, well.rhod,
                      well.cd, well.va, well.r3, well.h3, well.qa, well.lambdar, well.lambdarw, well.lambdaw, well.cr,
                      well.cw, well.rhor, well.rhow, well.r4, well.r5, well.rfm, well.lambdac, well.lambdacsr,
-                     well.lambdasr, well.lambdasrfm, well.cc, well.csr, well.rhoc, well.rhosr, well.lambdafm, well.cfm,
-                     well.rhofm, deltaz, deltat, well.lambdasr2, well.lambdasr3, well.lambdacsr2, well.lambdacsr3,
-                     well.lambdasrfm2, well.lambdasrfm3, well.csr2, well.csr3)
+                     well.lambdasr, well.lambdasrfm, well.cc, well.csr, well.rhoc, well.rhosr, well.rhosr2, well.rhosr3,
+                     well.lambdafm, well.cfm, well.rhofm, deltaz, deltat, well.lambdasr2, well.lambdasr3,
+                     well.lambdacsr2, well.lambdacsr3, well.lambdasrfm2, well.lambdasrfm3, well.csr2, well.csr3)
 
     Tdsi, Ta, Tr, Tcsg, Tsr = temp_calc(well.tin, Tdsio, Tdso, Tao, Tcsgo, Tsro, c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t,
                                         c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t,
