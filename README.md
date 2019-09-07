@@ -103,7 +103,9 @@ The code is compound different files as follows:
 
 > **Graph.py** ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time. And another function to plot the temperature profile. Also has a function which create axes for the web server.
 
-> **Main.py** ▷ contains a function to determine the temperature profile at any time and another function to calculate for the stabilization time.
+> **Main.py** ▷ contains **temp_time()** function to get the temperature profile at any time and **stab_time()** to to calculate for the stabilization time.
+
+> **Analysis.py** ▷ contains **param_effect()** to get the effect of fluid circulation, heat source terms and formation temperature on the temperature profile; and **hs_effect()** to get the effect of drill string rotation and fluid friction on the heat source terms.
 
 ### Inputs
 
