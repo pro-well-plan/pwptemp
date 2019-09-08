@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - for continuous updates of web server add FLASK_DEBUG=1
 - run `python -m flask run` to start in pwptemp folder
 - axis plot for the web server in Graph.py
+- Time plot in flask server.py and Graph.py
+- form for entry of timesteps in jinja
+- added __init__.py to test directory for easier test runs
 ### Changed
 ### Fixed
 

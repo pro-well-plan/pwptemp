@@ -45,3 +45,16 @@ def create_plot(ax, step, mw_riser, md, riser=1):
     ax.plot(step['Tfm'], md, 'g', label='Formation')  # Temp. due to gradient vs Depth
     ax.plot(step['Tsr'], md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
     return ax
+
+
+def create_temp_time_plot(ax, finaltime,Tbot,Tout,Tfm):
+
+    # Plotting Tbottom and Tout through time
+    ax.plot(range(finaltime), Tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
+    ax.plot(range(finaltime), Tout, 'r', label='Outlet (Annular)')  # Temp. inside Annulus vs Time
+    ax.axhline(y=Tfm[-1], color='k', label='Formation')  # Formation Temp. vs Time
+    ax.set_xlim(0, finaltime - 1)
+    ax.set_xlabel('Time, h')
+    ax.set_ylabel('Temperature, °C')
+    ax.legend()  # applying the legend
+    return ax
