@@ -1,7 +1,7 @@
 from math import pi
 
 temp_dict = {
-  "tin": 30,
+  "tin": 15,
   "ts": 15,
   "wd": 100,
   "csgco": 500,
