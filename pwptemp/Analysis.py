@@ -1,4 +1,4 @@
-def param_effect(Tdsi, Ta, Tcsg, well):
+def param_effect(Tdsi, Ta, Toh, well):
 
     import math
     # Eq coefficients - Inside Drill String
@@ -8,13 +8,13 @@ def param_effect(Tdsi, Ta, Tcsg, well):
     c3e = (2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2  # East component for fluid inside annular
     c3 = well.qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2)))  # Heat source term for fluid inside annular
 
-    total = (c1z * abs(Tdsi[-1] - Tdsi[-2]) + c1 + c3e * abs(Ta[-1] - Tcsg[-1]) + c3)
+    total = (c1z * abs(Tdsi[-1] - Tdsi[-2]) + c1 + c3e * abs(Ta[-1] - Toh[-1]) + c3)
 
     p1 = c1z * abs(Tdsi[-1] - Tdsi[-2]) / total
     p1 = round(p1*100, 2)  # Effect of the mud circulation
     p2 = (c1 + c3) / total
     p2 = round(p2*100, 2)  # Effect of heat source terms
-    p3 = c3e * abs(Ta[-1] - Tcsg[-1]) / total  # Effect of the formation
+    p3 = c3e * abs(Ta[-1] - Toh[-1]) / total  # Effect of the formation
     p3 = round(p3 * 100, 2)
 
     effect = [p1, p2, p3]
@@ -37,3 +37,10 @@ def hs_effect(well):
     effect = [p1, p2, p3, p4]
 
     return effect
+
+
+def hs_ratio(well):
+
+    result = round(well.qp/well.qa, 2)
+
+    return result

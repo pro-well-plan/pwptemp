@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 
-def plot_temp_time(finaltime,Tbot,Tout,Tfm):
+def plot_temp_time(finaltime, Tbot, Tout, Tfm):
 
     # Plotting Tbottom and Tout through time
     plt.plot(range(finaltime), Tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
@@ -14,7 +14,7 @@ def plot_temp_time(finaltime,Tbot,Tout,Tfm):
     plt.show()
 
 
-def plot_temp_profile(Tdsi,Ta,Tr,Tcsg,Tfm,Tsr,Riser,md,time):
+def plot_temp_profile(Tdsi, Ta, Tr, Tcsg, Tfm, Tsr, Riser, md, time):
 
     # Plotting Temperature PROFILE
     plt.plot(Tdsi, md, c='r', label='Fluid in Drill String')  # Temp. inside Drillpipe vs Depth
@@ -47,7 +47,7 @@ def create_plot(ax, step, mw_riser, md, riser=1):
     return ax
 
 
-def create_temp_time_plot(ax, finaltime,Tbot,Tout,Tfm):
+def create_temp_time_plot(ax, finaltime, Tbot, Tout, Tfm):
 
     # Plotting Tbottom and Tout through time
     ax.plot(range(finaltime), Tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time

@@ -335,7 +335,8 @@ def temp_calc(Tin,Tdsio, Tdso, Tao, Tcsgo, Tsro,c1z,c1e,c1,c1t,c2z,c2e,c2w,c2t,c
     Tr = Tcsg[:Riser]+[None]*(zstep-Riser)
     for x in range(Riser):
         Tcsg[x] = None
+    Toh = [None]*csgi + Tcsg[csgi:]
     for x in range(csgi, zstep):
         Tcsg[x] = None
 
-    return Tdsi, Ta, Tr, Tcsg, Tsr
+    return Tdsi, Ta, Tr, Tcsg, Toh, Tsr

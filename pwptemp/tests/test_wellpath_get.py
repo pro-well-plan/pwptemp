@@ -1,10 +1,10 @@
 from unittest import TestCase
-from pwptemp.WellPath import wellpath
+from pwptemp.WellPath import get
 
 
 class TestWellPath(TestCase):
-    def test_wellpath(self):
-        md, tvd, deltaz, zstep = wellpath(5000)
+    def test_get(self):
+        md, tvd, deltaz, zstep = get(5000)
         self.assertIsInstance(md, range)
         self.assertIsInstance(tvd, list)
         self.assertEqual(len(md), len(tvd))

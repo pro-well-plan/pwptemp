@@ -1,12 +1,12 @@
 from math import pi
 
 temp_dict = {
-  "tin": 15,
+  "tin": 20,
   "ts": 15,
-  "wd": 100,
-  "csgco": 500,
-  "csgso": 2000,
-  "csgio": 4000,
+  "wd": 0,
+  "csgco": 0,
+  "csgso": 0,
+  "csgio": 0,
   "ddi": 0.101,
   "ddo": 0.114,
   "dcsg": 0.216,
@@ -57,7 +57,7 @@ temp_dict = {
   "wob": 22.41,
   "rop": 14.4,
   "an": 2,
-  "mdt": 5000
+  "mdt": 3000
 }
 
 class WellTemperature(object):
@@ -177,7 +177,7 @@ class WellTemperature(object):
         self.an = temp_dict["an"]       # Area of the nozzles, m^2
         self.mdt = temp_dict["mdt"]     # Measured Depth of the Target, m
     # Heat Source Terms
-        self.qp = 2*pi * (self.rpm/60) * self.t * 2 * 0.24 * self.rhol * (self.vp ** 2) * (self.mdt / (self.ddi*127.094*10**6)) * (1/0.24**.5)
+        self.qp = 2*pi * (self.rpm/60) * self.t + 2 * 0.24 * self.rhol * (self.vp ** 2) * (self.mdt / (self.ddi*127.094*10**6)) * (1/0.24**.5)
         self.qa = 0.05*(self.wob*(self.rop/3600)+2*pi*(self.rpm/60)*self.tbit) + (self.rhol/2*9.81)*((self.q/3600)/(0.095*self.an)) \
                 + (2*0.3832*self.mdt/((self.r3-self.r2)*(127.094*10**6)))*((2*(0.7+1)*self.va)/(0.7*pi*(self.r3+self.r2)
                 * (self.r3-self.r2)**2))**0.7

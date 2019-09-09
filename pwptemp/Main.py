@@ -26,7 +26,7 @@ def temp_time(n, well, tvd, deltaz, zstep):
                      well.lambdafm, well.cfm, well.rhofm, deltaz, deltat, well.lambdasr2, well.lambdasr3,
                      well.lambdacsr2, well.lambdacsr3, well.lambdasrfm2, well.lambdasrfm3, well.csr2, well.csr3)
 
-    Tdsi, Ta, Tr, Tcsg, Tsr = temp_calc(well.tin, Tdsio, Tdso, Tao, Tcsgo, Tsro, c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t,
+    Tdsi, Ta, Tr, Tcsg, Toh, Tsr = temp_calc(well.tin, Tdsio, Tdso, Tao, Tcsgo, Tsro, c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t,
                                         c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t,
                                         c5z, c5w, c5e, c5t, c4z1, c4e1, c4w1, c4t1, c5z1, c5w1, c5e1, c5t1, c4z2, c4e2,
                                         c4w2, c4t2, c5z2, c5w2, c5e2, c5t2, c4z3,
@@ -34,7 +34,7 @@ def temp_time(n, well, tvd, deltaz, zstep):
                                         c5e4, c5t4, c4z5, c4e5, c4w5, c4t5, c5z5,
                                         c5w5, c5e5, c5t5, zstep, well.riser, well.csgc, well.csgs, well.csgi)
 
-    return Tdsi, Ta, Tr, Tcsg, Tsr, Tfm, time
+    return Tdsi, Ta, Tr, Tcsg, Toh, Tsr, Tfm, time
 
 
 def stab_time(well, tvd, deltaz, zstep):
@@ -64,7 +64,7 @@ def temp_times(n, x, well, tvd, deltaz, zstep):
 
     temps = []
     for i in range(1, n+1, x):
-        Tdsi, Ta, Tr, Tcsg, Tsr, Tfm, time = temp_time(i, well, tvd, deltaz, zstep)
+        Tdsi, Ta, Tr, Tcsg, Toh, Tsr, Tfm, time = temp_time(i, well, tvd, deltaz, zstep)
         current_temp = [Tdsi, Ta, Tr, Tcsg, Tsr, Tfm, time]
         temps.append(current_temp)
 
