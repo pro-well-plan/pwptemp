@@ -27,7 +27,8 @@ def show_temp_plot():
         session['timesteps'] = [6]
     if 'show_variables' not in session:
         session['show_variables'] = True
-    return render_template('plot.html', timesteps = session['timesteps'], show_variables = session['show_variables'], variables=temp_dict, q=session['q'])
+    timesteps = ','.join(map(str,session['timesteps']))
+    return render_template('plot.html', timesteps = timesteps, show_variables = session['show_variables'], variables=temp_dict, q=session['q'])
 
 @app.route('/plot.png')
 def depth_profile():
