@@ -18,14 +18,16 @@ def show_temp_plot():
     """
     Renders template which calls for figure
     """
+    session['q'] = 50
     if request.method == 'POST':
             steps=request.form['timesteps']
             session['timesteps']=[float(n) for n in steps.split(',')]
+            session['q'] = float(request.form['q'])
     if 'timesteps' not in session:
         session['timesteps'] = [6]
     if 'show_variables' not in session:
         session['show_variables'] = True
-    return render_template('plot.html', timesteps = session['timesteps'], show_variables = session['show_variables'], variables=temp_dict)
+    return render_template('plot.html', timesteps = session['timesteps'], show_variables = session['show_variables'], variables=temp_dict, q=session['q'])
 
 @app.route('/plot.png')
 def depth_profile():
@@ -73,7 +75,10 @@ def plot_depth_profile():
     return fig
 
 def create_default_well():
+    print(session)
     tdata=temp_dict 
+    if 'q' in session:
+        tdata['q'] = session['q']
     well=WellTemperature(tdata)
     md,tvd,deltaz,zstep=wellpath(well.mdt)  # Getting depth values
     return well, md, tvd, deltaz, zstep
