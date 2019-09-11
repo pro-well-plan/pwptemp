@@ -4,7 +4,7 @@
 
 * [Create a Well Profile.](#1.)  
 * [Load a Well Profile.](#2.)
-* [Set and load parameters.](#3.)
+* [Set and load parameters.](#3.Set and load parameters)
 * [Calculating the Well Temperature Distribution for a set circulation time.](#4.)
 * [Calculating the stabilization time of the temperature profile.](#5.)
 * [Calculating the Well Temperature Distributions for n timesteps.](#6.)
