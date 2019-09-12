@@ -24,3 +24,5 @@ Create a vertical well profile.
 >>> zstep
 10
 ```
+
+See the [pwpetmp.WellPath](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.WellPath.md) documentation.
