@@ -10,7 +10,7 @@ def get(mdt):
     zstep = round(mdt/deltaz)  # Number of cells from RKB up to the bottom
 
     tvd = tvd[0::deltaz]
-    md = md[0::deltaz]
+    md = list(md[0::deltaz])
 
     return md, tvd, deltaz, zstep
 
