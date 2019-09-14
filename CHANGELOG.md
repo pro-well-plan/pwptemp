@@ -4,19 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - 2019-09-06
+## [Unreleased] - 2019-09-12
  
 ### Added
+- Functions WellPath.get() and Analysis.hs_ratio()
 - Analysis Module.
 - Testing Module.
-### Changed
-- Stab_time function.
-### Fixed
-- Change of density - Surrounding Space (rhosr)
-
-## [Unreleased] - 2019-08-29
- 
-### Added
 - Web server in server.py, runs default script and returns plot to template
 - Add environment variable FLASK_APP=server.py
 - for continuous updates of web server add FLASK_DEBUG=1
@@ -26,7 +19,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - form for entry of timesteps in jinja
 - added __init__.py to test directory for easier test runs
 ### Changed
+- Stab_time function.
 ### Fixed
+- Change of density - Surrounding Space (rhosr)
 
 ## [v0.0.6] - 2019-08-27
 ### Added
