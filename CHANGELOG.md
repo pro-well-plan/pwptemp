@@ -55,13 +55,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v0.0.1] - 2019-08-21
 ### Added
-### Changed
-- Files distribution for packaging ('pwptemp' in PyPI)
-### Fixed
-
-## [Unreleased] - 2019-08-01
-### Added
 - Riser section in the temperature profile.
 - Surrounding space (from 1st cement sheath up to undisturbed formation point).
-### Changed 
+### Changed
+- Files distribution for packaging ('pwptemp' in PyPI)
 ### Fixed
