@@ -1,26 +1,20 @@
-def get(mdt):
-    #WELLPATH
-    md = range(mdt)  # Measured Depth from RKB, m
-    tvd = []   # True Vertical Depth from RKB, m
+from numpy import interp
 
-    for z in md:
-        tvd.append(z)
-
-    deltaz = 50  # Length of each grid cell, m
-    zstep = round(mdt/deltaz)  # Number of cells from RKB up to the bottom
-
-    tvd = tvd[0::deltaz]
-    md = list(md[0::deltaz])
+def get(mdt, deltaz):
+    #WELLPROFILE for vertical well
+    md = list(range(0, mdt + deltaz, deltaz))  # Measured Depth from RKB, m
+    tvd = md   # True Vertical Depth from RKB, m
+    zstep = len(md)  # Number of cells from RKB up to the bottom
 
     return md, tvd, deltaz, zstep
 
 
-def load(md, tvd, delta_step):
+def load(md, tvd, deltaz):
 
-    deltaz = 50  # Length of each grid cell, m
-    zstep = round(len(md) * delta_step/deltaz)  # Number of cells from RKB up to the bottom
+    md_new = list(range(0, max(md) + deltaz, deltaz))
+    tvd_new = [0]
+    for i in md_new[1:]:
+        tvd_new.append(interp(i, md, tvd))
+    zstep = len(md_new)
 
-    tvd = tvd[0::int(delta_step/deltaz)]
-    md = md[0::int(delta_step/deltaz)]
-
-    return md, tvd, deltaz, zstep
+    return md_new, tvd_new, deltaz, zstep
