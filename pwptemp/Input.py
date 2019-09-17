@@ -1,7 +1,7 @@
 from math import pi
 
 
-def temp_dict(deltaz):
+def tdict(deltaz):
     dict = {"tin": 20, "ts": 15, "wd": 0, "csgco": 0, "csgso": 0, "csgio": 0, "ddi": 0.101, "ddo": 0.114, "dcsg": 0.216,
             "dcsgo": 0.24, "dsr": 0.26, "dsro": 0.6, "dri": 0.45, "dro": 0.5334, "dfm": 2, "dcsgci": 0.63,
             "dcsgco": 0.66, "dcsgsi": 0.41, "dcsgso": 0.44, "tcsr3": 0, "tcem4": 0, "q": 47.696, "lambdal": 0.635,
