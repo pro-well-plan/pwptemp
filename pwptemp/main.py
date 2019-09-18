@@ -1,7 +1,7 @@
 from statistics import mean
-from pwptemp.InitCond import init_cond
-from pwptemp.HeatCoefficients import heat_coef
-from pwptemp.LinearSystem import temp_calc
+from pwptemp.initcond import init_cond
+from pwptemp.heatcoefficients import heat_coef
+from pwptemp.linearsystem import temp_calc
 
 def temp_time(n, well, tvd, deltaz, zstep):
     """

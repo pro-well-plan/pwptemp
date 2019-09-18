@@ -14,7 +14,7 @@ def tdict(deltaz):
     return dict
 
 
-class WellTemperature(object):
+class welltemperature(object):
     def __init__(self, temp_dict):
         self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
         self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C

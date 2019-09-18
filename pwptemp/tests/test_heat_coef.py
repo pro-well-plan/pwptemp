@@ -1,6 +1,6 @@
 from unittest import TestCase
-from pwptemp.HeatCoefficients import heat_coef
-from pwptemp.Input import WellTemperature, temp_dict
+from pwptemp.heatcoefficients import heat_coef
+from pwptemp.input import WellTemperature, temp_dict
 
 
 class TestWellPath(TestCase):

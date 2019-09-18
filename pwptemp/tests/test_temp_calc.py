@@ -1,7 +1,7 @@
 from unittest import TestCase
-from pwptemp.InitCond import init_cond
-from pwptemp.WellPath import wellpath
-from pwptemp.LinearSystem import temp_calc
+from pwptemp.initcond import init_cond
+from pwptemp.wellpath import wellpath
+from pwptemp.linearsystem import temp_calc
 
 
 class TestLinearSystem(TestCase):

@@ -1,7 +1,7 @@
 from unittest import TestCase
-from pwptemp.Input import WellTemperature, temp_dict
-from pwptemp.WellPath import wellpath
-from pwptemp.Main import temp_time
+from pwptemp.input import WellTemperature, temp_dict
+from pwptemp.wellpath import wellpath
+from pwptemp.main import temp_time
 
 
 class TestLinearSystem(TestCase):

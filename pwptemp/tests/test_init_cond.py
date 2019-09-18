@@ -1,6 +1,6 @@
 from unittest import TestCase
-from pwptemp.InitCond import init_cond
-from pwptemp.WellPath import wellpath
+from pwptemp.initcond import init_cond
+from pwptemp.wellpath import wellpath
 
 
 class TestInitCond(TestCase):

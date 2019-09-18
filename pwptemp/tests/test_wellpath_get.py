@@ -1,5 +1,5 @@
 from unittest import TestCase
-from pwptemp.WellPath import get
+from pwptemp.wellpath import get
 
 
 class TestWellPath(TestCase):
