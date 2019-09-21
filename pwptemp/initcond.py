@@ -1,20 +1,20 @@
-def init_cond(Ts,riser,wtg,gt,zstep,tvd,deltaz):
+def init_cond(well):
     # Initial Conditions
-    Tdsio = [Ts]   # Temperature of the fluid inside the drill string at RKB
-    Tdso = [Ts]    # Temperature of the drill string wall at RKB, t=0
-    Tao = [Ts]      # Temperature of the fluid inside the annulus at RKB, t=0
-    Tcsgo = [Ts]    # Temperature of the casing at RKB, t=0   
-    Tsro = [Ts]    # Temperature of the surrounding space at RKB, t=0
-    Tfm = [Ts]      # Temperature of the formation at RKB
+    Tdsio = [well.ts]   # Temperature of the fluid inside the drill string at RKB
+    Tdso = [well.ts]    # Temperature of the drill string wall at RKB, t=0
+    Tao = [well.ts]      # Temperature of the fluid inside the annulus at RKB, t=0
+    Tcsgo = [well.ts]    # Temperature of the casing at RKB, t=0
+    Tsro = [well.ts]    # Temperature of the surrounding space at RKB, t=0
+    Tfm = [well.ts]      # Temperature of the formation at RKB
 
-    for j in range(1, zstep):
+    for j in range(1, well.zstep):
 
-        if j <= riser:
-            Tg = wtg    # Water Thermal Gradient for the Riser section
+        if j <= well.riser:
+            Tg = well.wtg    # Water Thermal Gradient for the Riser section
         else:
-            Tg = gt      # Geothermal Gradient below the Riser section
+            Tg = well.gt      # Geothermal Gradient below the Riser section
 
-        deltaT = Tsro[j - 1] + Tg*(tvd[j]-tvd[j-1])/deltaz
+        deltaT = Tsro[j - 1] + Tg*(well.tvd[j]-well.tvd[j-1])/well.deltaz
         # Generating the Temperature Profile at t=0
         Tdsio.append(deltaT)
         Tdso.append(deltaT)
@@ -22,4 +22,14 @@ def init_cond(Ts,riser,wtg,gt,zstep,tvd,deltaz):
         Tcsgo.append(deltaT)
         Tsro.append(deltaT)
         Tfm.append(deltaT)
-    return Tdsio, Tdso, Tao, Tcsgo, Tsro, Tfm
+
+    class InitCond(object):
+        def __init__(self):
+            self.tdsio = Tdsio
+            self.tdso = Tdso
+            self.tao = Tao
+            self.tcsgo = Tcsgo
+            self.tsro = Tsro
+            self.tfm = Tfm
+
+    return InitCond()

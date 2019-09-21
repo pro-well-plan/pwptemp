@@ -1,5 +1,4 @@
 from math import pi
-from pwptemp.initcond import init_cond
 
 
 def tdict(deltaz):
@@ -140,7 +139,5 @@ def set_well(temp_dict, depths):
             self.qa = 0.05*(self.wob*(self.rop/3600)+2*pi*(self.rpm/60)*self.tbit) + (self.rhol/2*9.81)*((self.q/3600)/(0.095*self.an)) \
                     + (2*0.3832*self.mdt/((self.r3-self.r2)*(127.094*10**6)))*((2*(0.7+1)*self.va)/(0.7*pi*(self.r3+self.r2)
                     * (self.r3-self.r2)**2))**0.7
-
-            self.tfm = init_cond(self.ts, self.riser, self.wtg, self.gt, self.zstep, self.tvd, self.deltaz)[5]
 
     return NewWell()
