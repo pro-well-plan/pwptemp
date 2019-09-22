@@ -39,77 +39,41 @@ You can use the package by creating a new file and by following the instructions
    
    > Option 2: Go to the terminal and type `pip install pwptemp`
    
-2. Importing the dictionary and creating a new instance WellTemperature:
+2. Import pwptemp:
 ```
-from pwptemp.Input import WellTemperature, temp_dict
-
-tdata = temp_dict
-well = WellTemperature(tdata)
+import pwptemp
 ```
-
-3. Defining wellpath:
+   
+3. Import the dictionary with default values:
 ```
-from pwptemp.WellPath import wellpath
-
-md, tvd, deltaz, zstep = wellpath(well.mdt)  # Getting depth values
+tdata = pwptemp.input.tdict(deltaz)
 ```
 
-4. Calculating temperature distribution:
+4. Define wellpath (create a vertical well):
 ```
-from pwptemp.Main import temp_time
-
-#For circulation time = 5 hours
-Tdsi, Ta, Tr, Tcsg, Tsr, Tfm, time = temp_time(5, well, tvd, deltaz, zstep)
+depths = pwptemp.wellpath.get(target_depth, deltaz)
 ```
 
-5. Plotting Temperature profile:
+5. Create a new well instance:
 ```
-from pwptemp.Graph import plot_temp_profile
-
-plot_temp_profile(Tdsi, Ta, Tr, Tcsg, Tfm, Tsr, well.riser, md)
+well = pwptemp.input.set_well(tdata, depths)
 ```
 
-6. Calculating Stabilization Time (Circulating):
+6. Calculating temperature distribution:
 ```
-from pwptemp.Main import stab_time
-
-finaltime, Tbot, Tout = stab_time(well, tvd, deltaz, zstep)
+temp_distribution = pwptemp.main.temp_time(circulation_time, well)
 ```
+*circulation_time in hours
 
-7. Plotting Temperature at bottom/outlet through circulating time:
+7. Plotting Temperature profile:
 ```
-from pwptemp.Graph import plot_temp_time
-
-plot_temp_time(finaltime, Tbot, Tout, Tfm)
+pwptemp.graph.plot_temp_profile(temp_distribution, well)
 ```
 
-### Web Visualization
-A Flask server runs from `server.py`
-Add environment variable `FLASK_APP=server.py` and run `python -m flask run` from the pwptemp folder and open your browser for visualization.
-
-### Code Distribution
-
-The code is compound different files as follows:
-
-> **Wellpath.py** ▷ contains a function to define the MD, and TVD values from the wellpath.
-
-> **Input.py** ▷ creates a class (WellTemperature) to have access to the parameters of the case.
-
-> **InitCond.py** ▷ defines the initial and boundary conditions.
-
-> **HeatCoefficients.py** ▷ contains a function to calculate the coefficients for the heat tranfer equations that will be used.
-
-> **LinearSystem.py** ▷ contains a function to generate the entire temperature profile. 
-
-> **Graph.py** ▷ contains a function to plot Tfm, Ta(bottom), Ta(outlet) vs time. And another function to plot the temperature profile. Also has a function which create axes for the web server.
-
-> **Main.py** ▷ contains **temp_time()** function to get the temperature profile at any time and **stab_time()** to to calculate for the stabilization time.
-
-> **Analysis.py** ▷ contains **param_effect()** to get the effect of fluid circulation, heat source terms and formation temperature on the temperature profile; and **hs_effect()** to get the effect of drill string rotation and fluid friction on the heat source terms.
 
 ### Inputs
 
-Around 43 data [inputs](inputs.md) (such as depths, diameters, temperatures, densities and operation parameters) are involved in pwptemp. However default values are provided in order to only change the parameters that the user wants to load.
+Around 43 data [inputs](https://github.com/pro-well-plan/pwptemp/blob/master/physics/inputs.md) (such as depths, diameters, temperatures, densities and operation parameters) are involved in pwptemp. However default values are provided in order to only change the parameters that the user wants to load.
 
 ### Outputs
 
