@@ -1,20 +1,19 @@
 from unittest import TestCase
-from pwptemp.input import WellTemperature, temp_dict
-from pwptemp.wellpath import wellpath
-from pwptemp.main import temp_time
+import pwptemp
 
 
 class TestLinearSystem(TestCase):
     def test_temp_time(self):
-        well = WellTemperature(temp_dict)
-        md, tvd, deltaz, zstep = wellpath(5000)
-        tdsi, ta, tr, tcsg, tsr, tfm, time = temp_time(5, well, tvd, deltaz, zstep)
-        self.assertEqual(len(tdsi), len(ta), len(tr))
-        self.assertEqual(len(tcsg), len(tsr), len(tfm))
-        self.assertEqual(time, 5)
-        self.assertIsInstance(tdsi, list)
-        self.assertIsInstance(ta, list)
-        self.assertIsInstance(tr, list)
-        self.assertIsInstance(tcsg, list)
-        self.assertIsInstance(tsr, list)
-        self.assertIsInstance(tfm, list)
+        tdata = pwptemp.input.tdict(50)
+        depths = pwptemp.wellpath.get(3000, 50)
+        well = pwptemp.input.set_well(tdata, depths)
+        td = pwptemp.main.temp_time(24, well)
+        self.assertEqual(len(td.tdsi), len(td.ta), len(td.tr))
+        self.assertEqual(len(td.tcsg), len(td.tsr), len(td.tfm))
+        self.assertEqual(td.time, 24)
+        self.assertIsInstance(td.tdsi, list)
+        self.assertIsInstance(td.ta, list)
+        self.assertIsInstance(td.tr, list)
+        self.assertIsInstance(td.tcsg, list)
+        self.assertIsInstance(td.tsr, list)
+        self.assertIsInstance(td.tfm, list)

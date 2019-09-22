@@ -1,15 +1,14 @@
 from unittest import TestCase
-from pwptemp.input import WellTemperature, temp_dict
-from pwptemp.wellpath import wellpath
-from pwptemp.main import stab_time
+import pwptemp
 
 
 class TestLinearSystem(TestCase):
     def test_stab_time(self):
-        well = WellTemperature(temp_dict)
-        md, tvd, deltaz, zstep = wellpath(5000)
-        finaltime, Tbot, Tout = stab_time(well, tvd, deltaz, zstep)
-        self.assertEqual(finaltime, len(Tbot), len(Tout))
-        self.assertIsInstance(finaltime, int)
-        self.assertIsInstance(Tbot, list)
-        self.assertIsInstance(Tout, list)
+        tdata = pwptemp.input.tdict(50)
+        depths = pwptemp.wellpath.get(3000, 50)
+        well = pwptemp.input.set_well(tdata, depths)
+        st = pwptemp.main.stab_time(well)
+        self.assertEqual(st.finaltime, len(st.tbot), len(st.tout))
+        self.assertIsInstance(st.finaltime, int)
+        self.assertIsInstance(st.tbot, list)
+        self.assertIsInstance(st.tout, list)

@@ -60,7 +60,7 @@ def stab_time(well):
             self.finaltime = finaltime
             self.tbot = tbot
             self.tout = tout
-            self.tfm = well.tfm
+            self.tfm = init_cond(well).tfm
 
     return StabTime()
 

@@ -1,13 +1,13 @@
 from unittest import TestCase
-from pwptemp.wellpath import get, load
+import pwptemp
 
 
 class TestWellPath(TestCase):
     def test_load(self):
-        mdo, tvdo, deltazo, zstepo = get(5000)
-        md, tvd, deltaz, zstep = load(mdo, tvdo, deltazo)
-        self.assertIsInstance(md, range)
-        self.assertIsInstance(tvd, list)
-        self.assertEqual(len(md), len(tvd))
-        self.assertEqual(deltaz, 50)
-        self.assertEqual(zstep, len(md))
+        D = pwptemp.wellpath.get(3000, 50)
+        newD = pwptemp.wellpath.load(D.md, D.tvd, D.deltaz)
+        self.assertIsInstance(newD.md, list)
+        self.assertIsInstance(newD.tvd, list)
+        self.assertEqual(len(newD.md), len(newD.tvd))
+        self.assertEqual(newD.deltaz, 50)
+        self.assertEqual(newD.zstep, len(newD.md))
