@@ -273,6 +273,7 @@ def temp_calc(well, initcond, heatcoeff):
     class TempCalc(object):
         def __init__(self):
             self.tdsi = Tdsi
+            self.tds = Tds
             self.ta = Ta
             self.tr = Tr
             self.tcsg = Tcsg

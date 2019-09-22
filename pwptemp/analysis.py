@@ -1,8 +1,11 @@
-def param_effect(Tdsi, Ta, Toh, well):
+def param_effect(temp_distribution, well):
 
     import math
     # Eq coefficients - Inside Drill String
     deltaz = 50
+    Tdsi = temp_distribution.tdsi
+    Ta = temp_distribution.ta
+    Toh = temp_distribution.toh
     c1z = ((well.rhol * well.cl * well.vp) / deltaz) / 2  # Vertical component for fluid inside drill string
     c1 = well.qp / (math.pi * (well.r1 ** 2))  # Heat source term for fluid inside drill string
     c3e = (2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2  # East component for fluid inside annular
@@ -17,9 +20,13 @@ def param_effect(Tdsi, Ta, Toh, well):
     p3 = c3e * abs(Ta[-1] - Toh[-1]) / total  # Effect of the formation
     p3 = round(p3 * 100, 2)
 
-    effect = [p1, p2, p3]
+    class ParametersEffect(object):
+        def __init__(self):
+            self.flow = p1
+            self.hs = p2
+            self.fm = p3
 
-    return effect
+    return ParametersEffect()
 
 
 def hs_effect(well):
@@ -34,9 +41,14 @@ def hs_effect(well):
     p3 = round(p3 * 100, 2)  # Effect of Drill String Rotation in Heat Source Term Qa
     p4 = round((100 - p3), 2)  # Effect of Friction in Heat Source Term Qa
 
-    effect = [p1, p2, p3, p4]
+    class HeatSourceEffect(object):
+        def __init__(self):
+            self.ds_rot1 = p1
+            self.fric1 = p2
+            self.ds_rot2 = p3
+            self.fric2 = p4
 
-    return effect
+    return HeatSourceEffect()
 
 
 def hs_ratio(well):
