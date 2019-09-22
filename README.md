@@ -113,7 +113,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 * **Muhammad Suleman** - *Initial work* - [msfazal](https://github.com/msfazal)
 
 
-See also the list of [contributors](https://github.com/jcamiloangarita/WT/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/jcamiloangarita/WT/graphs/contributors) involved in this project.
 
 ## History ##
 Pwptemp was initially written and is maintained by [Pro Well Plan
@@ -124,3 +124,6 @@ free software community.
 ## License
 
 This project is licensed under the GNU Lesser General Public License v3.0 - see the [LICENSE](LICENSE.md) file for details
+
+
+*for further information contact juan@prowellplan.com*
