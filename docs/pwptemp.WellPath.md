@@ -1,4 +1,4 @@
-## pwptemp.WellPath ##
+## pwptemp.wellpath ##
 
-* [WellPath.get](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.WellPath.get.md)
-* [WellPath.load](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.WellPath.load.md)
+* [wellpath.get](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.wellpath.get.md)
+* [wellpath.load](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.wellpath.load.md)
