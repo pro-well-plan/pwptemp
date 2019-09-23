@@ -24,6 +24,7 @@ def temp_time(n, well):
     class TempDist(object):
         def __init__(self):
             self.tdsi = tc.tdsi
+            self.tds = tc.tds
             self.ta = tc.ta
             self.tr = tc.tr
             self.tcsg = tc.tcsg
