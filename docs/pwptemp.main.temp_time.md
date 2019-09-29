@@ -1,6 +1,6 @@
-# pwptemp.main.temp_time(n, well) #
+# pwptemp.main.temp_time(*n, well*) #
 
-Create a vertical well profile.
+Generate the well temperature profile for a certain circulation time **n**.
 
 > **Parameters:**
 * **n: int** - Circulation time, h.
