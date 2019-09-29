@@ -9,7 +9,7 @@ def tdict(deltaz):
             "lambdaw": 0.6, "cl": 3713, "cc": 469, "ccem": 2000, "cd": 400, "cr": 464, "cw": 4000, "cfm": 800,
             "h1": 1800, "h2": 2000, "h3": 200, "h3r": 200, "rhol": 1198, "rhod": 7600, "rhoc": 7800, "rhor": 7800,
             "rhofm": 2245, "rhow": 1029, "rhocem": 2700, "gt": 0.0238, "wtg": -0.005, "rpm": 100, "t": 2, "tbit": 1.35,
-            "wob": 22.41, "rop": 14.4, "an": 2, "mdt": 3000}
+            "wob": 22.41, "rop": 14.4, "an": 2}
 
     return dict
 
@@ -133,7 +133,7 @@ def set_well(temp_dict, depths):
             self.wob = temp_dict["wob"]     # Weight on bit, kN
             self.rop = temp_dict["rop"]     # Rate of Penetration, m/h
             self.an = temp_dict["an"]       # Area of the nozzles, m^2
-            self.mdt = temp_dict["mdt"]     # Measured Depth of the Target, m
+            self.mdt = depths.md[-1]     # Measured Depth of the Target, m
         # Heat Source Terms
             self.qp = 2*pi * (self.rpm/60) * self.t + 2 * 0.24 * self.rhol * (self.vp ** 2) * (self.mdt / (self.ddi*127.094*10**6)) * (1/0.24**.5)
             self.qa = 0.05*(self.wob*(self.rop/3600)+2*pi*(self.rpm/60)*self.tbit) + (self.rhol/2*9.81)*((self.q/3600)/(0.095*self.an)) \

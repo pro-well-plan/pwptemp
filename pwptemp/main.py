@@ -1,4 +1,5 @@
 from statistics import mean
+import numpy as np
 from pwptemp.initcond import init_cond
 from pwptemp.heatcoefficients import heat_coef
 from pwptemp.linearsystem import temp_calc
@@ -6,19 +7,17 @@ from pwptemp.linearsystem import temp_calc
 
 def temp_time(n, well):
     """
-    :param n: # circulating time, h
-    :return: circulation time values
+    :param n:
+    :param well:
+    :return:
     """
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
     tstep = 1
     deltat = tcirc / tstep
-
     ic = init_cond(well)
-
     hc = heat_coef(well, deltat)
-
     tc = temp_calc(well, ic, hc)
 
     class TempDist(object):
@@ -69,9 +68,9 @@ def stab_time(well):
 def temp_times(n, x, well):
 
     temps = []
-    for i in range(1, n+1, x):
+    for i in list(np.arange(1, n+1, x)):
         x = temp_time(i, well)
-        current_temp = [x.tdsi, x.ta, x.tr, x.tcsg, x.tsr, x.tfm, x.time]
+        current_temp = x
         temps.append(current_temp)
 
     return temps

@@ -26,7 +26,7 @@ def plot_temp_profile(temp_distribution, well):
     plt.plot(temp_distribution.tsr, well.md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
     plt.xlabel('Temperature, °C')
     plt.ylabel('Depth, m')
-    title = 'Temperature Profile at %i hours' % temp_distribution.time
+    title = 'Temperature Profile at %1.1f hours' % temp_distribution.time
     plt.title(title)
     plt.ylim(plt.ylim()[::-1])  # reversing y axis
     plt.legend()  # applying the legend
