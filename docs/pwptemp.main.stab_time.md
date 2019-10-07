@@ -13,5 +13,18 @@ a **StabTime** instance with the following features:
 * **.tout: list** - Outlet temperatures (every hour).
 * **.tfm: list** - Formation temperature.
 
+## Example ##
+
+```
+>>> stabilization = pwptemp.main.stab_time(well)
+>>> type(stabilization.finaltime)
+<class 'int'>
+>>> type(stabilization.tbot)
+<class 'list'>
+>>> type(stabilization.tout)
+<class 'list'>
+>>> type(stabilization.tfm)
+<class 'list'>
+```
 
 See the [pwpetmp.main](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.main.md) documentation.

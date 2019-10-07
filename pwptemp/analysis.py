@@ -47,12 +47,6 @@ def hs_effect(well):
             self.fric1 = p2
             self.ds_rot2 = p3
             self.fric2 = p4
+            self.hsr = round(well.qp/well.qa, 2)  #Pipe-Annular heat source ratio
 
     return HeatSourceEffect()
-
-
-def hs_ratio(well):
-
-    result = round(well.qp/well.qa, 2)
-
-    return result

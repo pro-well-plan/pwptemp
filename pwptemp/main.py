@@ -68,9 +68,8 @@ def stab_time(well):
 def temp_times(n, x, well):
 
     temps = []
-    for i in list(np.arange(1, n+1, x)):
-        x = temp_time(i, well)
-        current_temp = x
+    for i in list(np.arange(x, n+x, x)):
+        current_temp = temp_time(i, well)
         temps.append(current_temp)
 
     return temps

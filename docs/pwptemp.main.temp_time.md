@@ -19,4 +19,28 @@ a **TempDist** instance with the following features:
 * **.tfm: list** - Temperature values (formation).
 * **.time: int** - Circulation time, h.
 
+## Example ##
+
+```
+>>> temp_distribution = pwptemp.main.temp_time(5, well)  #for 5 hours of drilling fluid circulation
+>>> type(temps.tdsi)
+<class 'list'>
+>>> type(temps.tds)
+<class 'list'>
+>>> type(temps.ta)
+<class 'list'>
+>>> type(temps.tr)
+<class 'list'>
+>>> type(temps.tcsg)
+<class 'list'>
+>>> type(temps.toh)
+<class 'list'>
+>>> type(temps.tsr)
+<class 'list'>
+>>> type(temps.tfm)
+<class 'list'>
+>>> temps.time
+5
+```
+
 See the [pwpetmp.main](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.main.md) documentation.
