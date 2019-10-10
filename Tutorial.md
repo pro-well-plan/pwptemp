@@ -6,8 +6,7 @@
 * [Load a Well Profile.](#load-a-well-profile)
 * [Set and load parameters.](#set-and-load-parameters)
 * [Calculating.](#calculating)
-* [Plotting](#plotting)
-* [Effects.](#effects)
+* [Analysis.](#analysis)
 
 ## Create a Well Profile 
 At first we will need the well profile (TVD and MD), the function pwp.wellPath.get() allow us to generate it for a vertical well case 
@@ -65,7 +64,7 @@ for 10 hours divided in 1 hour per timestep.
 > pwptemp.graph.plot_temp_profile(temps[3], well)
 > ![](https://user-images.githubusercontent.com/52009346/66596777-c3454380-eb9d-11e9-8c14-28f378c69ab0.png)
 
-## Effects
+## Analysis
 
 ### Calculating the effect of main parameters on the Temperature Distribution
 
