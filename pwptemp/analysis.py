@@ -34,12 +34,15 @@ def hs_effect(well):
     import math
     pi = math.pi
     rps = well.rpm / 60
-    p1 = 2*pi*rps*well.t / well.qp
+    total = (well.qp + well.qa)
+    qp = round((well.qp/total)*100, 2)
+    qa = round((well.qa/total)*100, 2)
+    p1 = 2*pi*rps*well.t / total
     p1 = round(p1*100, 2)  # Effect of Drill String Rotation in Heat Source Term Qp
-    p2 = round((100 - p1), 2)  # Effect of Friction in Heat Source Term Qp
-    p3 = 0.05*(well.wob * well.rop + 2 * pi * rps * well.tbit) / well.qa
+    p2 = qp - p1  # Effect of Friction in Heat Source Term Qp
+    p3 = 0.05*(well.wob * well.rop + 2 * pi * rps * well.tbit) / (well.qp + well.qa)
     p3 = round(p3 * 100, 2)  # Effect of Drill String Rotation in Heat Source Term Qa
-    p4 = round((100 - p3), 2)  # Effect of Friction in Heat Source Term Qa
+    p4 = qa - p3  # Effect of Friction in Heat Source Term Qa
 
     class HeatSourceEffect(object):
         def __init__(self):
@@ -50,3 +53,22 @@ def hs_effect(well):
             self.hsr = round(well.qp/well.qa, 2)  #Pipe-Annular heat source ratio
 
     return HeatSourceEffect()
+
+def plot(effect, how):
+    import matplotlib.pyplot as plt
+    if how == 1:
+        labels = ['mud circulation', 'heat source terms', 'formation temperature']
+        effects = [effect.flow, effect.hs, effect.fm]
+        plt.pie(effects, startangle=90, autopct='%1.1f%%')
+        plt.legend(labels, loc=0)
+        plt.title('Effect of the parameters in the temperature calculation')
+        plt.show()
+
+    if how == 2:
+        labels = ['pipe rotation in Qp', 'friction in Qp', 'pipe rotation in Qa', 'friction in Qa']
+        effects = [effect.ds_rot1, effect.fric1, effect.ds_rot2, effect.fric2]
+        plt.pie(effects, startangle=90)
+        plt.legend(loc=0, labels=['%s, %1.1f %%' % (l, s) for l, s in zip(labels, effects)])
+        title = 'Effect of the drill string rotation and friction in heat source terms. Qp/Qa = %1.2f' % effect.hsr
+        plt.title(title)
+        plt.show()
