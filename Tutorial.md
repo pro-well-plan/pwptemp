@@ -75,7 +75,7 @@ for 10 hours divided in 1 hour per timestep.
 > effect1 = param_effect(temp, well)
 
 > pwptemp.analysis.plot(effect1, 1)
-> !![](https://user-images.githubusercontent.com/52009346/66598876-4d8fa680-eba2-11e9-8d8c-ecd1de472b1b.png)
+> ![](https://user-images.githubusercontent.com/52009346/66598876-4d8fa680-eba2-11e9-8d8c-ecd1de472b1b.png)
 
 ### Calculating the effect of main parameters on the Heat Source Terms
 
