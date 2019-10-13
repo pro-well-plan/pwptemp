@@ -2,7 +2,7 @@ from unittest import TestCase
 import pwptemp
 
 
-class TestLinearSystem(TestCase):
+class TestMain(TestCase):
     def test_temp_time(self):
         tdata = pwptemp.input.tdict(50)
         depths = pwptemp.wellpath.get(3000, 50)
