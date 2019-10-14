@@ -17,29 +17,49 @@ When the drilling fluid is flowing inside the drill string, following three reas
 (2) heat convection of the drilling fluid and the inner wall of drill string;
 (3) heat generated due to the friction losses of drilling fluid
 
-Heat transfer control equation inside the drill string is 
+Heat transfer control equation inside the drill string is:
 
 <img src="https://user-images.githubusercontent.com/52009346/65387268-fedeb180-dd45-11e9-86c9-9b93fd685e60.PNG" width="500" 
 height="60"> 
 
-Eq. 2 Drill string wall
+# Drill string wall
+The changes in internal energy of drill string volume element are caused by following three reasons:
+(1) heat conduction of the drill string in the axial direction;
+(2) heat convection of the inner wall of drill string and drilling fluid inside the drill string;
+(3) heat convection of the outer wall of drill string and the annular drilling fluid.
+
+Heat transfer control equation of the drill string is given as:
 
 <img src="https://user-images.githubusercontent.com/52009346/65387279-1cac1680-dd46-11e9-8e37-8b1a58b9b039.PNG" width="550" 
 height="60"> 
 
 
-Eq. 3 Fluid in the annular
+# In the annulas
+When the drilling fluid is flowing in the annulus, changes in internal energy of drilling fluid volume element are caused by four reasons:
+(1) heat transfer within the drilling fluid because of flowing up in the annular in the axial direction;
+(2) heat convection of drilling fluid and casing or surrounding formation;
+(3) heat convection of drilling fluid and outside wall of drill string;
+(4) heat produced due to the frictional flow losses of drilling fluid.
+
+Heat transfer control equation in the annulus is given by the following equation:
 
 <img src="https://user-images.githubusercontent.com/52009346/65387272-0d2ccd80-dd46-11e9-9211-18501db10b53.PNG" width="650" 
 height="60"> 
 
-Eq. 4 Section 4 (First layer of casing / formation)
+# In First layer of casing
+Changes in internal energy of volume element of the first layer of casing are caused by three reasons:
+(1) heat conduction of the first layer of casing in the axial direction;
+(2) heat transfer between the first layer of casing and the first layer of cement sheath;
+(3) heat convection between the first layer of casing and the annulus drilling fluid.
+
+Heat transfer control equation of the first layer of casing is given by the following equation:
 
 <img src="https://user-images.githubusercontent.com/52009346/65387283-2897d880-dd46-11e9-8269-fa4d2567ae81.PNG" width="500" 
 height="60"> 
 
 
-Eq. 5 Surrounding Space (Casings and Cement Sheaths / formation)
+# In Surrounding Space (Casings and Cement Sheaths / formation)
+Changes in internal energy of volume element of casing, cement sheath, and surrounding formation are caused by heat conduction of the ith layer in the axial direction and heat transfer between adjacent layers in the radial direction. On the basis of the law of conservation of energy, heat transfer control equation of the ith layer is given by the following equation:
 
 <img src="https://user-images.githubusercontent.com/52009346/65387288-30577d00-dd46-11e9-8070-fe0998752dfe.PNG" width="400" 
 height="60"> 
