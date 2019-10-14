@@ -37,9 +37,9 @@
 |35| Riser Density |kg/m3|
 |36| Formation Density|kg/m3| 
 |37| Seawater Density |kg/m3|
-|38| Surrouding Average Density |kg/m3|
+|38| Average Density of Surrouding Formation|kg/m3|
 |39| Weight on bit (WOB)|kN|
 |40| Rate of Penetration (ROP)|m/h|
-|41| Area of Nuzzles|m^2|
-|42| Reynolds|none|
+|41| Area of Drill Bit Nozzles|m^2|
+|42| Reynolds number|unit less|
 |43| Measured Depth at Target|m|
