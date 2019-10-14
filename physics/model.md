@@ -1,6 +1,23 @@
 # Heat Transfer Model
+The temperature distribution of wellbore and surrounding formation has a significant influence on safe and fast drilling. This transient temperature model investigate the temperature distribution of wellbores during circulation and was established based on the energy conservation law. The model was discretized by the finite difference method and solved by the successive over relaxation
+iterative method.
 
-Eq. 1 Fluid in the drill string
+Heat convection and heat transfer are the main forms of heat exchange of the drilling fluid and the surrounding formation.The formation temperature increases with the increase of vertical depth. In the vertical section, the surrounding formation temperature increases linearly with the increase of the well depth. In the inclined section, the surrounding formation temperature increases more and more slowly as the well depth increases. In the horizontal section, the formation temperature does not change as the well depth increases.
+
+# Assumptions
+(1) The wellbore is a regular cylinder;
+
+(2) Drilling fluid is incompressible, and the density, specific heat capacity, and thermal conductivity of drilling fluid are constant
+
+(3) When the drilling fluid flows in the drill string and in the annulus, only the velocity in the axial direction is taken into account, irrespective of the velocity in the radial direction.
+
+# Inside the drill string
+When the drilling fluid is flowing inside the drill string, following three reasons causes the change in internal energy of drilling fluid:
+(1) heat transfer within the drilling fluid because of flowing down inside the drill string in the axial direction;
+(2) heat convection of the drilling fluid and the inner wall of drill string;
+(3) heat generated due to the friction losses of drilling fluid
+
+Heat transfer control equation inside the drill string is 
 
 <img src="https://user-images.githubusercontent.com/52009346/65387268-fedeb180-dd45-11e9-86c9-9b93fd685e60.PNG" width="500" 
 height="60"> 
