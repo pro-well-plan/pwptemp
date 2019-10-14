@@ -12,13 +12,13 @@
 |10| Riser Outer Diameter|m|
 |11| Nearby Formation Diameter|m|
 |12| Circulation Rate| m^3/h |
-|13| Fluid Thermal Conductivity | W/(m°C)|
-|14| Casing Thermal Conductivity | W/(m°C)|
-|15| Drill Pipe Thermal Conductivity|W/(m°C)|
-|16| Comprehensive Csg-Fm Thermal Conductivity|W/(m°C)|
-|17| Riser Thermal Conductivity |W/(m°C)|
-|18| Comprehensive Riser-Water Thermal Conductivity|W/(m°C)|
-|19| Seawater Thermal Conductivity|W/(m°C)|
+|13| Fluid Thermal Conductivity | W/(m°K) or W/(m°C)|
+|14| Casing Thermal Conductivity | W/(m°K) or W/(m°C)|
+|15| Drill Pipe Thermal Conductivity|W/(m°K) or W/(m°C)|
+|16| Comprehensive Csg-Fm Thermal Conductivity|W/(m°K) or W/(m°C)|
+|17| Riser Thermal Conductivity |W/(m°K) or W/(m°C)|
+|18| Comprehensive Riser-Water Thermal Conductivity|W/(m°K) or W/(m°C)|
+|19| Seawater Thermal Conductivity|W/(m°K) or W/(m°C)|
 |20| Fluid Heat Capacity|J/(kg°C)|
 |21| Casing Heat Capacity|J/(kg°C)|
 |22| Drill Pipe Heat Capacity|J/(kg°C)| 
@@ -43,4 +43,3 @@
 |41| Area of Nuzzles|m^2|
 |42| Reynolds|none|
 |43| Measured Depth at Target|m|
-
