@@ -21,7 +21,8 @@ def plot_temp_profile(temp_distribution, well):
     plt.plot(temp_distribution.ta, well.md, 'b', label='Fluid in Annulus')
     if well.riser > 0:
         plt.plot(temp_distribution.tr, well.md, 'g', label='Riser')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tcsg, well.md, 'c', label='Casing')  # Temp. due to gradient vs Depth
+    if well.csgi > 0:
+        plt.plot(temp_distribution.tcsg, well.md, 'c', label='Casing')  # Temp. due to gradient vs Depth
     plt.plot(temp_distribution.tfm, well.md, 'g', label='Formation')  # Temp. due to gradient vs Depth
     plt.plot(temp_distribution.tsr, well.md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
     plt.xlabel('Temperature, °C')

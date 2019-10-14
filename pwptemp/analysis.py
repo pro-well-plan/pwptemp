@@ -54,6 +54,7 @@ def hs_effect(well):
 
     return HeatSourceEffect()
 
+
 def plot(effect, how):
     import matplotlib.pyplot as plt
     if how == 1:
