@@ -64,6 +64,7 @@ Changes in internal energy of volume element of casing, cement sheath, and surro
 <img src="https://user-images.githubusercontent.com/52009346/65387288-30577d00-dd46-11e9-8070-fe0998752dfe.PNG" width="400" 
 height="60"> 
 
+# whereas
 
 ![dens](https://user-images.githubusercontent.com/52009346/65387330-9d6b1280-dd46-11e9-8b45-5b75667ac428.PNG)
 
