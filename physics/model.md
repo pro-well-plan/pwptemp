@@ -59,7 +59,7 @@ height="60">
 
 
 # In Surrounding Space (Casings and Cement Sheaths / formation)
-Changes in internal energy of volume element of casing, cement sheath, and surrounding formation are caused by heat conduction of the ith layer in the axial direction and heat transfer between adjacent layers in the radial direction. On the basis of the law of conservation of energy, heat transfer control equation of the ith layer is given by the following equation:
+Changes in internal energy of volume element of casing, cement sheath, and surrounding formation are caused by heat conduction in the axial direction and heat transfer between adjacent layers in the radial direction. On the basis of the law of conservation of energy, heat transfer control equation in sorrounding space is given by the following equation:
 
 <img src="https://user-images.githubusercontent.com/52009346/65387288-30577d00-dd46-11e9-8070-fe0998752dfe.PNG" width="400" 
 height="60"> 
