@@ -34,7 +34,7 @@ Heat transfer control equation of the drill string is given as:
 height="60"> 
 
 
-# In the annulas
+# In the annulus
 When the drilling fluid is flowing in the annulus, changes in internal energy of drilling fluid volume element are caused by four reasons:
 (1) heat transfer within the drilling fluid because of flowing up in the annular in the axial direction;
 (2) heat convection of drilling fluid and casing or surrounding formation;
