@@ -10,6 +10,8 @@ def plot_temp_time(stab_data):
     plt.xlim(0, stab_data.finaltime - 1)
     plt.xlabel('Time, h')
     plt.ylabel('Temperature, °C')
+    title = 'Temperature behavior before stabilization (%1.1f hours)' % stab_data.finaltime
+    plt.title(title)
     plt.legend()  # applying the legend
     plt.show()
 
