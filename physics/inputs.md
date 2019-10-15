@@ -1,4 +1,4 @@
-| # | Input   |    Value    |    Units      | 
+| # | Input   |    Value    ||    Units      | 
 |---|-------|:-------------:|
 |1| Inlet Fluid Temperature|  20  ||°C|
 |2| Surface Temperature|  15  ||°C|
