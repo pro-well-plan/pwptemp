@@ -2,7 +2,7 @@
 |-|-----------------------------------------------------------------------|--------|---------|
 |1| Inlet Fluid Temperature                                               |  20    |°C       |
 |2| Surface Temperature                                                   |  15    |°C       |
-|3| Well Depth                                                            |  5000  |m        |
+|3| Well Depth                                                            |  -     |m        |
 |4| Water Depth                                                           |    0   |m        |
 |5| Drill Pipe Inner Diameter                                             |  0.101 |m        |
 |6| Drill Pipe Outer Diameter                                             |  0.104 |m        |
@@ -42,4 +42,4 @@
 |40| Rate of Penetration (ROP)                                            |  14.4  |m/h      |
 |41| Area of Drill Bit Nozzles                                            |  2     |m^2      |
 |42| Reynolds number                                                      |  -     |unit less|
-|43| Measured Depth at Target                                             |  2000  |m        |
+|43| Measured Depth at Target                                             |  -     |m        |
