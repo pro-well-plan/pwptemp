@@ -1,14 +1,24 @@
-![OSP](https://user-images.githubusercontent.com/52009346/62771366-56c69f00-ba9d-11e9-9c86-a868bf3a1180.png)
+![](https://user-images.githubusercontent.com/52009346/62771366-56c69f00-ba9d-11e9-9c86-a868bf3a1180.png)
 
 ## Index ##
 
+* [Authors](#authors)
 * [Introduction](#introduction)
 * [Getting started](#getting-started)
 * [Tutorial](#tutorial)
 * [Versioning](#versioning)
-* [Authors](#authors)
 * [History](#history)
 * [License](#license)
+
+
+## Contributors
+
+* **Juan Camilo Gonzalez Angarita** - [jcamiloangarita](https://github.com/jcamiloangarita)
+* **Muhammad Suleman** - [msfazal](https://github.com/msfazal)
+* **Eirik Lyngvi** - [elyngvi](https://github.com/elyngvi)
+* **Magnus Tvedt** - [magnusbj](https://github.com/magnusbj)
+
+See the full list of [contributors](https://github.com/pro-well-plan/pwptemp/graphs/contributors) involved in this project.
 
 ## Introduction
 Pwptemp is a small LGPL licensed library for easy calculation of the
@@ -105,15 +115,6 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, 
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/pro-well-plan/pwptemp/tags). 
-
-## Authors
-
-* **Eirik Lyngvi** - *Initial work* - [elyngvi](https://github.com/elyngvi)
-* **Juan Camilo Gonzalez Angarita** - *Initial work* - [jcamiloangarita](https://github.com/jcamiloangarita)
-* **Muhammad Suleman** - *Initial work* - [msfazal](https://github.com/msfazal)
-
-
-See also the list of [contributors](https://github.com/jcamiloangarita/WT/graphs/contributors) involved in this project.
 
 ## History ##
 Pwptemp was initially written and is maintained by [Pro Well Plan
