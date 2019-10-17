@@ -4,8 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - 2019-09-12
- 
+
+## [v0.0.8] - 2019-10-16
+### Added
+- Documentation.
+### Changed
+- Physics Module (descriptions regarding modelling).
+- Tutorial.
+- Tests.
+### Fixed
+- Minor issues.
+
+## [v0.0.7] - 2019-09-23
 ### Added
 - Functions WellPath.get() and Analysis.hs_ratio()
 - Analysis Module.
@@ -19,8 +29,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - form for entry of timesteps in jinja
 - added __init__.py to test directory for easier test runs
 ### Changed
+- Web visualization app moved to [new repo](https://github.com/pro-well-plan/WebVisual-for-pwptemp) 
 - Stab_time function.
 ### Fixed
+- Title on plot_temp_time()
 - Change of density - Surrounding Space (rhosr)
 
 ## [v0.0.6] - 2019-08-27
