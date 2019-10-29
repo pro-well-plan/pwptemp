@@ -1,9 +1,9 @@
-from numpy import interp
+from numpy import interp, arange
 
 
 def get(mdt, deltaz):
-    #WELLPROFILE for vertical well
-    md = list(range(0, mdt + deltaz, deltaz))  # Measured Depth from RKB, m
+    # WELLPROFILE for vertical well
+    md = list(arange(0, mdt + deltaz, deltaz))  # Measured Depth from RKB, m
     tvd = md   # True Vertical Depth from RKB, m
     zstep = len(md)  # Number of cells from RKB up to the bottom
 
@@ -19,7 +19,7 @@ def get(mdt, deltaz):
 
 def load(md, tvd, deltaz):
 
-    md_new = list(range(0, max(md) + deltaz, deltaz))
+    md_new = list(arange(0, max(md) + deltaz, deltaz))
     tvd_new = [0]
     for i in md_new[1:]:
         tvd_new.append(interp(i, md, tvd))
