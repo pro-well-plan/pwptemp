@@ -41,7 +41,7 @@ For example, let's do it for 24 hours.
 
 > temp = pwptemp.main.temp_time(24, well)
 
-> pwptemp.graph.plot_temp_profile(temp, well)
+> pwptemp.plot.profile(temp)
 >![](https://user-images.githubusercontent.com/52009346/66595749-e0791280-eb9b-11e9-822e-3155dad6c64a.png)
 
 Here we get an instance with the temperature values for the different sections (inside drill string, drill string wall, riser wall, 
@@ -53,7 +53,7 @@ the final time in hours, a list with the temperature value at bottom for each ho
 
 > stabilization = pwptemp.main.stab_time(well)
 
-> pwptemp.graph.plot_temp_time(stabilization)
+> pwptemp.plot.behavior(stabilization)
 > ![](https://user-images.githubusercontent.com/52009346/66596338-018e3300-eb9d-11e9-8373-90853f2398a0.png)
 
 ## Calculating the Well Temperature Distributions for n timesteps
@@ -62,10 +62,10 @@ for 10 hours divided in 1 hour per timestep.
 
 > temps = pwptemp.main.temp_times(10, 1, well)
 
-> pwptemp.graph.plot_temp_profile(temps[0], well)
+> pwptemp.plot.profile(temps[0])
 > ![](https://user-images.githubusercontent.com/52009346/66596694-a577de80-eb9d-11e9-8e07-5a5627eb6846.png)
 
-> pwptemp.graph.plot_temp_profile(temps[3], well)
+> pwptemp.plot.profile(temps[3])
 > ![](https://user-images.githubusercontent.com/52009346/66596777-c3454380-eb9d-11e9-8c14-28f378c69ab0.png)
 
 ## Analysis

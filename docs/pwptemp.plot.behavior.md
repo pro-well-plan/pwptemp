@@ -1,4 +1,4 @@
-# pwptemp.input.graph(*stab_data*) #
+# pwptemp.plot.behavior(*stab_data*) #
 
 Generate a plot for the temperature behavior until stabilization.
 
@@ -9,4 +9,11 @@ Generate a plot for the temperature behavior until stabilization.
 
 a plot of the well temperature behavior during circulation until reaching stabilization.
 
-See the [pwptemp.graph](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.graph.md) documentation.
+## Example ##
+
+```
+>>> pwptemp.plot.behavior(stab_data)
+```
+![](https://user-images.githubusercontent.com/52009346/68157467-fdf88c80-ff4d-11e9-8028-f95043a4778f.png)
+
+See the [pwptemp.plot](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.plot.md) documentation.

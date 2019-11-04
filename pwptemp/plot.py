@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 
-def plot_temp_time(stab_data):
+def behavior(stab_data):
 
     # Plotting Tbottom and Tout through time
     plt.plot(range(stab_data.finaltime), stab_data.tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
@@ -16,17 +16,20 @@ def plot_temp_time(stab_data):
     plt.show()
 
 
-def plot_temp_profile(temp_distribution, well):
+def profile(temp_distribution):
 
     # Plotting Temperature PROFILE
-    plt.plot(temp_distribution.tdsi, well.md, c='r', label='Fluid in Drill String')  # Temp. inside Drillpipe vs Depth
-    plt.plot(temp_distribution.ta, well.md, 'b', label='Fluid in Annulus')
-    if well.riser > 0:
-        plt.plot(temp_distribution.tr, well.md, 'g', label='Riser')  # Temp. due to gradient vs Depth
-    if well.csg1 > 0:
-        plt.plot(temp_distribution.tcsg, well.md, 'c', label='Casing')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tfm, well.md, 'g', label='Formation')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tsr, well.md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
+    md = temp_distribution.md
+    riser = temp_distribution.riser
+    csg1 = temp_distribution.csg1
+    plt.plot(temp_distribution.tdsi, md, c='r', label='Fluid in Drill String')  # Temp. inside Drillpipe vs Depth
+    plt.plot(temp_distribution.ta, md, 'b', label='Fluid in Annulus')
+    if riser > 0:
+        plt.plot(temp_distribution.tr, md, 'g', label='Riser')  # Temp. due to gradient vs Depth
+    if csg1 > 0:
+        plt.plot(temp_distribution.tcsg, md, 'c', label='Casing')  # Temp. due to gradient vs Depth
+    plt.plot(temp_distribution.tfm, md, 'g', label='Formation')  # Temp. due to gradient vs Depth
+    plt.plot(temp_distribution.tsr, md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
     plt.xlabel('Temperature, °C')
     plt.ylabel('Depth, m')
     title = 'Temperature Profile at %1.1f hours' % temp_distribution.time

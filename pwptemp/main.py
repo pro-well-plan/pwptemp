@@ -31,6 +31,9 @@ def temp_time(n, well):
             self.tsr = tc.tsr
             self.tfm = ic.tfm
             self.time = time
+            self.md = well.md
+            self.riser = well.riser
+            self.csg1 = well.csg1
 
     return TempDist()
 

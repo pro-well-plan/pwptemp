@@ -56,7 +56,7 @@ import pwptemp
    
 3. Import the dictionary with default values:
 ```
-tdata = pwptemp.input.tdict(deltaz)
+tdata = pwptemp.input.tdict()
 ```
 
 4. Define wellpath (create a vertical well):
@@ -77,7 +77,7 @@ temp_distribution = pwptemp.main.temp_time(circulation_time, well)
 
 7. Plotting Temperature profile:
 ```
-pwptemp.graph.plot_temp_profile(temp_distribution, well)
+pwptemp.plot.profile(temp_distribution)
 ```
 
 
