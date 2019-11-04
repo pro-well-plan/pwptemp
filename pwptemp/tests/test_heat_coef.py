@@ -5,7 +5,7 @@ import pwptemp
 class TestWellPath(TestCase):
     def test_wellpath(self):
         depths = pwptemp.wellpath.get(100, 50)
-        well = pwptemp.input.set_well(pwptemp.input.tdict(50), depths)
+        well = pwptemp.input.set_well(pwptemp.input.tdict(), depths)
         hc = pwptemp.heatcoefficients.heat_coef(well, 1)
         p = (hc.c1z, hc.c1e, hc.c1, hc.c1t, hc.c2z, hc.c2e, hc.c2w, hc.c2t, hc.c3z, hc.c3e, hc.c3w, hc.c3, hc.c3t,
              hc.c4z, hc.c4e, hc.c4w, hc.c4t, hc.c5z, hc.c5w, hc.c5e, hc.c5t, hc.c4z1, hc.c4e1, hc.c4w1, hc.c4t1,

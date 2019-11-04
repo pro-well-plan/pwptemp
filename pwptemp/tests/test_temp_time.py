@@ -4,7 +4,7 @@ import pwptemp
 
 class TestMain(TestCase):
     def test_temp_time(self):
-        tdata = pwptemp.input.tdict(50)
+        tdata = pwptemp.input.tdict()
         depths = pwptemp.wellpath.get(3000, 50)
         well = pwptemp.input.set_well(tdata, depths)
         td = pwptemp.main.temp_time(24, well)

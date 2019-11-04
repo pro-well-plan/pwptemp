@@ -4,7 +4,7 @@ import pwptemp
 
 class TestInitCond(TestCase):
     def test_init_cond(self):
-        tdata = pwptemp.input.tdict(10)
+        tdata = pwptemp.input.tdict()
         depths = pwptemp.wellpath.get(100, 10)
         well = pwptemp.input.set_well(tdata, depths)
         ic = pwptemp.initcond.init_cond(well)
