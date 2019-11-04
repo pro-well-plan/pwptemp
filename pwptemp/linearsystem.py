@@ -43,7 +43,7 @@ def temp_calc(well, initcond, heatcoeff):
             c5e = heatcoeff.c5e2
             c5t = heatcoeff.c5t2
 
-        if j == well.csgc:
+        if j == well.csg3:
             # Casing:
             c4z = heatcoeff.c4z3
             c4e = heatcoeff.c4e3
@@ -55,7 +55,7 @@ def temp_calc(well, initcond, heatcoeff):
             c5e = heatcoeff.c5e3
             c5t = heatcoeff.c5t3
 
-        if j == well.csgs:
+        if j == well.csg2:
             # Casing:
             c4z = heatcoeff.c4z4
             c4e = heatcoeff.c4e4
@@ -67,7 +67,7 @@ def temp_calc(well, initcond, heatcoeff):
             c5e = heatcoeff.c5e4
             c5t = heatcoeff.c5t4
 
-        if j == well.csgi:
+        if j == well.csg1:
             # Casing:
             c4z = heatcoeff.c4z5
             c4e = heatcoeff.c4e5
@@ -266,8 +266,8 @@ def temp_calc(well, initcond, heatcoeff):
     Tr = Tcsg[:well.riser]+[None]*(well.zstep-well.riser)
     for x in range(well.riser):
         Tcsg[x] = None
-    Toh = [None]*well.csgi + Tcsg[well.csgi:]
-    for x in range(well.csgi, well.zstep):
+    Toh = [None]*well.csg1 + Tcsg[well.csg1:]
+    for x in range(well.csg1, well.zstep):
         Tcsg[x] = None
 
     class TempCalc(object):

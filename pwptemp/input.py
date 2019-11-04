@@ -1,17 +1,104 @@
 from math import pi
 
 
-def tdict(deltaz):
-    dict = {"tin": 20, "ts": 15, "wd": 0, "csgco": 0, "csgso": 0, "csgio": 0, "ddi": 0.101, "ddo": 0.114, "dcsg": 0.216,
-            "dcsgo": 0.24, "dsr": 0.26, "dsro": 0.6, "dri": 0.45, "dro": 0.5334, "dfm": 2, "dcsgci": 0.63,
-            "dcsgco": 0.66, "dcsgsi": 0.41, "dcsgso": 0.44, "tcsr3": 0, "tcem4": 0, "q": 47.696, "lambdal": 0.635,
-            "lambdac": 43.3, "lambdacem": 0.7, "lambdad": 40, "lambdafm": 2.249, "lambdar": 15.49, "lambdarw": 5,
-            "lambdaw": 0.6, "cl": 3713, "cc": 469, "ccem": 2000, "cd": 400, "cr": 464, "cw": 4000, "cfm": 800,
-            "h1": 1800, "h2": 2000, "h3": 200, "h3r": 200, "rhol": 1198, "rhod": 7600, "rhoc": 7800, "rhor": 7800,
-            "rhofm": 2245, "rhow": 1029, "rhocem": 2700, "gt": 0.0238, "wtg": -0.005, "rpm": 100, "t": 2, "tbit": 1.35,
-            "wob": 22.41, "rop": 14.4, "an": 2}
+def tdict():
+    dict = {"tin": 20, "ts": 15, "wd": 0, "csg3": 0, "csg2": 0, "csg1": 0, "ddi": 0.101, "ddo": 0.114, "dcsg1i": 0.216,
+            "dcsg1o": 0.24, "dsr": 0.26, "dsro": 0.6, "dri": 0.45, "dro": 0.5334, "dfm": 2, "dcsg3i": 0.63,
+            "dcsg3o": 0.66, "dcsg2i": 0.41, "dcsg2o": 0.44, "tcsr3": 0, "tcem4": 0, "q": 47.696, "lambdal": 0.635,
+            "lambdac": 43.3, "lambdacem": 0.7, "lambdad": 40, "lambdafm": 2.249, "lambdar": 15.49, "lambdaw": 0.6,
+            "cl": 3713, "cc": 469, "ccem": 2000, "cd": 400, "cr": 464, "cw": 4000, "cfm": 800, "h1": 1800,
+            "h2": 2000, "h3": 200, "h3r": 200, "rhol": 1198, "rhod": 7600, "rhoc": 7800, "rhor": 7800, "rhofm": 2245,
+            "rhow": 1029, "rhocem": 2700, "gt": 0.0238, "wtg": -0.005, "rpm": 100, "t": 2, "tbit": 1.35, "wob": 22.41,
+            "rop": 14.4, "an": 2}
 
     return dict
+
+
+def info(about='all'):
+    print("Use the ID of a parameter to change the default value (e.g. tdict['tin']=30 to change the fluid inlet "
+          "temperature from the default value to 30° Celsius)" + '\n')
+
+    casings_parameters = 'PARAMETERS RELATED TO CASINGS/RISER' + '\n' + \
+                         'csg1: shoe depth of the first casing from the well to the formation, m' + '\n' + \
+                         'csg2: shoe depth of the second casing from the well to the formation, m' + '\n' + \
+                         'csg3: shoe depth of the third casing from the well to the formation, m' + '\n' + \
+                         'ddi: drill string inner diameter, m' + '\n' + \
+                         'ddo: drill string outer diameter, m' + '\n' + \
+                         'dcsg1i: inner diameter of the first casing from the well to the formation, m' + '\n' + \
+                         'dcsg1o: outer diameter of the first casing from the well to the formation, m' + '\n' + \
+                         'dcsg2i: inner diameter of the second casing from the well to the formation, m' + '\n' + \
+                         'dcsg2o: outer diameter of the second casing from the well to the formation, m' + '\n' + \
+                         'dcsg3i: inner diameter of the third casing from the well to the formation, m' + '\n' + \
+                         'dcsg3o: outer diameter of the third casing from the well to the formation, m' + '\n' + \
+                         'dri: riser inner diameter, m' + '\n' + \
+                         'dro: riser outer diameter, m' + '\n'
+
+    conditions_parameters = 'PARAMETERS RELATED TO SIMULATION CONDITIONS' + '\n' + \
+                            'ts: surface temperature, °C' + '\n' + \
+                            'wd: water depth, m' + '\n' + \
+                            'dsr: surrounding space inner diameter, m' + '\n' + \
+                            'dsro: surrounding space outer diameter, m' + '\n' + \
+                            'dfm: undisturbed formation diameter, m' + '\n'
+
+    heatcoeff_parameters = 'PARAMETERS RELATED TO HEAT COEFFICIENTS' + '\n' + \
+                           'lambdal: fluid - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdac: casing - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdacem: cement - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdad: drill pipe - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdafm: formation - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdar: riser - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdaw: water - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'cl: fluid - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cc: casing - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'ccem: cement - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cd: drill pipe - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cr: riser - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cw: water - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cfm: formation - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'h1: drill pipe inner - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
+                           'h2: drill pipe outer - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
+                           'h3: casing inner - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
+                           'h3r: riser inner - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
+                           'gt: geothermal gradient, °C/m' + '\n' + \
+                           'wtg: seawater thermal gradient, °C/m' + '\n'
+
+    densities_parameters = 'PARAMETERS RELATED TO DENSITIES' + '\n' + \
+                           'rhol: fluid density, kg/m3' + '\n' + \
+                           'rhod: drill pipe density, kg/m3' + '\n' + \
+                           'rhoc: casing density, kg/m3' + '\n' + \
+                           'rhor: riser density, kg/m3' + '\n' + \
+                           'rhofm: formation density, kg/m3' + '\n' + \
+                           'rhow: seawater density, kg/m3' + '\n' + \
+                           'rhocem: cement density, kg/m3' + '\n'
+
+    operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
+                             'tin: fluid inlet temperature, °C' + '\n' + \
+                             'q: flow rate, m3/h' + '\n' + \
+                             'rpm: revolutions per minute' + '\n' + \
+                             't: torque on the drill string, kN*m' + '\n' + \
+                             'tbit: torque on the bit, kN*m' + '\n' + \
+                             'wob: reight on bit, kN' + '\n' + \
+                             'rop: rate of penetration, m/h' + '\n' + \
+                             'an: area of the nozzles, m2' + '\n'
+
+    if about == 'casings':
+        print(casings_parameters)
+
+    if about == 'conditions':
+        print(conditions_parameters)
+
+    if about == 'heatcoeff':
+        print(heatcoeff_parameters)
+
+    if about == 'densities':
+        print(densities_parameters)
+
+    if about == 'operational':
+        print(operational_parameters)
+
+    if about == 'all':
+        print(casings_parameters + '\n' + conditions_parameters + '\n' + heatcoeff_parameters + '\n' +
+              densities_parameters + '\n' + operational_parameters)
 
 
 def set_well(temp_dict, depths):
@@ -25,38 +112,38 @@ def set_well(temp_dict, depths):
             self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
             self.wd = temp_dict["wd"]  # Water Depth, m
             self.riser = round(self.wd / self.deltaz)  # number of grid cells for the riser
-            self.csgc = round(temp_dict["csgco"] / self.deltaz)  # Shoe Depth of Conductor Casing, m
-            self.csgs = round(temp_dict["csgso"] / self.deltaz)  # Shoe Depth of Surface Casing, m
-            self.csgi = round(temp_dict["csgio"] / self.deltaz)  # Shoe Depth of Intermediate Casing, m
+            self.csg3 = round(temp_dict["csg3"] / self.deltaz)  # Shoe Depth of Conductor Casing, m
+            self.csg2 = round(temp_dict["csg2"] / self.deltaz)  # Shoe Depth of Surface Casing, m
+            self.csg1 = round(temp_dict["csg1"] / self.deltaz)  # Shoe Depth of Intermediate Casing, m
             # Wellbore Geometry
             self.ddi = temp_dict["ddi"]  # Drill String Inner  Diameter, m
             self.ddo = temp_dict["ddo"]  # Drill String Outer Diameter, m
-            self.dcsg = temp_dict["dcsg"]  # Casing Inner Diameter, m
-            self.dcsgo = temp_dict["dcsgo"]  # Casing Outer Diameter, m
+            self.dcsg1i = temp_dict["dcsg1i"]  # Casing Inner Diameter, m
+            self.dcsg1o = temp_dict["dcsg1o"]  # Casing Outer Diameter, m
             self.dsr = temp_dict["dsr"]  # Surrounding Space Inner Diameter, m
             self.dsro = temp_dict["dsro"]  # Surrounding Space Outer Diameter, m
             self.dri = temp_dict["dri"]  # Riser diameter Inner Diameter, m
             self.dro = temp_dict["dro"]  # Riser diameter Outer Diameter, m
             self.dfm = temp_dict["dfm"]  # Undisturbed Formation Diameter, m
-            self.dcsgci = temp_dict["dcsgci"]   # Conductor casing inner diameter, m
-            self.dcsgco = temp_dict["dcsgco"]   # Conductor casing outer diameter, m
-            self.dcemo = self.dcsgco+0.03  # First Cement sheath outer diameter, m
-            self.dcsgsi = temp_dict["dcsgsi"]   # Surface casing inner diameter, m
-            self.dcsgso = temp_dict["dcsgso"]   # Surface casing outer diameter, m
+            self.dcsg3i = temp_dict["dcsg3i"]   # Conductor casing inner diameter, m
+            self.dcsg3o = temp_dict["dcsg3o"]   # Conductor casing outer diameter, m
+            self.dcemo = self.dcsg3o+0.03  # First Cement sheath outer diameter, m
+            self.dcsg2i = temp_dict["dcsg2i"]   # Surface casing inner diameter, m
+            self.dcsg2o = temp_dict["dcsg2o"]   # Surface casing outer diameter, m
             self.r1 = self.ddi / 2  # Drill String Inner  Radius, m
             self.r2 = self.ddo / 2  # Drill String Outer Radius, m
-            self.r3 = self.dcsg / 2  # Casing Inner Radius, m
+            self.r3 = self.dcsg1i / 2  # Casing Inner Radius, m
             self.r3r = self.dri / 2  # Riser Inner Radius, m
             self.r4r = self.dro / 2  # Riser Outer Radius, m
-            self.r4 = self.dcsgo / 2  # Surrounding Space Inner Radius m
+            self.r4 = self.dcsg1o / 2  # Surrounding Space Inner Radius m
             self.r5 = self.dcemo / 2  # Surrounding Space Outer Radius, m
             self.rfm = self.dfm / 2  # Undisturbed Formation Radius, m
-            self.tcsr = (self.dcsgco-self.dcsgci)/2 + (self.dcsgso-self.dcsgsi)/2
-            self.tcem = (self.dcsgsi-self.dcsgo)/2 + (self.dcsgci-self.dcsgso)/2 + (self.dcemo-self.dcsgco)/2
-            self.tcsr2 = (self.dcsgso-self.dcsgsi)/2
-            self.tcem2 = (self.dcsgsi-self.dcsgo)/2 + (self.dcsgci-self.dcsgso)/2
+            self.tcsr = (self.dcsg3o-self.dcsg3i)/2 + (self.dcsg2o-self.dcsg2i)/2
+            self.tcem = (self.dcsg2i-self.dcsg1o)/2 + (self.dcsg3i-self.dcsg2o)/2 + (self.dcemo-self.dcsg3o)/2
+            self.tcsr2 = (self.dcsg2o-self.dcsg2i)/2
+            self.tcem2 = (self.dcsg2i-self.dcsg1o)/2 + (self.dcsg2i-self.dcsg2o)/2
             self.tcsr3 = temp_dict["tcsr3"]
-            self.tcem3 = (self.dcsgsi - self.dcsgo) / 2
+            self.tcem3 = (self.dcsg2i - self.dcsg1o) / 2
             self.tcem4 = temp_dict["tcem4"]
         # Flow Rate
             self.q = temp_dict["q"]     # Flow rate, m^3/h
@@ -85,8 +172,9 @@ def set_well(temp_dict, depths):
             self.lambdasrfm3 = (self.lambdac * (self.r5 - self.r4) + self.lambdasr3 * (self.rfm - self.r5)) / (
                         self.rfm - self.r4)  # Comprehensive Surrounding space - Formation
             self.lambdar = temp_dict["lambdar"]     # Riser
-            self.lambdarw = temp_dict["lambdarw"]       # Comprehensive Riser - Seawater
             self.lambdaw = temp_dict["lambdaw"]     # Seawater
+            self.lambdarw = (self.lambdar * (self.r4r - self.r3r) + self.lambdaw * (self.r5 - self.r4r)) / (
+                        self.r5 - self.r3r)       # Comprehensive Riser - Seawater
         # Specific Heat Capacity, J/(kg*°C)
             self.cl = temp_dict["cl"]       # Fluid
             self.cc = temp_dict["cc"]    # Casing
