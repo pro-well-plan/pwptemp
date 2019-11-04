@@ -1,4 +1,4 @@
-# pwptemp.input.graph(*temp_distribution, well*) #
+# pwptemp.graph.plot_temp_profile(*temp_distribution, well*) #
 
 Generate a plot for the well temperature distribution results.
 
@@ -9,5 +9,12 @@ Generate a plot for the well temperature distribution results.
 > **Returns:** 
 
 a plot of the well temperature distribution.
+
+## Example ##
+
+```
+>>> pwptemp.graph.plot_temp_profile(temp_distribution, well)
+```
+![](https://user-images.githubusercontent.com/52009346/68156946-fedcee80-ff4c-11e9-82a8-9a969c1d64f5.png)
 
 See the [pwptemp.graph](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.graph.md) documentation.
