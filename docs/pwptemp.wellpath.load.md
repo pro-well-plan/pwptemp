@@ -31,4 +31,4 @@ a **Well_Depths** instance with the following features
 20
 ```
 
-See the [pwpetmp.wellpath](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.wellpath.md) documentation.
+See the [pwptemp.wellpath](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.wellpath.md) documentation.

@@ -27,4 +27,4 @@ a **StabTime** instance with the following features:
 <class 'list'>
 ```
 
-See the [pwpetmp.main](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.main.md) documentation.
+See the [pwptemp.main](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.main.md) documentation.

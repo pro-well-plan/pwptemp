@@ -43,4 +43,4 @@ a **TempDist** instance with the following features:
 5
 ```
 
-See the [pwpetmp.main](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.main.md) documentation.
+See the [pwptemp.main](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.main.md) documentation.

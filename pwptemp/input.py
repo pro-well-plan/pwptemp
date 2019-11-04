@@ -16,7 +16,9 @@ def tdict():
 
 def info(about='all'):
     print("Use the ID of a parameter to change the default value (e.g. tdict['tin']=30 to change the fluid inlet "
-          "temperature from the default value to 30° Celsius)" + '\n')
+          "temperature from the default value to 30° Celsius)")
+    print('Notice that the information is provided as follows:' + '\n' +
+          'parameter ID: general description, units' + '\n')
 
     casings_parameters = 'PARAMETERS RELATED TO CASINGS/RISER' + '\n' + \
                          'csg1: shoe depth of the first casing from the well to the formation, m' + '\n' + \

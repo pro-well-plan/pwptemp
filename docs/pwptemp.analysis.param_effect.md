@@ -26,4 +26,4 @@ a **ParametersEffect** instance with the following features:
 21.65
 ```
 
-See the [pwpetmp.analysis](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.analysis.md) documentation.
+See the [pwptemp.analysis](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.analysis.md) documentation.

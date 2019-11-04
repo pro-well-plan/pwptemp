@@ -11,4 +11,4 @@ Load and create a new well case.
 a **NewWell** instance with loaded and calculated data
 
 
-See the [pwpetmp.input](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.input.md) documentation.
+See the [pwptemp.input](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.input.md) documentation.

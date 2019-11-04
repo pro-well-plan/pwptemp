@@ -66,4 +66,4 @@ a dictionary with the following default values:
 * **an:** 2
 
 
-See the [pwpetmp.input](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.input.md) documentation.
+See the [pwptemp.input](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.input.md) documentation.

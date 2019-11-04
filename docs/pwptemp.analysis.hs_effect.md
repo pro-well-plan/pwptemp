@@ -30,4 +30,4 @@ a **HeatSourceEffect** instance with the following features:
 0.05
 ```
 
-See the [pwpetmp.analysis](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.analysis.md) documentation.
+See the [pwptemp.analysis](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.analysis.md) documentation.
