@@ -3,7 +3,7 @@ from math import pi
 
 def tdict():
     dict = {"tin": 20, "ts": 15, "wd": 0, "csg3": 0, "csg2": 0, "csg1": 0, "ddi": 0.101, "ddo": 0.114, "dcsg1i": 0.216,
-            "dcsg1o": 0.24, "dsr": 0.26, "dsro": 0.6, "dri": 0.45, "dro": 0.5334, "dfm": 2, "dcsg3i": 0.63,
+            "dcsg1o": 0.24,  "dri": 0.45, "dro": 0.5334, "dfm": 2, "dcsg3i": 0.63,
             "dcsg3o": 0.66, "dcsg2i": 0.41, "dcsg2o": 0.44, "tcsr3": 0, "tcem4": 0, "q": 47.696, "lambdal": 0.635,
             "lambdac": 43.3, "lambdacem": 0.7, "lambdad": 40, "lambdafm": 2.249, "lambdar": 15.49, "lambdaw": 0.6,
             "cl": 3713, "cc": 469, "ccem": 2000, "cd": 400, "cr": 464, "cw": 4000, "cfm": 800, "h1": 1800,
@@ -122,14 +122,14 @@ def set_well(temp_dict, depths):
             self.ddo = temp_dict["ddo"]  # Drill String Outer Diameter, m
             self.dcsg1i = temp_dict["dcsg1i"]  # Casing Inner Diameter, m
             self.dcsg1o = temp_dict["dcsg1o"]  # Casing Outer Diameter, m
-            self.dsr = temp_dict["dsr"]  # Surrounding Space Inner Diameter, m
-            self.dsro = temp_dict["dsro"]  # Surrounding Space Outer Diameter, m
             self.dri = temp_dict["dri"]  # Riser diameter Inner Diameter, m
             self.dro = temp_dict["dro"]  # Riser diameter Outer Diameter, m
             self.dfm = temp_dict["dfm"]  # Undisturbed Formation Diameter, m
             self.dcsg3i = temp_dict["dcsg3i"]   # Conductor casing inner diameter, m
             self.dcsg3o = temp_dict["dcsg3o"]   # Conductor casing outer diameter, m
             self.dcemo = self.dcsg3o+0.03  # First Cement sheath outer diameter, m
+            self.dsr = temp_dict["dcsg1o"]  # Surrounding Space Inner Diameter, m
+            self.dsro = self.dcemo  # Surrounding Space Outer Diameter, m
             self.dcsg2i = temp_dict["dcsg2i"]   # Surface casing inner diameter, m
             self.dcsg2o = temp_dict["dcsg2o"]   # Surface casing outer diameter, m
             self.r1 = self.ddi / 2  # Drill String Inner  Radius, m
@@ -147,12 +147,12 @@ def set_well(temp_dict, depths):
             self.tcsr3 = temp_dict["tcsr3"]
             self.tcem3 = (self.dcsg2i - self.dcsg1o) / 2
             self.tcem4 = temp_dict["tcem4"]
-        # Flow Rate
+            # Flow Rate
             self.q = temp_dict["q"]     # Flow rate, m^3/h
             self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600        # Fluid velocity through the annular
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600       # Fluid velocity through the drill pipe
-        # Heat Coefficients
-        # Thermal Conductivity, W/(m*°C)
+            # Heat Coefficients
+            # Thermal Conductivity, W/(m*°C)
             self.lambdal = temp_dict["lambdal"]     # Fluid
             self.lambdac = temp_dict["lambdac"]    # Casing
             self.lambdacem = temp_dict["lambdacem"]     #Cement
@@ -177,7 +177,7 @@ def set_well(temp_dict, depths):
             self.lambdaw = temp_dict["lambdaw"]     # Seawater
             self.lambdarw = (self.lambdar * (self.r4r - self.r3r) + self.lambdaw * (self.r5 - self.r4r)) / (
                         self.r5 - self.r3r)       # Comprehensive Riser - Seawater
-        # Specific Heat Capacity, J/(kg*°C)
+            # Specific Heat Capacity, J/(kg*°C)
             self.cl = temp_dict["cl"]       # Fluid
             self.cc = temp_dict["cc"]    # Casing
             self.ccem = temp_dict["ccem"]     # Cement
@@ -188,12 +188,12 @@ def set_well(temp_dict, depths):
             self.csr2 = (self.cc * (self.tcsr2) + self.ccem * (self.tcem2)) / (self.r5 - self.r4)  # Surrounding space
             self.csr3 = (self.cc * (self.tcsr3) + self.ccem * (self.tcem3)) / (self.r5 - self.r4)  # Surrounding space
             self.cfm = temp_dict["cfm"]       # Formation
-        # Convective Heat Transfer Coefficient, W/(m^2*°C)
+            # Convective Heat Transfer Coefficient, W/(m^2*°C)
             self.h1 = temp_dict["h1"]       # Drill Pipe inner wall
             self.h2 = temp_dict["h2"]       # Drill Pipe outer wall
             self.h3 = temp_dict["h3"]       # Casing inner wall
             self.h3r = temp_dict["h3r"]    # Riser inner wall
-        # Densities, kg/m3
+            # Densities, kg/m3
             self.rhol = temp_dict["rhol"]       # Fluid
             self.rhod = temp_dict["rhod"]       # Drill Pipe
             self.rhoc = temp_dict["rhoc"]       # Casing
@@ -213,10 +213,10 @@ def set_well(temp_dict, depths):
             xcem = self.tcem3 / (self.r5 - self.r4)
             xfm = 1 - xcsr - xcem
             self.rhosr3 = xcsr*self.rhoc + xcem*self.rhocem + xfm*self.rhofm  # Surrounding Space
-        # Thermal Gradients
+            # Thermal Gradients
             self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
-        # Operational Parameters
+            # Operational Parameters
             self.rpm = temp_dict["rpm"]    # Revolutions per minute
             self.t = temp_dict["t"]     # Torque on the drill string, kN*m
             self.tbit = temp_dict["tbit"]       # Torque on the bit, kN*m
@@ -224,10 +224,36 @@ def set_well(temp_dict, depths):
             self.rop = temp_dict["rop"]     # Rate of Penetration, m/h
             self.an = temp_dict["an"]       # Area of the nozzles, m^2
             self.mdt = depths.md[-1]     # Measured Depth of the Target, m
-        # Heat Source Terms
+            # Heat Source Terms
             self.qp = 2*pi * (self.rpm/60) * self.t + 2 * 0.24 * self.rhol * (self.vp ** 2) * (self.mdt / (self.ddi*127.094*10**6)) * (1/0.24**.5)
             self.qa = 0.05*(self.wob*(self.rop/3600)+2*pi*(self.rpm/60)*self.tbit) + (self.rhol/2*9.81)*((self.q/3600)/(0.095*self.an)) \
                     + (2*0.3832*self.mdt/((self.r3-self.r2)*(127.094*10**6)))*((2*(0.7+1)*self.va)/(0.7*pi*(self.r3+self.r2)
                     * (self.r3-self.r2)**2))**0.7
+
+            # Raise Errors:
+            if self.dcsg1i > self.dcsg1o or self.dcsg2i > self.dcsg2o or self.dcsg3i > self.dcsg3o or \
+                    self.dri > self.dro or self.dsr > self.dsro or self.ddi > self.ddo:
+                raise ValueError('Inner diameters must be smaller than outer diameters.')
+
+            if self.csg1 < self.csg2 or self.csg2 < self.csg3:
+                raise ValueError('Shoe depths of casings are wrong. They should be csg1 > csg2 > csg3.')
+
+            if self.ddo > self.dcsg1i:
+                raise ValueError('Drill string diameter must be smaller than the casing 1 diameter.')
+
+            if self.dcsg1o > self.dcsg2i:
+                raise ValueError('Casing 1 diameter must be smaller than the casing 2 diameter.')
+
+            if self.dcsg2o > self.dcsg3i:
+                raise ValueError('Casing 2 diameter must be smaller than the casing 3 diameter.')
+
+            if self.dcsg3o > self.dsro:
+                raise ValueError('Casing 3 diameter must be smaller than the surrounding space diameter.')
+
+            if self.dro > self.dsro:
+                raise ValueError('Riser diameter must be smaller than the surrounding space diameter.')
+
+            if self.dsro > self.dfm:
+                raise ValueError('Surrounding space diameter must be smaller than the undisturbed formation diameter.')
 
     return NewWell()
