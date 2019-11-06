@@ -1,8 +1,9 @@
-def param_effect(temp_distribution, well):
+def param_effect(temp_distribution, well, md_length=1):
 
     import math
     # Eq coefficients - Inside Drill String
     deltaz = 50
+    n_cells = well.zstep - 2
     Tdsi = temp_distribution.tdsi
     Ta = temp_distribution.ta
     Toh = temp_distribution.toh
@@ -10,14 +11,14 @@ def param_effect(temp_distribution, well):
     c1 = well.qp / (math.pi * (well.r1 ** 2))  # Heat source term for fluid inside drill string
     c3e = (2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2  # East component for fluid inside annular
     c3 = well.qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2)))  # Heat source term for fluid inside annular
+    cell = round((n_cells * (1 - md_length)) + 1)
+    total = (c1z * abs(Tdsi[-cell] - Tdsi[-(cell+1)]) + c1 + c3e * abs(Ta[-cell] - Toh[-cell]) + c3)
 
-    total = (c1z * abs(Tdsi[-1] - Tdsi[-2]) + c1 + c3e * abs(Ta[-1] - Toh[-1]) + c3)
-
-    p1 = c1z * abs(Tdsi[-1] - Tdsi[-2]) / total
+    p1 = c1z * abs(Tdsi[-cell] - Tdsi[-(cell+1)]) / total
     p1 = round(p1*100, 2)  # Effect of the mud circulation
     p2 = (c1 + c3) / total
     p2 = round(p2*100, 2)  # Effect of heat source terms
-    p3 = c3e * abs(Ta[-1] - Toh[-1]) / total  # Effect of the formation
+    p3 = c3e * abs(Ta[-cell] - Toh[-cell]) / total  # Effect of the formation
     p3 = round(p3 * 100, 2)
 
     class ParametersEffect(object):
