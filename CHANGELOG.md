@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [unreleased] - 2019-11-09
+### Added
+- Function `input.info()`.
+- Raise-error messages for the function `input.set_well()`.
+### Changed
+- Names of casings-related variables.
+- Module `graph` is now module `plot`.
+- Function `analysis.param_effect()`, new input `md_length`.
+### Fixed
+- Module `wellpath`, error when using float numbers.
+
 ## [v0.0.8] - 2019-10-16
 ### Added
 - Documentation.
@@ -17,7 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v0.0.7] - 2019-09-23
 ### Added
-- Functions WellPath.get() and Analysis.hs_ratio()
+- Functions `wellPath.get()` and `analysis.hs_ratio()`.
 - Analysis Module.
 - Testing Module.
 - Web server in server.py, runs default script and returns plot to template
