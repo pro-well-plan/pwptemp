@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [unreleased] - 2019-11-09
+## [unreleased] - 2019-11-11
 ### Added
 - Function `input.info()`.
 - Raise-error messages for the function `input.set_well()`.
@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Names of casings-related variables.
 - Module `graph` is now module `plot`.
 - Function `analysis.param_effect()`, new input `md_length`.
+- Function `wellpath.get()`, now it is possible to generate *J-type wells*, *S-type wells* and *Horizontal wells*.
 ### Fixed
 - Module `wellpath`, error when using float numbers.
 
