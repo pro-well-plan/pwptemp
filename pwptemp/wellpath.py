@@ -2,7 +2,7 @@ from numpy import interp, arange
 from math import radians, sin, cos
 
 
-def get(mdt, deltaz, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0):
+def get(mdt, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0):
     if profile == 'V':        # Vertical well
         md = list(arange(0, mdt + deltaz, deltaz))  # Measured Depth from RKB, m
         tvd = md   # True Vertical Depth from RKB, m
@@ -20,18 +20,18 @@ def get(mdt, deltaz, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop
         theta = theta_delta
         r = s / theta
         z_displacement = (r * sin(theta))
-        tvd.append(tvd[-1] + z_displacement)
+        tvd.append(round(tvd[-1] + z_displacement, 2))
         z_count = z_displacement
         for x in range(round((eob - kop) / deltaz)-1):
             theta = theta+theta_delta
             z_displacement = (r * sin(theta)) - z_count
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
             z_count += z_displacement
 
         # Tangent section
         z_displacement = (deltaz * cos(radians(build_angle)))
         for x in range(round((mdt-eob)/deltaz)):
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
 
         zstep = len(md)  # Number of cells from RKB up to the bottom
 
@@ -46,17 +46,17 @@ def get(mdt, deltaz, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop
         theta = theta_delta
         r = s / theta
         z_displacement = (r * sin(theta))
-        tvd.append(tvd[-1] + z_displacement)
+        tvd.append(round(tvd[-1] + z_displacement, 2))
         z_count = z_displacement
         for x in range(round((eob - kop) / deltaz) - 1):
             theta = theta + theta_delta
             z_displacement = (r * sin(theta)) - z_count
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
             z_count += z_displacement
 
         # Tangent section
         for x in range(round((sod - eob) / deltaz)):
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
 
         # Drop section
         s = deltaz
@@ -65,11 +65,11 @@ def get(mdt, deltaz, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop
         r = s / theta_delta
         for x in range(round((eod - sod) / deltaz)):
             z_displacement = (r * sin(theta-(theta_delta*x))) - (r * sin(theta-(theta_delta*(x+1))))
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
 
         # Vertical section
         for x in range(round((mdt - eod) / deltaz)):
-            tvd.append(tvd[-1] + deltaz)
+            tvd.append(round(tvd[-1] + deltaz, 2))
 
         zstep = len(md)  # Number of cells from RKB up to the bottom
 
@@ -84,12 +84,12 @@ def get(mdt, deltaz, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop
         theta = theta_delta
         r = s / theta
         z_displacement = (r * sin(theta))
-        tvd.append(tvd[-1] + z_displacement)
+        tvd.append(round(tvd[-1] + z_displacement, 2))
         z_count = z_displacement
         for x in range(round((eob - kop) / deltaz)-1):
             theta = theta+theta_delta
             z_displacement = (r * sin(theta)) - z_count
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
             z_count += z_displacement
 
         # Horizontal section
@@ -109,18 +109,18 @@ def get(mdt, deltaz, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop
         theta = theta_delta
         r = s / theta
         z_displacement = (r * sin(theta))
-        tvd.append(tvd[-1] + z_displacement)
+        tvd.append(round(tvd[-1] + z_displacement, 2))
         z_count = z_displacement
         for x in range(round((eob - kop) / deltaz)-1):
             theta = theta+theta_delta
             z_displacement = (r * sin(theta)) - z_count
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
             z_count += z_displacement
 
         # Tangent section
         z_displacement = (deltaz * cos(radians(build_angle)))
         for x in range(round((kop2-eob)/deltaz)):
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
 
         # Build section
         s = deltaz
@@ -129,12 +129,12 @@ def get(mdt, deltaz, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop
         theta = theta_delta
         r = s / theta
         z_displacement = (r * sin(theta))
-        tvd.append(tvd[-1] + z_displacement)
+        tvd.append(round(tvd[-1] + z_displacement, 2))
         z_count = z_displacement
         for x in range(round((eob2 - kop2) / deltaz) - 1):
             theta = theta + theta_delta
             z_displacement = (r * sin(theta)) - z_count
-            tvd.append(tvd[-1] + z_displacement)
+            tvd.append(round(tvd[-1] + z_displacement, 2))
             z_count += z_displacement
 
         # Horizontal section
