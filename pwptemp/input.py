@@ -1,7 +1,7 @@
 from math import pi
 
 
-def tdict():
+def tdict(casings=[]):
     dict = {"tin": 20, "ts": 15, "wd": 0, "csg3": 0, "csg2": 0, "csg1": 0, "ddi": 0.101, "ddo": 0.114, "dcsg1i": 0.216,
             "dcsg1o": 0.24,  "dri": 0.45, "dro": 0.5334, "dfm": 2, "dcsg3i": 0.63, "dcsg3o": 0.66, "dcsg2i": 0.41,
             "dcsg2o": 0.44, "q": 47.696, "lambdal": 0.635, "lambdac": 43.3, "lambdacem": 0.7, "lambdad": 40,
@@ -9,6 +9,14 @@ def tdict():
             "cr": 464, "cw": 4000, "cfm": 800, "h1": 1800, "h2": 2000, "h3": 200, "h3r": 200, "rhol": 1198,
             "rhod": 7600, "rhoc": 7800, "rhor": 7800, "rhofm": 2245, "rhow": 1029, "rhocem": 2700, "gt": 0.0238,
             "wtg": -0.005, "rpm": 100, "t": 2, "tbit": 1.35, "wob": 22.41, "rop": 14.4, "an": 2}
+
+    if len(casings) > 0:
+        od = sorted([x['od'] for x in casings])
+        id = sorted([x['id'] for x in casings])
+        depth = sorted([x['depth'] for x in casings], reverse=True)
+        dict['dcsg1o'], dict['dcsg1i'], dict['csg1'] = od[0], id[0], depth[0]
+        dict['dcsg2o'], dict['dcsg2i'], dict['csg2'] = od[1], id[1], depth[1]
+        dict['dcsg3o'], dict['dcsg3i'], dict['csg3'] = od[2], id[2], depth[2]
 
     return dict
 
