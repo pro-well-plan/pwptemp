@@ -5,7 +5,8 @@ import pwptemp
 class TestWellPath(TestCase):
     def test_load(self):
         D = pwptemp.wellpath.get(3000, 50)
-        newD = pwptemp.wellpath.load(D.md, D.tvd, D.deltaz)
+        data = [D.md, D.tvd]
+        newD = pwptemp.wellpath.load(data, deltaz=D.deltaz, mode=1)
         self.assertIsInstance(newD.md, list)
         self.assertIsInstance(newD.tvd, list)
         self.assertEqual(len(newD.md), len(newD.tvd))

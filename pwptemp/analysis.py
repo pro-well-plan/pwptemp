@@ -1,16 +1,24 @@
 def param_effect(temp_distribution, well, md_length=1):
 
     import math
+    # Heat Source Terms
+    qp = 2 * math.pi * (well.rpm / 60) * well.t + 2 * 0.24 * well.rhol * (well.vp ** 2) * (well.md[-1] /
+                (well.ddi * 127.094 * 10 ** 6)) * (1 / 0.24 ** .5)
+    qa = 0.05 * (well.wob * (well.rop / 3600) + 2 * math.pi * (well.rpm / 60) * well.tbit) + (well.rhol / 2 * 9.81) * (
+                (well.q / 3600) / (0.095 * well.an)) + (2 * 0.3832 * well.md[-1] / ((well.r3 - well.r2) *
+                (127.094 * 10 ** 6))) * ((2 * (0.7 + 1) * well.va) / (0.7 * math.pi * (well.r3 + well.r2) *
+                (well.r3 - well.r2) ** 2)) ** 0.7
+
+
     # Eq coefficients - Inside Drill String
-    deltaz = 50
     n_cells = well.zstep - 2
     Tdsi = temp_distribution.tdsi
     Ta = temp_distribution.ta
     Toh = temp_distribution.toh
-    c1z = ((well.rhol * well.cl * well.vp) / deltaz) / 2  # Vertical component for fluid inside drill string
-    c1 = well.qp / (math.pi * (well.r1 ** 2))  # Heat source term for fluid inside drill string
+    c1z = ((well.rhol * well.cl * well.vp) / well.deltaz) / 2  # Vertical component for fluid inside drill string
+    c1 = qp / (math.pi * (well.r1 ** 2))  # Heat source term for fluid inside drill string
     c3e = (2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2  # East component for fluid inside annular
-    c3 = well.qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2)))  # Heat source term for fluid inside annular
+    c3 = qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2)))  # Heat source term for fluid inside annular
     cell = round((n_cells * (1 - md_length)) + 1)
     total = (c1z * abs(Tdsi[-cell] - Tdsi[-(cell+1)]) + c1 + c3e * abs(Ta[-cell] - Toh[-cell]) + c3)
 
@@ -33,15 +41,22 @@ def param_effect(temp_distribution, well, md_length=1):
 def hs_effect(well):
 
     import math
+    # Heat Source Terms
+    qp = 2 * math.pi * (well.rpm / 60) * well.t + 2 * 0.24 * well.rhol * (well.vp ** 2) * (well.md[-1] /
+                (well.ddi * 127.094 * 10 ** 6)) * (1 / 0.24 ** .5)
+    qa = 0.05 * (well.wob * (well.rop / 3600) + 2 * math.pi * (well.rpm / 60) * well.tbit) + (well.rhol / 2 * 9.81) * (
+                (well.q / 3600) / (0.095 * well.an)) + (2 * 0.3832 * well.md[-1] / ((well.r3 - well.r2) *
+                (127.094 * 10 ** 6))) * ((2 * (0.7 + 1) * well.va) / (0.7 * math.pi * (well.r3 + well.r2) *
+                (well.r3 - well.r2) ** 2)) ** 0.7
     pi = math.pi
     rps = well.rpm / 60
-    total = (well.qp + well.qa)
-    qp = round((well.qp/total)*100, 2)
-    qa = round((well.qa/total)*100, 2)
+    total = (qp + qa)
+    qp = round((qp/total)*100, 2)
+    qa = round((qa/total)*100, 2)
     p1 = 2*pi*rps*well.t / total
     p1 = round(p1*100, 2)  # Effect of Drill String Rotation in Heat Source Term Qp
     p2 = qp - p1  # Effect of Friction in Heat Source Term Qp
-    p3 = 0.05*(well.wob * well.rop + 2 * pi * rps * well.tbit) / (well.qp + well.qa)
+    p3 = 0.05*(well.wob * well.rop + 2 * pi * rps * well.tbit) / (qp + qa)
     p3 = round(p3 * 100, 2)  # Effect of Drill String Rotation in Heat Source Term Qa
     p4 = qa - p3  # Effect of Friction in Heat Source Term Qa
 
@@ -51,7 +66,7 @@ def hs_effect(well):
             self.fric1 = p2
             self.ds_rot2 = p3
             self.fric2 = p4
-            self.hsr = round(well.qp/well.qa, 2)  #Pipe-Annular heat source ratio
+            self.hsr = round(qp/qa, 2)  #Pipe-Annular heat source ratio
 
     return HeatSourceEffect()
 

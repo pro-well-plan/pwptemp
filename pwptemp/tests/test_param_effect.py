@@ -10,7 +10,7 @@ class TestAnalysis(TestCase):
         td = pwptemp.main.temp_time(24, well)
         eff = pwptemp.analysis.param_effect(td, well)
         total = eff.flow + eff.hs + eff.fm
-        self.assertEqual(total, 100)
+        self.assertEqual(round(total), 100)
         self.assertIsInstance(eff.flow, float)
         self.assertIsInstance(eff.hs, float)
         self.assertIsInstance(eff.fm, float)
