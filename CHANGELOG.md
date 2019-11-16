@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Module `graph` is now module `plot`.
 - Function `analysis.param_effect()`, new input `md_length`.
 - Function `wellpath.get()`, now it is possible to generate *J-type wells*, *S-type wells* and *Horizontal wells*.
+- Function `wellpath.load()`, load a wellpath as a list of dictionaries.
+- Function `input.tdict()`, include unlimited number of casings as a list of dictionaries.
 ### Fixed
 - Module `wellpath`, error when using float numbers.
 
