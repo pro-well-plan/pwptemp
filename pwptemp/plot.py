@@ -21,12 +21,12 @@ def profile(temp_distribution):
     # Plotting Temperature PROFILE
     md = temp_distribution.md
     riser = temp_distribution.riser
-    csg1 = temp_distribution.csg1
+    csg = temp_distribution.csgs_reach
     plt.plot(temp_distribution.tdsi, md, c='r', label='Fluid in Drill String')  # Temp. inside Drillpipe vs Depth
     plt.plot(temp_distribution.ta, md, 'b', label='Fluid in Annulus')
     if riser > 0:
         plt.plot(temp_distribution.tr, md, 'g', label='Riser')  # Temp. due to gradient vs Depth
-    if csg1 > 0:
+    if csg > 0:
         plt.plot(temp_distribution.tcsg, md, 'c', label='Casing')  # Temp. due to gradient vs Depth
     plt.plot(temp_distribution.tfm, md, 'g', label='Formation')  # Temp. due to gradient vs Depth
     plt.plot(temp_distribution.tsr, md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth

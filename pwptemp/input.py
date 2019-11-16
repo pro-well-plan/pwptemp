@@ -1,22 +1,21 @@
 from math import pi
+import numpy as np
 
 
 def tdict(casings=[]):
-    dict = {"tin": 20, "ts": 15, "wd": 0, "csg3": 0, "csg2": 0, "csg1": 0, "ddi": 0.101, "ddo": 0.114, "dcsg1i": 0.216,
-            "dcsg1o": 0.24,  "dri": 0.45, "dro": 0.5334, "dfm": 2, "dcsg3i": 0.63, "dcsg3o": 0.66, "dcsg2i": 0.41,
-            "dcsg2o": 0.44, "q": 47.696, "lambdal": 0.635, "lambdac": 43.3, "lambdacem": 0.7, "lambdad": 40,
-            "lambdafm": 2.249, "lambdar": 15.49, "lambdaw": 0.6, "cl": 3713, "cc": 469, "ccem": 2000, "cd": 400,
-            "cr": 464, "cw": 4000, "cfm": 800, "h1": 1800, "h2": 2000, "h3": 200, "h3r": 200, "rhol": 1198,
-            "rhod": 7600, "rhoc": 7800, "rhor": 7800, "rhofm": 2245, "rhow": 1029, "rhocem": 2700, "gt": 0.0238,
-            "wtg": -0.005, "rpm": 100, "t": 2, "tbit": 1.35, "wob": 22.41, "rop": 14.4, "an": 2}
+    dict = {"tin": 20, "ts": 15, "wd": 0,  "ddi": 0.101, "ddo": 0.114, "dri": 0.45, "dro": 0.5334, "dfm": 2,
+            "q": 47.696, "lambdal": 0.635, "lambdac": 43.3, "lambdacem": 0.7, "lambdad": 40, "lambdafm": 2.249,
+            "lambdar": 15.49, "lambdaw": 0.6, "cl": 3713, "cc": 469, "ccem": 2000, "cd": 400, "cr": 464, "cw": 4000,
+            "cfm": 800, "h1": 1800, "h2": 2000, "h3": 200, "h3r": 200, "rhol": 1198, "rhod": 7600, "rhoc": 7800,
+            "rhor": 7800, "rhofm": 2245, "rhow": 1029, "rhocem": 2700, "gt": 0.0238, "wtg": -0.005, "rpm": 100,
+            "t": 2, "tbit": 1.35, "wob": 22.41, "rop": 14.4, "an": 2}
 
     if len(casings) > 0:
         od = sorted([x['od'] for x in casings])
         id = sorted([x['id'] for x in casings])
         depth = sorted([x['depth'] for x in casings], reverse=True)
-        dict['dcsg1o'], dict['dcsg1i'], dict['csg1'] = od[0], id[0], depth[0]
-        dict['dcsg2o'], dict['dcsg2i'], dict['csg2'] = od[1], id[1], depth[1]
-        dict['dcsg3o'], dict['dcsg3i'], dict['csg3'] = od[2], id[2], depth[2]
+        dict['casings'] = [[od[x], id[x], depth[x]] for x in range(len(casings))]
+        dict['casings'] = np.asarray(dict['casings'])
 
     return dict
 
@@ -28,17 +27,8 @@ def info(about='all'):
           'parameter ID: general description, units' + '\n')
 
     casings_parameters = 'PARAMETERS RELATED TO CASINGS/RISER' + '\n' + \
-                         'csg1: shoe depth of the first casing from the well to the formation, m' + '\n' + \
-                         'csg2: shoe depth of the second casing from the well to the formation, m' + '\n' + \
-                         'csg3: shoe depth of the third casing from the well to the formation, m' + '\n' + \
                          'ddi: drill string inner diameter, m' + '\n' + \
                          'ddo: drill string outer diameter, m' + '\n' + \
-                         'dcsg1i: inner diameter of the first casing from the well to the formation, m' + '\n' + \
-                         'dcsg1o: outer diameter of the first casing from the well to the formation, m' + '\n' + \
-                         'dcsg2i: inner diameter of the second casing from the well to the formation, m' + '\n' + \
-                         'dcsg2o: outer diameter of the second casing from the well to the formation, m' + '\n' + \
-                         'dcsg3i: inner diameter of the third casing from the well to the formation, m' + '\n' + \
-                         'dcsg3o: outer diameter of the third casing from the well to the formation, m' + '\n' + \
                          'dri: riser inner diameter, m' + '\n' + \
                          'dro: riser outer diameter, m' + '\n'
 
@@ -120,35 +110,27 @@ def set_well(temp_dict, depths):
             self.zstep = depths.zstep
 
             #TUBULAR
-            self.csg1 = round(temp_dict["csg1"] / self.deltaz)  # number of grid cells for the casing 1
-            self.csg2 = round(temp_dict["csg2"] / self.deltaz)  # # number of grid cells for the casing 2
-            self.csg3 = round(temp_dict["csg3"] / self.deltaz)  # # number of grid cells for the casing 3
+            self.casings = temp_dict["casings"]  # casings array
             self.riser = round(temp_dict["wd"] / self.deltaz)  # number of grid cells for the riser
             self.ddi = temp_dict["ddi"]  # Drill String Inner  Diameter, m
             self.ddo = temp_dict["ddo"]  # Drill String Outer Diameter, m
-            self.dcsg1i = temp_dict["dcsg1i"]  # Casing Inner Diameter, m
-            self.dcsg1o = temp_dict["dcsg1o"]  # Casing Outer Diameter, m
-            self.dcsg2i = temp_dict["dcsg2i"]   # Surface casing inner diameter, m
-            self.dcsg2o = temp_dict["dcsg2o"]   # Surface casing outer diameter, m
-            self.dcsg3i = temp_dict["dcsg3i"]   # Conductor casing inner diameter, m
-            self.dcsg3o = temp_dict["dcsg3o"]   # Conductor casing outer diameter, m
             self.dri = temp_dict["dri"]  # Riser diameter Inner Diameter, m
             self.dro = temp_dict["dro"]  # Riser diameter Outer Diameter, m
 
             #CONDITIONS
             self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
             self.wd = temp_dict["wd"]  # Water Depth, m
-            self.dsr = temp_dict["dcsg1o"]  # Surrounding Space Inner Diameter, m
-            self.dsro = temp_dict["dcsg3o"]+0.03  # Surrounding Space Outer Diameter, m
+            self.dsr = self.casings[0, 0]  # Surrounding Space Inner Diameter, m
+            self.dsro = self.casings[-1, 0] + 0.03  # Surrounding Space Outer Diameter, m
             self.dfm = temp_dict["dfm"]  # Undisturbed Formation Diameter, m
 
             #RADIUS (CALCULATED)
             self.r1 = self.ddi / 2  # Drill String Inner  Radius, m
             self.r2 = self.ddo / 2  # Drill String Outer Radius, m
-            self.r3 = self.dcsg1i / 2  # Casing Inner Radius, m
+            self.r3 = self.casings[0, 1] / 2  # Casing Inner Radius, m
             self.r3r = self.dri / 2  # Riser Inner Radius, m
             self.r4r = self.dro / 2  # Riser Outer Radius, m
-            self.r4 = self.dcsg1o / 2  # Surrounding Space Inner Radius m
+            self.r4 = self.casings[0, 0] / 2  # Surrounding Space Inner Radius m
             self.r5 = self.dsro / 2  # Surrounding Space Outer Radius, m
             self.rfm = self.dfm / 2  # Undisturbed Formation Radius, m
 
@@ -197,24 +179,24 @@ def set_well(temp_dict, depths):
 
 
             # Raise Errors:
-            if self.dcsg1i > self.dcsg1o or self.dcsg2i > self.dcsg2o or self.dcsg3i > self.dcsg3o or \
-                    self.dri > self.dro or self.dsr > self.dsro or self.ddi > self.ddo:
-                raise ValueError('Inner diameters must be smaller than outer diameters.')
-
-            if self.csg1 < self.csg2 or self.csg2 < self.csg3:
-                raise ValueError('Shoe depths of casings are wrong. They should be csg1 > csg2 > csg3.')
-
-            if self.ddo > self.dcsg1i:
-                raise ValueError('Drill string diameter must be smaller than the casing 1 diameter.')
-
-            if self.dcsg1o > self.dcsg2i:
-                raise ValueError('Casing 1 diameter must be smaller than the casing 2 diameter.')
-
-            if self.dcsg2o > self.dcsg3i:
-                raise ValueError('Casing 2 diameter must be smaller than the casing 3 diameter.')
-
-            if self.dcsg3o > self.dsro:
-                raise ValueError('Casing 3 diameter must be smaller than the surrounding space diameter.')
+            # if self.dcsg1i > self.dcsg1o or self.dcsg2i > self.dcsg2o or self.dcsg3i > self.dcsg3o or \
+            #         self.dri > self.dro or self.dsr > self.dsro or self.ddi > self.ddo:
+            #     raise ValueError('Inner diameters must be smaller than outer diameters.')
+            #
+            # if self.csg1 < self.csg2 or self.csg2 < self.csg3:
+            #     raise ValueError('Shoe depths of casings are wrong. They should be csg1 > csg2 > csg3.')
+            #
+            # if self.ddo > self.dcsg1i:
+            #     raise ValueError('Drill string diameter must be smaller than the casing 1 diameter.')
+            #
+            # if self.dcsg1o > self.dcsg2i:
+            #     raise ValueError('Casing 1 diameter must be smaller than the casing 2 diameter.')
+            #
+            # if self.dcsg2o > self.dcsg3i:
+            #     raise ValueError('Casing 2 diameter must be smaller than the casing 3 diameter.')
+            #
+            # if self.dcsg3o > self.dsro:
+            #     raise ValueError('Casing 3 diameter must be smaller than the surrounding space diameter.')
 
             if self.dro > self.dsro:
                 raise ValueError('Riser diameter must be smaller than the surrounding space diameter.')

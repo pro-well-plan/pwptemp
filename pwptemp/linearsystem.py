@@ -1,6 +1,36 @@
 import numpy as np
 
 
+def define_coef(coefficients, section):
+    c1z = coefficients[section, 0][0]
+    c1e = coefficients[section, 0][1]
+    c1 = coefficients[section, 0][2]
+    c1t = coefficients[section, 0][3]
+
+    c2z = coefficients[section, 1][0]
+    c2e = coefficients[section, 1][1]
+    c2w = coefficients[section, 1][2]
+    c2t = coefficients[section, 1][3]
+
+    c3z = coefficients[section, 2][0]
+    c3e = coefficients[section, 2][1]
+    c3w = coefficients[section, 2][2]
+    c3 = coefficients[section, 2][3]
+    c3t = coefficients[section, 2][4]
+
+    c4z = coefficients[section, 3][0]
+    c4e = coefficients[section, 3][1]
+    c4w = coefficients[section, 3][2]
+    c4t = coefficients[section, 3][3]
+
+    c5z = coefficients[section, 4][0]
+    c5e = coefficients[section, 4][1]
+    c5w = coefficients[section, 4][2]
+    c5t = coefficients[section, 4][3]
+
+    return c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t
+
+
 def temp_calc(well, initcond, heatcoeff):
 
     Tdsi = [well.tin]
@@ -18,139 +48,87 @@ def temp_calc(well, initcond, heatcoeff):
     S = []
     B = []
 
-    # Casing:
-    c4z = heatcoeff.c4z1
-    c4e = heatcoeff.c4e1
-    c4w = heatcoeff.c4w1
-    c4t = heatcoeff.c4t1
-    # Surrounding:
-    c5z = heatcoeff.c5z1
-    c5w = heatcoeff.c5w1
-    c5e = heatcoeff.c5e1
-    c5t = heatcoeff.c5t1
+    section = 0
+    limit = well.riser
+
+    c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t = \
+        define_coef(heatcoeff, section)
 
     for j in range(well.zstep):
 
-        if j == well.riser:
-            # Casing:
-            c4z = heatcoeff.c4z2
-            c4e = heatcoeff.c4e2
-            c4w = heatcoeff.c4w2
-            c4t = heatcoeff.c4t2
-            # Surrounding:
-            c5z = heatcoeff.c5z2
-            c5w = heatcoeff.c5w2
-            c5e = heatcoeff.c5e2
-            c5t = heatcoeff.c5t2
-
-        if j == well.csg3:
-            # Casing:
-            c4z = heatcoeff.c4z3
-            c4e = heatcoeff.c4e3
-            c4w = heatcoeff.c4w3
-            c4t = heatcoeff.c4t3
-            # Surrounding:
-            c5z = heatcoeff.c5z3
-            c5w = heatcoeff.c5w3
-            c5e = heatcoeff.c5e3
-            c5t = heatcoeff.c5t3
-
-        if j == well.csg2:
-            # Casing:
-            c4z = heatcoeff.c4z4
-            c4e = heatcoeff.c4e4
-            c4w = heatcoeff.c4w4
-            c4t = heatcoeff.c4t4
-            # Surrounding:
-            c5z = heatcoeff.c5z4
-            c5w = heatcoeff.c5w4
-            c5e = heatcoeff.c5e4
-            c5t = heatcoeff.c5t4
-
-        if j == well.csg1:
-            # Casing:
-            c4z = heatcoeff.c4z5
-            c4e = heatcoeff.c4e5
-            c4w = heatcoeff.c4w5
-            c4t = heatcoeff.c4t5
-            # Surrounding:
-            c5z = heatcoeff.c5z5
-            c5w = heatcoeff.c5w5
-            c5e = heatcoeff.c5e5
-            c5t = heatcoeff.c5t5
+        if j == limit:
+            section += 1
+            if section <= len(well.casings):
+                limit = round(well.casings[-section, 2] / well.deltaz)
+            c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t = \
+                define_coef(heatcoeff, section)
 
         for i in range(xi):
             if i == 0:  # Inside Drill String
                 if j == 1:
                     W.append(0)
-                    C.append(heatcoeff.c1t + heatcoeff.c1e + heatcoeff.c1z)
-                    E.append(-heatcoeff.c1e)
+                    C.append(c1t + c1e + c1z)
+                    E.append(-c1e)
                     S.append(0)
-                    B.append(heatcoeff.c1t * initcond.tdsio[j] + heatcoeff.c1 + heatcoeff.c1e * (initcond.tdso[j] -
-                                initcond.tdsio[j]) + heatcoeff.c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j]) +
-                                heatcoeff.c1z * (Tdsi[j - 1]))
+                    B.append(c1t * initcond.tdsio[j] + c1 + c1e * (initcond.tdso[j] - initcond.tdsio[j]) + c1z *
+                             (initcond.tdsio[j - 1] - initcond.tdsio[j]) + c1z * (Tdsi[j - 1]))
 
-                if j > 1 and j < well.zstep - 1:
-                    N.append(-heatcoeff.c1z)
+                if 1 < j < well.zstep - 1:
+                    N.append(-c1z)
                     W.append(0)
-                    C.append(heatcoeff.c1t + heatcoeff.c1e + heatcoeff.c1z)
-                    E.append(-heatcoeff.c1e)
+                    C.append(c1t + c1e + c1z)
+                    E.append(-c1e)
                     S.append(0)
-                    B.append(heatcoeff.c1t * initcond.tdsio[j] + heatcoeff.c1 + heatcoeff.c1e * (initcond.tdso[j] -
-                                initcond.tdsio[j]) + heatcoeff.c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j]))
+                    B.append(c1t * initcond.tdsio[j] + c1 + c1e * (initcond.tdso[j] - initcond.tdsio[j]) + c1z *
+                             (initcond.tdsio[j - 1] - initcond.tdsio[j]))
 
                 if j == well.zstep - 1:
-                    N.append(-heatcoeff.c1z - heatcoeff.c2z)
+                    N.append(-c1z - c2z)
                     W.append(0)
-                    C.append(3 * heatcoeff.c1t + heatcoeff.c1z + heatcoeff.c2z + heatcoeff.c3e)
-                    E.append(-heatcoeff.c3e)
-                    B.append(heatcoeff.c1t * initcond.tdsio[j] + heatcoeff.c1 + heatcoeff.c1z * (initcond.tdsio[j - 1] -
-                                initcond.tdsio[j]) + heatcoeff.c1t * initcond.tdso[j] + heatcoeff.c1t * initcond.tao[j]
-                                + heatcoeff.c3)
+                    C.append(3 * c1t + c1z + c2z + c3e)
+                    E.append(-c3e)
+                    B.append(c1t * initcond.tdsio[j] + c1 + c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j]) + c1t *
+                             initcond.tdso[j] + c1t * initcond.tao[j] + c3)
 
             if i == 1:  # Drill string wall
 
                 if j == 0:
-                    C.append(heatcoeff.c2t + heatcoeff.c2e + heatcoeff.c2w + heatcoeff.c2z)
-                    E.append(-heatcoeff.c2e)
-                    S.append(-heatcoeff.c2z)
-                    B.append(heatcoeff.c2t * initcond.tdso[j] + heatcoeff.c2w * Tdsi[j] + heatcoeff.c2e *
-                                (initcond.tao[j] - initcond.tdso[j]) + heatcoeff.c2w * (initcond.tdsio[j] -
-                                initcond.tdso[j]) + heatcoeff.c2z * (initcond.tdso[j + 1] - initcond.tdso[j]))
+                    C.append(c2t + c2e + c2w + c2z)
+                    E.append(-c2e)
+                    S.append(-c2z)
+                    B.append(c2t * initcond.tdso[j] + c2w * Tdsi[j] + c2e * (initcond.tao[j] - initcond.tdso[j]) + c2w *
+                             (initcond.tdsio[j] - initcond.tdso[j]) + c2z * (initcond.tdso[j + 1] - initcond.tdso[j]))
 
                 if 0 < j < well.zstep - 1:
-                    N.append(-heatcoeff.c2z)
-                    W.append(-heatcoeff.c2w)
-                    C.append(heatcoeff.c2t + heatcoeff.c2e + heatcoeff.c2w + 2 * heatcoeff.c2z)
-                    E.append(-heatcoeff.c2e)
+                    N.append(-c2z)
+                    W.append(-c2w)
+                    C.append(c2t + c2e + c2w + 2 * c2z)
+                    E.append(-c2e)
                     if j < well.zstep - 2:
-                        S.append(-heatcoeff.c2z)
-                    B.append(heatcoeff.c2t * initcond.tdso[j] + heatcoeff.c2e * (initcond.tao[j] - initcond.tdso[j]) +
-                                heatcoeff.c2w * (initcond.tdsio[j] - initcond.tdso[j]) + heatcoeff.c2z *
-                                (initcond.tdso[j + 1] - initcond.tdso[j]) + heatcoeff.c2z * (initcond.tdso[j - 1] -
-                                initcond.tdso[j]))
+                        S.append(-c2z)
+                    B.append(c2t * initcond.tdso[j] + c2e * (initcond.tao[j] - initcond.tdso[j]) + c2w *
+                             (initcond.tdsio[j] - initcond.tdso[j]) + c2z * (initcond.tdso[j + 1] - initcond.tdso[j]) +
+                             c2z * (initcond.tdso[j - 1] - initcond.tdso[j]))
 
             if i == 2:  # Annular
 
                 if j == 0:
-                    W.append(-heatcoeff.c3w)
-                    C.append(heatcoeff.c3t + heatcoeff.c3e + heatcoeff.c3w + heatcoeff.c3z)
-                    E.append(-heatcoeff.c3e)
-                    S.append(-heatcoeff.c3z)
-                    B.append(heatcoeff.c3t * initcond.tao[j] + heatcoeff.c3 + heatcoeff.c3e * (initcond.tcsgo[j] -
-                                initcond.tao[j]) + heatcoeff.c3w * (initcond.tdso[j] - initcond.tao[j]) + heatcoeff.c3z
-                                * (initcond.tao[j + 1] - initcond.tao[j]))
+                    W.append(-c3w)
+                    C.append(c3t + c3e + c3w + c3z)
+                    E.append(-c3e)
+                    S.append(-c3z)
+                    B.append(c3t * initcond.tao[j] + c3 + c3e * (initcond.tcsgo[j] - initcond.tao[j]) + c3w *
+                             (initcond.tdso[j] - initcond.tao[j]) + c3z * (initcond.tao[j + 1] - initcond.tao[j]))
 
-                if j > 0 and j < well.zstep - 1:
+                if 0 < j < well.zstep - 1:
                     N.append(0)
-                    W.append(-heatcoeff.c3w)
-                    C.append(heatcoeff.c3t + heatcoeff.c3e + heatcoeff.c3w + heatcoeff.c3z)
-                    E.append(-heatcoeff.c3e)
+                    W.append(-c3w)
+                    C.append(c3t + c3e + c3w + c3z)
+                    E.append(-c3e)
                     if j < well.zstep - 2:
-                        S.append(-heatcoeff.c3z)
-                    B.append(heatcoeff.c3t * initcond.tao[j] + heatcoeff.c3 + heatcoeff.c3e * (initcond.tcsgo[j] -
-                                initcond.tao[j]) + heatcoeff.c3w * (initcond.tdso[j] - initcond.tao[j]) + heatcoeff.c3z
-                                * (initcond.tao[j + 1] - initcond.tao[j]))
+                        S.append(-c3z)
+                    B.append(c3t * initcond.tao[j] + c3 + c3e * (initcond.tcsgo[j] - initcond.tao[j]) + c3w *
+                             (initcond.tdso[j] - initcond.tao[j]) + c3z * (initcond.tao[j + 1] - initcond.tao[j]))
 
             if i == 3:  # Casing
 
@@ -232,8 +210,8 @@ def temp_calc(well, initcond, heatcoeff):
     for it in range(lenS):  # Inserting list S
         A[it, it + xi] = S[it]
 
-    A[lenC - 1 - (xi - 3) - (xi - 1), lenC - 1 - (xi - 3)] = -heatcoeff.c2z
-    A[lenC - 1 - (xi - 3) - (xi - 2), lenC - 1 - (xi - 3)] = -heatcoeff.c3z
+    A[lenC - 1 - (xi - 3) - (xi - 1), lenC - 1 - (xi - 3)] = -c2z
+    A[lenC - 1 - (xi - 3) - (xi - 2), lenC - 1 - (xi - 3)] = -c3z
 
     Temp = np.linalg.solve(A, B)
 
@@ -266,8 +244,11 @@ def temp_calc(well, initcond, heatcoeff):
     Tr = Tcsg[:well.riser]+[None]*(well.zstep-well.riser)
     for x in range(well.riser):
         Tcsg[x] = None
-    Toh = [None]*well.csg1 + Tcsg[well.csg1:]
-    for x in range(well.csg1, well.zstep):
+
+    csgs_reach = int(well.casings[0, 2] / well.deltaz)    # final depth still covered with casing(s)
+
+    Toh = [None]*csgs_reach + Tcsg[csgs_reach:]
+    for x in range(csgs_reach, well.zstep):
         Tcsg[x] = None
 
     class TempCalc(object):
@@ -279,5 +260,6 @@ def temp_calc(well, initcond, heatcoeff):
             self.tcsg = Tcsg
             self.toh = Toh
             self.tsr = Tsr
+            self.csgs_reach = csgs_reach
 
     return TempCalc()

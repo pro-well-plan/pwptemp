@@ -33,7 +33,7 @@ def temp_time(n, well):
             self.time = time
             self.md = well.md
             self.riser = well.riser
-            self.csg1 = well.csg1
+            self.csgs_reach = tc.csgs_reach
 
     return TempDist()
 
