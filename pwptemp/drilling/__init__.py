@@ -3,6 +3,8 @@ from . import initcond
 from . import heatcoefficients
 from . import linearsystem
 from . import main
+from . import analysis
+from . import plot
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, deltaz=50, profile='V', build_angle=1, kop=0, eob=0,
