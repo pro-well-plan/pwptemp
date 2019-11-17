@@ -4,7 +4,7 @@ import pwptemp
 
 class TestLinearSystem(TestCase):
     def test_temp_calc(self):
-        tdata = pwptemp.input.tdict()
+        tdata = pwptemp.input.data()
         depths = pwptemp.wellpath.get(3000, 50)
         well = pwptemp.input.set_well(tdata, depths)
         ic = pwptemp.initcond.init_cond(well)

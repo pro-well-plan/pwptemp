@@ -1,9 +1,10 @@
-# pwptemp.input.temp_dict(*deltaz*) #
+# pwptemp.input.data(*casings=[], bit=0.216*) #
 
 Get default parameters.
 
 > **Parameters:**
-* **deltaz** - Length of each cell, m.
+* **casings: list** - List of dictionaries with casings-related data.
+* **bit: float** - Diameter of the hole. *Only required there are not casings.
 
 > **Returns:**
 
@@ -11,24 +12,11 @@ a dictionary with the following default values:
 * **tin:**  20
 * **ts:** 15
 * **wd:** 0
-* **csgco:** 0
-* **csgso:** 0
-* **csgio:** 0
 * **ddi:** 0.101
 * **ddo:** 0.114
-* **dcsg:** 0.216
-* **dcsgo:** 0.24
-* **dsr:** 0.26 
-* **dsro:** 0.6
 * **dri:** 0.45
 * **dro:** 0.5334
 * **dfm:** 2
-* **dcsgci:** 0.635
-* **dcsgco:** 0.66
-* **dcsgsi:** 0.41
-* **dcsgso:** 0.44
-* **tcsr3:** 0
-* **tcem4:** 0
 * **q:** 47.696
 * **lambdal:** 0.635
 * **lambdac:** 43.3
@@ -36,7 +24,6 @@ a dictionary with the following default values:
 * **lambdad:** 40
 * **lambdafm:** 2.249
 * **lambdar:** 15.49
-* **lambdarw:** 5
 * **lambdaw:** 0.6
 * **cl:** 3713
 * **cc:** 469
@@ -64,6 +51,17 @@ a dictionary with the following default values:
 * **wob:** 22.41
 * **rop:** 14.4
 * **an:** 2
+* **casings:** array with casings-related data [[od, id, depth]]
 
+## Example ##
+
+```
+>>> casings = [{'od': 0.24, 'id': 0.216, 'depth': 2500}, {'od': 0.66, 'id': 0.63, 'depth': 1000}]
+>>> data = pwptemp.input.data(casings)
+>>> print(data['ts'])
+15
+>>> print(data['casings'])
+[[0.24, 0.216, 2500], [0.66, 0.63, 1000]]
+```
 
 See the [pwptemp.input](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.input.md) documentation.

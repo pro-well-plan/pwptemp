@@ -3,6 +3,7 @@ import numpy as np
 from pwptemp.initcond import init_cond
 from pwptemp.heatcoefficients import heat_coef
 from pwptemp.linearsystem import temp_calc
+from pwptemp.plot import profile,behavior
 
 
 def temp_time(n, well):
@@ -35,6 +36,9 @@ def temp_time(n, well):
             self.riser = well.riser
             self.csgs_reach = tc.csgs_reach
 
+        def plot(self):
+            profile(self)
+
     return TempDist()
 
 
@@ -64,6 +68,9 @@ def stab_time(well):
             self.tbot = tbot
             self.tout = tout
             self.tfm = init_cond(well).tfm
+
+        def plot(self):
+            behavior(self)
 
     return StabTime()
 
