@@ -1,5 +1,6 @@
 from math import pi
 import numpy as np
+from pwptemp.analysis import hs_effect
 
 
 def data(casings=[], bit=0.216):
@@ -196,5 +197,10 @@ def set_well(temp_dict, depths):
 
             if self.dsro > self.dfm:
                 raise ValueError('Surrounding space diameter must be smaller than the undisturbed formation diameter.')
+
+        def effect(self):
+            effect = hs_effect(self)
+
+            return effect
 
     return NewWell()

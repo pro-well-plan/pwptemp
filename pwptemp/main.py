@@ -3,7 +3,8 @@ import numpy as np
 from pwptemp.initcond import init_cond
 from pwptemp.heatcoefficients import heat_coef
 from pwptemp.linearsystem import temp_calc
-from pwptemp.plot import profile,behavior
+from pwptemp.plot import profile, behavior
+from pwptemp.analysis import param_effect
 
 
 def temp_time(n, well):
@@ -38,6 +39,11 @@ def temp_time(n, well):
 
         def plot(self):
             profile(self)
+
+        def effect(self):
+            effect = param_effect(self, well)
+
+            return effect
 
     return TempDist()
 

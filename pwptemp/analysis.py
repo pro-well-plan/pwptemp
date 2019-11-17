@@ -35,6 +35,9 @@ def param_effect(temp_distribution, well, md_length=1):
             self.hs = p2
             self.fm = p3
 
+        def plot(self):
+            plot(self, 1)
+
     return ParametersEffect()
 
 
@@ -68,6 +71,9 @@ def hs_effect(well):
             self.fric2 = p4
             self.hsr = round(qp/qa, 2)  #Pipe-Annular heat source ratio
 
+        def plot(self):
+            plot(self, 2)
+
     return HeatSourceEffect()
 
 
@@ -78,7 +84,7 @@ def plot(effect, how):
         effects = [effect.flow, effect.hs, effect.fm]
         plt.pie(effects, startangle=90, autopct='%1.1f%%')
         plt.legend(labels, loc=0)
-        plt.title('Effect of the parameters in the temperature calculation')
+        plt.title('Effect of factors in the temperature calculation')
         plt.show()
 
     if how == 2:
@@ -86,6 +92,6 @@ def plot(effect, how):
         effects = [effect.ds_rot1, effect.fric1, effect.ds_rot2, effect.fric2]
         plt.pie(effects, startangle=90)
         plt.legend(loc=0, labels=['%s, %1.1f %%' % (l, s) for l, s in zip(labels, effects)])
-        title = 'Effect of the drill string rotation and friction in heat source terms. Qp/Qa = %1.2f' % effect.hsr
+        title = 'Effect of factors in heat source terms. Qp/Qa = %1.2f' % effect.hsr
         plt.title(title)
         plt.show()
