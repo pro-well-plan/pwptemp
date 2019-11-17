@@ -1,6 +1,6 @@
 from math import pi
 import numpy as np
-from pwptemp.analysis import hs_effect
+from pwptemp.drilling.analysis import hs_effect
 
 
 def data(casings=[], bit=0.216):

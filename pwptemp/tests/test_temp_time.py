@@ -4,10 +4,10 @@ import pwptemp
 
 class TestMain(TestCase):
     def test_temp_time(self):
-        tdata = pwptemp.input.data()
+        tdata = pwptemp.drilling.input.data()
         depths = pwptemp.wellpath.get(3000, 50)
-        well = pwptemp.input.set_well(tdata, depths)
-        td = pwptemp.main.temp_time(24, well)
+        well = pwptemp.drilling.input.set_well(tdata, depths)
+        td = pwptemp.drilling.main.temp_time(24, well)
         self.assertEqual(len(td.tdsi), len(td.ta), len(td.tr))
         self.assertEqual(len(td.tcsg), len(td.tsr), len(td.tfm))
         self.assertEqual(td.time, 24)

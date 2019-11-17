@@ -1,6 +1,3 @@
-from . import analysis
-from . import input
+from pwptemp.drilling import input, initcond, main, analysis, plot
 from . import wellpath
-from . import main
-from . import plot
-from . import initcond
+from . import drilling

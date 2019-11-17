@@ -4,10 +4,10 @@ import pwptemp
 
 class TestLinearSystem(TestCase):
     def test_temp_calc(self):
-        tdata = pwptemp.input.data()
+        tdata = pwptemp.drilling.input.data()
         depths = pwptemp.wellpath.get(3000, 50)
-        well = pwptemp.input.set_well(tdata, depths)
-        ic = pwptemp.initcond.init_cond(well)
+        well = pwptemp.drilling.input.set_well(tdata, depths)
+        ic = pwptemp.drilling.initcond.init_cond(well)
         hc = pwptemp.heatcoefficients.heat_coef(well, 1)
         tdist = pwptemp.linearsystem.temp_calc(well, ic, hc)
         self.assertEqual(len(tdist.tdsi), len(tdist.ta), len(tdist.tr))
