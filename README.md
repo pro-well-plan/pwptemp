@@ -1,4 +1,4 @@
-![](https://user-images.githubusercontent.com/52009346/68560531-cef88400-0441-11ea-845c-9e5e4ab1f53b.png)
+![](https://user-images.githubusercontent.com/52009346/69100304-2eb3e800-0a5d-11ea-9a3a-8e502af2120b.png)
 
 ## Contributors
 
@@ -26,6 +26,9 @@ These instructions will get you a copy of the project up and running on your loc
     * `pip install pwptemp`
 * Developers: Source code from [Github](https://github.com/pro-well-plan/pwptemp)
     * `git clone https://github.com/pro-well-plan/pwptemp`
+
+## Quick Use
+![](https://user-images.githubusercontent.com/52009346/69101600-4e98db00-0a60-11ea-9b8d-2d54b2c525b9.gif)
     
 ## Contributing
 

@@ -1,7 +1,7 @@
 from math import pi
 import numpy as np
-from pwptemp.drill_op.analysis import hs_effect
-from pwptemp.drill_op.main import stab_time
+from pwptemp.drilling.analysis import hs_effect
+from pwptemp.drilling.main import stab_time
 
 
 def data(casings=[], bit=0.216):

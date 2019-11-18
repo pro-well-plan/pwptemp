@@ -1,10 +1,10 @@
 from statistics import mean
 import numpy as np
-from pwptemp.drill_op.initcond import init_cond
-from pwptemp.drill_op.heatcoefficients import heat_coef
-from pwptemp.drill_op.linearsystem import temp_calc
-from pwptemp.drill_op.plot import profile, behavior
-from pwptemp.drill_op.analysis import param_effect
+from pwptemp.drilling.initcond import init_cond
+from pwptemp.drilling.heatcoefficients import heat_coef
+from pwptemp.drilling.linearsystem import temp_calc
+from pwptemp.drilling.plot import profile, behavior
+from pwptemp.drilling.analysis import param_effect
 
 
 def temp_time(n, well):
