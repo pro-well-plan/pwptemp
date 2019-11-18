@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
 
 setup(
     name='pwptemp',
-    packages=['pwptemp'],
-    version='0.0.9',
+    packages=['pwptemp', 'pwptemp.drill_op'],
+    version='0.1.0',
     license='LGPL v3',
     description='Well Temperature Distribution',
     long_description=long_description,
@@ -13,7 +13,6 @@ setup(
     author='Pro Well Plan AS',
     author_email='juan@prowellplan.com',
     url='https://github.com/pro-well-plan/pwptemp',
-    download_url='https://github.com/pro-well-plan/pwptemp/archive/v0.0.9.tar.gz',
     keywords='well temperature distribution',
     classifiers=['Programming Language :: Python :: 3',
                  'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',

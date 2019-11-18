@@ -5,8 +5,8 @@ import pwptemp
 class TestWellPath(TestCase):
     def test_wellpath(self):
         depths = pwptemp.wellpath.get(100, 50)
-        well = pwptemp.drilling.input.set_well(pwptemp.drilling.input.data(), depths)
-        hc = pwptemp.heatcoefficients.heat_coef(well, 1)
+        well = pwptemp.drill_op.input.set_well(pwptemp.drill_op.input.data(), depths)
+        hc = pwptemp.drill_op.heatcoefficients.heat_coef(well, 1)
         for i in range(len(hc)):
             for j in range(len(hc[0])):
                 for k in range(len(hc[0, 0])):

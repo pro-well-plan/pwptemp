@@ -24,16 +24,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 * Users: Wheels for Python from [PyPI](https://pypi.python.org/pypi/pwptemp/) 
     * `pip install pwptemp`
-* Developers: Source code from [github](https://github.com/pro-well-plan/pwptemp)
+* Developers: Source code from [Github](https://github.com/pro-well-plan/pwptemp)
     * `git clone https://github.com/pro-well-plan/pwptemp`
     
 ## Contributing
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/pro-well-plan/pwptemp/tags). 
 
 ## History ##
 Pwptemp was initially written and is maintained by [Pro Well Plan

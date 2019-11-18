@@ -4,10 +4,10 @@ import pwptemp
 
 class TestInitCond(TestCase):
     def test_init_cond(self):
-        tdata = pwptemp.drilling.input.data()
+        tdata = pwptemp.drill_op.input.data()
         depths = pwptemp.wellpath.get(100, 10)
-        well = pwptemp.drilling.input.set_well(tdata, depths)
-        ic = pwptemp.drilling.initcond.init_cond(well)
+        well = pwptemp.drill_op.input.set_well(tdata, depths)
+        ic = pwptemp.drill_op.initcond.init_cond(well)
         a = ic.tdsio
         b = ic.tdso
         c = ic.tao
