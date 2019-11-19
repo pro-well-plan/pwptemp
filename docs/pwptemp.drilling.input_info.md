@@ -1,4 +1,4 @@
-# pwptemp.input.info(*about='all'*) #
+# pwptemp.drilling.input_info(*about='all'*) #
 
 Get information about the parameters involved.
 
@@ -18,7 +18,8 @@ Print the information related with the parameters.
 ## Example ##
 
 ```
->>> pwptemp.wellpath.info(about='operational')
+>>> import pwptemp.drilling as ptd
+>>> ptd.input_info(about='operational')
 Use the ID of a parameter to change the default value (e.g. tdict['tin']=30 to change the fluid inlet temperature from the default value to 30° Celsius)
 Notice that the information is provided as follows:
 parameter ID: general description, units
@@ -34,4 +35,4 @@ rop: rate of penetration, m/h
 an: area of the nozzles, m2
 ```
 
-See the [pwptemp.input](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.input.md) documentation.
+See the [pwptemp.drilling](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.drilling.md) documentation.
