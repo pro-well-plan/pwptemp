@@ -1,12 +1,12 @@
-# pwptemp.drilling.temp(*n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0, wellpath_mode=0, wellpath_load_mode=0, change_input={}*)
+# pwptemp.drilling.temp(*n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}*)
 
 Generate the well temperature profile for a certain circulation time **n**.
 
 > **Parameters:** 
 * **n: int** - Circulation time, h.
 * **mdt: int** - Measured depth of the target, m.
-* **casings: array** - casings-related data [[od, id, depth]]
-* **wellpath_data: list** - MD and TVD data [{md:num, tvd:num},{...}].
+* **casings: list** - casings-related data [{od:num, id:num, depth:num},{...},...].
+* **wellpath_data: list** - MD and TVD data [{md:num, tvd:num},{...}] or [[md1, md2,...],[tvd1, tvd2,...]].
 * **bit: float** - - Diameter of the hole. *Only required there are not casings.
 * **deltaz: int** - Length of each cell, m.
 * **profile: str** - type of well:
@@ -22,8 +22,6 @@ Generate the well temperature profile for a certain circulation time **n**.
 * **eod: int** - end of drop, m.
 * **kop2: int** - kick-off point 2, m.
 * **eob2: int** - end of build 2, m.
-* **wellpath_mode: int** - 0: create wellpath, 1: load wellpath.
-* **wellpath_load_mode: int** - 0: if data [{md:num, tvd:num}, {...], 1: if data [md, tvd].
 * **change_input: dict** - change default values {id:value, id2:value2...}
 
 > **Returns:** 

@@ -2,84 +2,102 @@
 
 ## Index ##
 
-* [Create a Well Profile.](#create-a-well-profile)  
-* [Load a Well Profile.](#load-a-well-profile)
-* [Set and load parameters.](#set-and-load-parameters)
-* [Calculating.](#calculating)
-* [Analysis.](#analysis)
+* [Introduction.](#introduction) 
+* [Well Profile.](#well-profile)  
+* [Casings.](#casings)
+* [Parameters.](#parameters)
+* [Plots.](#plots)
 
-## Create a Well Profile 
-At first we will need the well profile (TVD and MD), the function pwp.wellPath.get() allow us to generate it for a vertical well case 
-(at the moment). 
+## Introduction
+Create a well temperature distribution easily with pwptemp:
 
-> depths = pwptemp.wellpath.get(3000, 50)
+```
+>>> import pwptemp.drilling as ptd
+>>> temp = ptd.temp(10)    # well temperature distribution at 10 hours of mud circulation. 
+```
+Of course, you can also do more interesting things with pwptemp, since load your own wellpath up to generate analysis.
 
-## Load a Well Profile
-Loading a Well Profile
+## Well Profile
+### create a well profile
+ptd.temp() function generates a vertical well by default. However, you can create a different case (J-type, S-type or 
+horizontal well):
+
+```
+ptd.temp(10, 
+         mdt=2800,           # set target depth at 2800 m. default = 3000 m
+         profile='S',        # set S-type well
+         build_angle=30,     # set angle of 30 degrees
+         kop=600,            # set kick-off point at 600 m
+         eob=1200,           # set end of build at 1200 m
+         sod=1600,           # set start of drop at 1600 m
+         eod=2500)           # set end of drop at 2500 m
+```
+
+### load a well profile
+It is also possible to load your own MD-TVD data:
+1. data as a list of dictionaries:
+```
+ptd.temp(10, wellpath_data = [{md:num, tvd:num},{md:num2, tvd:num2},...])
+```
+2. data as a list of lists [md, tvd]:
+```
+ptd.temp(10, wellpath_data = [[md1, md2,...],[tvd1, tvd2,...]])
+```
 
 > depths = pwptemp.wellpath.load(md, tvd, 50)
 
-## Set and load parameters
-We need all the well design data in order to set the parameters and conditions, for this we are importing the 
-default dataset (temp_dict) from pwp.input and finally just load this data to a new WellTemperature() instance (well for this example.)
+## Casings
+It is also possible to add as many casings as you want:
+```
+ptd.temp(10, casings = [{od:num1, id:num1, depth:num1},{od:num2, id:num2, depth:num2},...])
+```
+Where depth is md in meters.
 
-> tdata = pwptemp.input.temp_dict(50)
-> well = pwptemp.input.set_well(tdata, depths)
+## Parameters
+It is also possible to change any parameter:
+```
+ptd.temp(10, 
+         change_input={'wd': 100,       # set water-depth in m
+                       'ts': 20,        # set surface temperature in °C
+                       'q': 40,         # set flow rate in m3/h
+                       'gt: 0.024,      # set geothermal gradient in °C/m
+                       'wtg': -0.006,   # set water thermal gradient in °C/m
+                       'wob': 22.8,     # set weight on bit in kN
+                       'an': 1.86       # set area of the nozzles in m2 
+                       })
+```
+[click here](https://github.com/pro-well-plan/pwptemp/blob/master/physics/drilling/inputs.md)
+to check all the parameters used for the calculations or
+[click here](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.drilling.input_info.md)
+to check a function to print the information.
 
-### How to set different values for the parameters?
-You can modify each parameter before load the dataset, for example:
 
-> tdata = pwptemp.input.temp_dict(50)
-> tdata['wd'] = 200    # Setting Water Depth = 200 m,  before loading the dataset
-> well = pwptemp.input.set_well(tdata)   # Dataset is now loaded with wd = 200 instead of the default value.  
+## Plots
+### well temperature distribution
+```
+ptd.temp(10).plot()
+```
+![](https://user-images.githubusercontent.com/52009346/69182995-5fa22480-0b12-11ea-98cc-8331aeed5c1c.png)
 
-## Calculating
+### stabilization time
+```
+ptd.stab().plot()
+```
+or from the temperature distribution object:
+```
+ptd.temp(10).stab().plot()
+```
+![](https://user-images.githubusercontent.com/52009346/69183056-7f394d00-0b12-11ea-89e7-e8c206925222.png)
 
-### Calculating the Well Temperature Distribution for a set circulation time
-Once a WellTemperature instance is created, it's possible to calculate the temperature distribution for a certain circulation time.
-For example, let's do it for 24 hours.
+### analysis
+General effect:
+```
+ptd.temp(10).effect().plot()
+```
+![](https://user-images.githubusercontent.com/52009346/69183085-8f512c80-0b12-11ea-8fa2-bc032674fd08.png)
 
-> temp = pwptemp.main.temp_time(24, well)
-
-> pwptemp.plot.profile(temp)
->![](https://user-images.githubusercontent.com/52009346/66595749-e0791280-eb9b-11e9-822e-3155dad6c64a.png)
-
-Here we get an instance with the temperature values for the different sections (inside drill string, drill string wall, riser wall, 
-casing wall, open hole, surrounding space and formation).
-
-### Calculating the stabilization time of the temperature profile
-pwptemp also allows to calculate the circulation time when the temperature profile keep constant. The function stab_time() returns
-the final time in hours, a list with the temperature value at bottom for each hour and another list for the output temperature.
-
-> stabilization = pwptemp.main.stab_time(well)
-
-> pwptemp.plot.behavior(stabilization)
-> ![](https://user-images.githubusercontent.com/52009346/66596338-018e3300-eb9d-11e9-8373-90853f2398a0.png)
-
-## Calculating the Well Temperature Distributions for n timesteps
-The function temp_times() allows to get an array with the temperature distributions for several timesteps. For example, let's do it
-for 10 hours divided in 1 hour per timestep.
-
-> temps = pwptemp.main.temp_times(10, 1, well)
-
-> pwptemp.plot.profile(temps[0])
-> ![](https://user-images.githubusercontent.com/52009346/66596694-a577de80-eb9d-11e9-8e07-5a5627eb6846.png)
-
-> pwptemp.plot.profile(temps[3])
-> ![](https://user-images.githubusercontent.com/52009346/66596777-c3454380-eb9d-11e9-8c14-28f378c69ab0.png)
-
-## Analysis
-
-### Calculating the effect of main parameters on the Temperature Distribution
-
-> effect1 = param_effect(temp, well)
-
-> pwptemp.analysis.plot(effect1, 1)
-> ![](https://user-images.githubusercontent.com/52009346/66598876-4d8fa680-eba2-11e9-8d8c-ecd1de472b1b.png)
-
-### Calculating the effect of main parameters on the Heat Source Terms
-
-> effect2 = hs_effect(well)
-
-> pwptemp.analysis.plot(effect2, 2)
-> ![](https://user-images.githubusercontent.com/52009346/66602941-6781b700-ebab-11e9-818c-5e7d7b84bfc4.png)
+Regarding heat source terms:
+```
+ptd.temp(10).well().effect().plot()
+```
+![](https://user-images.githubusercontent.com/52009346/69183029-70eb3100-0b12-11ea-9a94-36b849a55a90.png)

@@ -81,7 +81,7 @@ def info(about='all'):
                              'rpm: revolutions per minute' + '\n' + \
                              't: torque on the drill string, kN*m' + '\n' + \
                              'tbit: torque on the bit, kN*m' + '\n' + \
-                             'wob: reight on bit, kN' + '\n' + \
+                             'wob: weight on bit, kN' + '\n' + \
                              'rop: rate of penetration, m/h' + '\n' + \
                              'an: area of the nozzles, m2' + '\n'
 

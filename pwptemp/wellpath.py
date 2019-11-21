@@ -153,15 +153,14 @@ def get(mdt, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, 
     return WellDepths()
 
 
-def load(data, deltaz=50, mode=0):
+def load(data, deltaz=50):
 
-    if mode == 0:
-        md = [x['md'] for x in data]
-        tvd = [x['tvd'] for x in data]
-
-    if mode == 1:
+    if len(data) == 1:
         md = data[0]
         tvd = data[1]
+    else:
+        md = [x['md'] for x in data]
+        tvd = [x['tvd'] for x in data]
 
     md_new = list(arange(0, max(md) + deltaz, deltaz))
     tvd_new = [0]
