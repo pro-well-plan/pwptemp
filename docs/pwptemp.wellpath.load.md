@@ -1,15 +1,14 @@
-# pwptemp.wellpath.load(data, deltaz=50, mode=0) #
+# pwptemp.wellpath.load(data, deltaz=50) #
 
 Load an existing well profile to use the a set value of deltaz.
 
 > **Parameters:** 
-* **data: list** - List of measured depth values.
+* **data: list** - List of measured depth values. [{md:num, tvd:num}, {...] or [md, tvd]
 * **deltaz: int** - - Length of each step, m.
-* **mode: int** - 0: if data [{md:num, tvd:num}, {...], 1: if data [md, tvd].
 
 > **Returns:** 
 
-a **Well_Depths** instance with the following features
+an object with the following features:
 * **.md: list** - List of measured depth values.
 * **.tvd: list** - List of true vertical depth values.
 * **.deltaz: int** - Length of each cell, m.
@@ -20,7 +19,7 @@ a **Well_Depths** instance with the following features
 ```
 >>> len(data[0])
 1000
->>> depths = pwptemp.wellpath.load(data, mode=1)
+>>> depths = pwptemp.wellpath.load(data)
 >>> len(depths.md)
 21
 >>> len(depths.tvd)
