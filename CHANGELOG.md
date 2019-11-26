@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [unreleased] - 2019-11-11
+## [v0.0.9 -> v0.1.0] - 2019-11-19
 ### Added
 - Function `input.info()`.
 - Raise-error messages for the function `input.set_well()`.

@@ -29,6 +29,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Quick Use
 ![](https://user-images.githubusercontent.com/52009346/69101600-4e98db00-0a60-11ea-9b8d-2d54b2c525b9.gif)
+
+Take a look at the [tutorial](https://github.com/pro-well-plan/pwptemp/blob/master/Tutorial.md)
+to check how to use the different functions available. 
     
 ## Contributing
 
