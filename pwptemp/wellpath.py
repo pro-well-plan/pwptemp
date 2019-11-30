@@ -155,7 +155,7 @@ def get(mdt, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, 
 
 def load(data, deltaz=50):
 
-    if len(data) == 1:
+    if len(data) == 2:
         md = data[0]
         tvd = data[1]
     else:

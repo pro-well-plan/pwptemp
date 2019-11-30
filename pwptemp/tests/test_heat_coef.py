@@ -1,12 +1,13 @@
 from unittest import TestCase
-import pwptemp
+from pwptemp import wellpath
+from pwptemp.drilling import input, heatcoefficients
 
 
 class TestWellPath(TestCase):
     def test_wellpath(self):
-        depths = pwptemp.wellpath.get(100, 50)
-        well = pwptemp.drill_op.input.set_well(pwptemp.drill_op.input.data(), depths)
-        hc = pwptemp.drill_op.heatcoefficients.heat_coef(well, 1)
+        depths = wellpath.get(100, 50)
+        well = input.set_well(input.data(), depths)
+        hc = heatcoefficients.heat_coef(well, 1)
         for i in range(len(hc)):
             for j in range(len(hc[0])):
                 for k in range(len(hc[0, 0])):

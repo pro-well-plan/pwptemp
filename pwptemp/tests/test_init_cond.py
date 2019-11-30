@@ -1,13 +1,14 @@
 from unittest import TestCase
-import pwptemp
+from pwptemp import wellpath
+from pwptemp.drilling import input, initcond
 
 
 class TestInitCond(TestCase):
     def test_init_cond(self):
-        tdata = pwptemp.drill_op.input.data()
-        depths = pwptemp.wellpath.get(100, 10)
-        well = pwptemp.drill_op.input.set_well(tdata, depths)
-        ic = pwptemp.drill_op.initcond.init_cond(well)
+        tdata = input.data()
+        depths = wellpath.get(100, 10)
+        well =input.set_well(tdata, depths)
+        ic = initcond.init_cond(well)
         a = ic.tdsio
         b = ic.tdso
         c = ic.tao

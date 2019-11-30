@@ -1,20 +1,14 @@
-from statistics import mean
-import numpy as np
-from pwptemp.drilling.initcond import init_cond
-from pwptemp.drilling.heatcoefficients import heat_coef
-from pwptemp.drilling.linearsystem import temp_calc
-from pwptemp.drilling.plot import profile, behavior
-from pwptemp.drilling.analysis import param_effect
-from .input import data, set_well, info
-from .. import wellpath
-
-
 def temp_time(n, well):
     """
     :param n:
     :param well:
     :return:
     """
+    from .initcond import init_cond
+    from .heatcoefficients import heat_coef
+    from .linearsystem import temp_calc
+    from .plot import profile
+    from .analysis import param_effect
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
@@ -39,8 +33,8 @@ def temp_time(n, well):
             self.riser = well.riser
             self.csgs_reach = tc.csgs_reach
 
-        def plot(self):
-            profile(self)
+        def plot(self, sr=False):
+            profile(self, sr)
 
         def effect(self, md_length=1):
             effect = param_effect(self, well, md_length)
@@ -57,6 +51,9 @@ def temp_time(n, well):
 
 
 def stab_time(well):
+    from statistics import mean
+    from .initcond import init_cond
+    from.plot import behavior
     ta = []
     for n in range(1, 3):
         ta.append(temp_time(n, well).ta)
@@ -90,9 +87,9 @@ def stab_time(well):
 
 
 def temp_times(n, x, well):
-
+    from numpy import arange
     temps = []
-    for i in list(np.arange(x, n+x, x)):
+    for i in list(arange(x, n+x, x)):
         current_temp = temp_time(i, well)
         temps.append(current_temp)
 
@@ -101,6 +98,8 @@ def temp_times(n, x, well):
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, deltaz=50, profile='V', build_angle=1, kop=0, eob=0,
              sod=0, eod=0, kop2=0, eob2=0, change_input={}):
+    from .input import data, set_well
+    from .. import wellpath
     tdata = data(casings, bit)
     for x in change_input:   # changing default values
         if x in tdata:
@@ -118,11 +117,14 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, deltaz=50, profil
 
 
 def input_info(about='all'):
+    from .input import info
     info(about)
 
 
 def stab(mdt=3000, casings=[], wellpath_data=[], bit=0.216, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0,
          eod=0, kop2=0, eob2=0, change_input={}):
+    from .input import data, set_well
+    from .. import wellpath
     tdata = data(casings, bit)
     for x in change_input:  # changing default values
         if x in tdata:

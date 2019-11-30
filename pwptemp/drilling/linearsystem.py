@@ -1,6 +1,3 @@
-import numpy as np
-
-
 def define_coef(coefficients, section):
     c1z = coefficients[section, 0][0]
     c1e = coefficients[section, 0][1]
@@ -32,6 +29,7 @@ def define_coef(coefficients, section):
 
 
 def temp_calc(well, initcond, heatcoeff):
+    from numpy import zeros, linalg
 
     Tdsi = [well.tin]
     Tds = []
@@ -190,7 +188,7 @@ def temp_calc(well, initcond, heatcoeff):
 
     #LINEARSYSTEM
     # Creating pentadiagonal matrix
-    A = np.zeros((xi * well.zstep - 3, xi * well.zstep - 3))
+    A = zeros((xi * well.zstep - 3, xi * well.zstep - 3))
 
     # Filling up Pentadiagonal Matrix A
     lenC = xi * well.zstep - 3
@@ -213,7 +211,7 @@ def temp_calc(well, initcond, heatcoeff):
     A[lenC - 1 - (xi - 3) - (xi - 1), lenC - 1 - (xi - 3)] = -c2z
     A[lenC - 1 - (xi - 3) - (xi - 2), lenC - 1 - (xi - 3)] = -c3z
 
-    Temp = np.linalg.solve(A, B)
+    Temp = linalg.solve(A, B)
 
     for x in range(well.zstep):
         if x < well.zstep - 1:

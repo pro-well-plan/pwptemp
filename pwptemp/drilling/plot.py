@@ -16,7 +16,7 @@ def behavior(stab_data):
     plt.show()
 
 
-def profile(temp_distribution):
+def profile(temp_distribution, sr=False):
 
     # Plotting Temperature PROFILE
     md = temp_distribution.md
@@ -29,7 +29,9 @@ def profile(temp_distribution):
     if csg > 0:
         plt.plot(temp_distribution.tcsg, md, 'c', label='Casing')  # Temp. due to gradient vs Depth
     plt.plot(temp_distribution.tfm, md, 'g', label='Formation')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tsr, md, c='k', ls='-', marker='', label='Surrounding Space')  # Temp. due to gradient vs Depth
+    if sr:
+        # Temp. due to gradient vs Depth
+        plt.plot(temp_distribution.tsr, md, c='k', ls='-', marker='', label='Surrounding Space')
     plt.xlabel('Temperature, °C')
     plt.ylabel('Depth, m')
     title = 'Temperature Profile at %1.1f hours' % temp_distribution.time

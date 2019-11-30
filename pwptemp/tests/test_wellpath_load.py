@@ -1,12 +1,12 @@
 from unittest import TestCase
-import pwptemp
+from pwptemp import wellpath
 
 
 class TestWellPath(TestCase):
     def test_load(self):
-        D = pwptemp.wellpath.get(3000, 50)
+        D = wellpath.get(3000, 50)
         data = [D.md, D.tvd]
-        newD = pwptemp.wellpath.load(data, deltaz=D.deltaz, mode=1)
+        newD = wellpath.load(data, deltaz=D.deltaz)
         self.assertIsInstance(newD.md, list)
         self.assertIsInstance(newD.tvd, list)
         self.assertEqual(len(newD.md), len(newD.tvd))

@@ -1,10 +1,5 @@
-from math import pi
-import numpy as np
-from pwptemp.drilling.analysis import hs_effect
-from pwptemp.drilling.main import stab_time
-
-
 def data(casings=[], bit=0.216):
+    from numpy import asarray
     dict = {'tin': 20.0, 'ts': 15.0, 'wd': 0.0,  'ddi': 0.101, 'ddo': 0.114, 'dri': 0.45, 'dro': 0.5334, 'dfm': 2.0,
             'q': 47.696, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
@@ -17,10 +12,10 @@ def data(casings=[], bit=0.216):
         id = sorted([x['id'] for x in casings])
         depth = sorted([x['depth'] for x in casings], reverse=True)
         dict['casings'] = [[od[x], id[x], depth[x]] for x in range(len(casings))]
-        dict['casings'] = np.asarray(dict['casings'])
+        dict['casings'] = asarray(dict['casings'])
     else:
         dict['casings'] = [[bit+0.3, bit, 0]]
-        dict['casings'] = np.asarray(dict['casings'])
+        dict['casings'] = asarray(dict['casings'])
 
     return dict
 
@@ -106,6 +101,10 @@ def info(about='all'):
 
 
 def set_well(temp_dict, depths):
+    from math import pi
+    from .main import stab_time
+    from .analysis import hs_effect
+
     class NewWell(object):
         def __init__(self):
             # DEPTH
@@ -204,7 +203,7 @@ def set_well(temp_dict, depths):
             return effect
 
         def stab(self):
-            stab = stab_time(self)
-            return stab
+            result = stab_time(self)
+            return result
 
     return NewWell()
