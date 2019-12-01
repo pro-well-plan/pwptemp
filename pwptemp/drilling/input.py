@@ -1,6 +1,6 @@
 def data(casings=[], bit=0.216):
     from numpy import asarray
-    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 0.0,  'ddi': 0.101, 'ddo': 0.114, 'dri': 0.45, 'dro': 0.5334, 'dfm': 2.0,
+    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 100.0,  'ddi': 0.101, 'ddo': 0.114, 'dri': 0.45, 'dro': 0.5334, 'dfm': 2.0,
             'q': 47.696, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'h1': 1800.0, 'h2': 2000.0, 'h3': 200.0, 'h3r': 200.0, 'rhol': 1198.0,
@@ -14,7 +14,7 @@ def data(casings=[], bit=0.216):
         dict['casings'] = [[od[x], id[x], depth[x]] for x in range(len(casings))]
         dict['casings'] = asarray(dict['casings'])
     else:
-        dict['casings'] = [[bit+0.3, bit, 0]]
+        dict['casings'] = [[bit+dict['dro'], bit, 0]]
         dict['casings'] = asarray(dict['casings'])
 
     return dict
@@ -192,7 +192,7 @@ def set_well(temp_dict, depths):
             if self.casings[0, 1] < self.ddo:
                 raise ValueError('Drill Pipe outer diameter must be smaller than the first casing inner diameter.')
 
-            if self.dro > self.dsro:
+            if self.wd > 0 and self.dro > self.dsro:
                 raise ValueError('Riser diameter must be smaller than the surrounding space diameter.')
 
             if self.dsro > self.dfm:

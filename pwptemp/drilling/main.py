@@ -32,6 +32,7 @@ def temp_time(n, well):
             self.md = well.md
             self.riser = well.riser
             self.csgs_reach = tc.csgs_reach
+            self.deltat = deltat
 
         def plot(self, sr=False):
             profile(self, sr)
