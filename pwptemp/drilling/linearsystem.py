@@ -85,8 +85,8 @@ def temp_calc(well, initcond, heatcoeff):
                     W.append(0)
                     C.append(c1t + c1z + c2z + c3e)
                     E.append(-c3e)
-                    B.append(c1t * initcond.tdsio[j] + c1 + c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j]) + c1t *
-                             initcond.tdso[j] + c1t * initcond.tao[j] + c3 + c2z * (initcond.tdso[j - 1] -
+                    B.append(c1t * initcond.tdsio[j] + c1 + c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j])
+                             + c3 + c2z * (initcond.tdso[j - 1] -
                              initcond.tdso[j]) + c3e * (initcond.tsro[j] - initcond.tdsio[j]))
 
             if i == 1:  # Drill string wall

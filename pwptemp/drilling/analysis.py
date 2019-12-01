@@ -11,7 +11,7 @@ def param_effect(temp_distribution, well, md_length=1):
 
 
     # Eq coefficients - Inside Drill String
-    n_cells = well.zstep - 2
+    n_cells = well.zstep - 1
     Tdsi = temp_distribution.tdsi
     Tds = temp_distribution.tds
     Ta = temp_distribution.ta
@@ -21,23 +21,34 @@ def param_effect(temp_distribution, well, md_length=1):
     c1e = (2*well.h1/well.r1) / 2  # East component for fluid inside drill string
     c1t = well.rhol * well.cl / temp_distribution.deltat
     c1 = qp / (pi * (well.r1 ** 2))  # Heat source term for fluid inside drill string
+    c2z = (well.lambdal / (well.deltaz ** 2)) / 2
     c3e = (2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2  # East component for fluid inside annular
     c3 = qa / (pi * ((well.r3 ** 2) - (well.r2 ** 2)))  # Heat source term for fluid inside annular
-    cell = round((n_cells * (1 - md_length)) + 1)
-    total = (c1z * abs(Tdsi[-cell] - Tdsi[-(cell+1)]) + c1 + c3e * abs(Ta[-cell] - Toh[-cell]) + c3)
-
-    p1conv = (- c1z * (Tdsi[-cell] - Tdsi[-(cell+1)]) - c1z * (Tfm[-cell] - Tfm[-(cell+1)])) / c1t
-    p1cond = (c1e * (Tds[-cell] - Tdsi[-cell]) + c1e *(Tfm[-cell] - Tfm[-cell])) / c1t
-    p1 = round(p1conv + p1cond, 2)  # Effect of convection + conduction
-    p2 = c1 / c1t  # Effect of heat source term
-    p2 = round(p2, 2)
+    cell = round(n_cells * md_length)
+    if cell == 0:  # The temperature at the first cell is constant (Tin)
+        p1 = 0  # Effect of convection + conduction
+        p2 = 0  # Effect of heat source term
+    if 0 < cell < well.zstep - 1:
+        p1conv = (- c1z * (Tdsi[cell] - Tdsi[cell-1]) - c1z * (Tfm[cell] - Tfm[cell-1])) / c1t
+        p1cond = (c1e * (Tds[cell] - Tdsi[cell]) + c1e * (Tfm[cell] - Tfm[cell])) / c1t
+        p1 = round(p1conv + p1cond, 2)  # Effect of convection + conduction
+        p2 = c1 / c1t  # Effect of heat source term
+        p2 = round(p2, 2)
+    if cell == well.zstep - 1:
+        p1conv = (- c1z * (Tdsi[cell] - Tdsi[cell - 1]) - c1z * (Tfm[cell] - Tfm[cell - 1]) -
+                 c2z * (Tds[cell] - Tds[cell - 1]) - c2z * (Tfm[cell] - Tfm[cell - 1])) / c1t
+        p1cond = (c1e * (Tds[cell] - Tdsi[cell]) + c1e * (Tfm[cell] - Tfm[cell]) +
+                  c3e * (Toh[cell] - Ta[cell]) + c3e * (Tfm[cell] - Tfm[cell])) / c1t
+        p1 = round(p1conv + p1cond, 2)  # Effect of convection + conduction
+        p2 = (c1 + c3) / c1t  # Effect of heat source term
+        p2 = round(p2, 2)
 
     class ParametersEffect(object):
         def __init__(self):
-            self.t1 = round(Tfm[-cell], 2)
+            self.t1 = round(Tfm[cell], 2)
             self.cc = p1
             self.hs = p2
-            self.t2 = round(Tdsi[-cell], 2)
+            self.t2 = round(Tdsi[cell], 2)
             self.time = temp_distribution.time
             self.length = round(md_length * well.md[-1], 1)
 

@@ -74,14 +74,13 @@ Returns the well instance with all the parameters.
 ![](https://user-images.githubusercontent.com/52009346/69183056-7f394d00-0b12-11ea-89e7-e8c206925222.png)
 
 ###.effect(*md_length=1*)
-Returns the effect instance with the relevance of the respective factor on the temperature calculation.
+Returns the effect instance with the contribution of the respective factor on the temperature calculation.
 ```
 >>> import pwptemp.drilling as ptd
 >>> temp = ptd.temp(10)
->>> temp.effect().plot()
+>>> temp.effect(md_length=0.95).plot()
 ```
-![](https://user-images.githubusercontent.com/52009346/69183085-8f512c80-0b12-11ea-8fa2-bc032674fd08.png)
-
+![](https://user-images.githubusercontent.com/52009346/69919368-4dae7300-147c-11ea-9ae3-4e3a3ce19a78.png)
 ###.stab()
 Returns the temperature behavior until the stabilization time.
 ```

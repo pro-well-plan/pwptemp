@@ -28,10 +28,10 @@ def profile(temp_distribution, sr=False):
         plt.plot(temp_distribution.tr, md, 'g', label='Riser')  # Temp. due to gradient vs Depth
     if csg > 0:
         plt.plot(temp_distribution.tcsg, md, 'c', label='Casing')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tfm, md, 'g', label='Formation')  # Temp. due to gradient vs Depth
+    plt.plot(temp_distribution.tfm, md, color='k', label='Formation')  # Temp. due to gradient vs Depth
     if sr:
         # Temp. due to gradient vs Depth
-        plt.plot(temp_distribution.tsr, md, c='k', ls='-', marker='', label='Surrounding Space')
+        plt.plot(temp_distribution.tsr, md, c='0.6', ls='-', marker='', label='Surrounding Space')
     plt.xlabel('Temperature, °C')
     plt.ylabel('Depth, m')
     title = 'Temperature Profile at %1.1f hours' % temp_distribution.time
