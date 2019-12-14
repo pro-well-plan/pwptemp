@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased] - 2019-12-14
+### Added
+- Horizontal displacement added in wellpath.get() function.
+- Method plot() wellpath.get().
+
+## [v0.1.1] - 2019-12-02
+### Changed
+- Inputs wellpath_mode and wellpath_load_mode are no longer required.
+- Function param_effect() now shows contributions by heat source terms and convection/conduction.
+### Fixed
+- Data shape recognition in wellpath.load()
 
 ## [v0.0.9 -> v0.1.0] - 2019-11-19
 ### Added
