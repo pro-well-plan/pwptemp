@@ -69,8 +69,6 @@ def hs_effect(well):
                 (127.094 * 10 ** 6))) * ((2 * (0.7 + 1) * well.va) / (0.7 * pi * (well.r3 + well.r2) *
                 (well.r3 - well.r2) ** 2)) ** 0.7
     total = qp + qa
-    #qp = round((qp/total)*100, 2)
-    #qa = round((qa/total)*100, 2)
     p1 = (2*pi*(well.rpm/60)*well.t) / total
     p1 = round(p1, 2)  # Effect of Drill String Rotation in Heat Source Term Qp
     p2 = (qp - p1) / total
