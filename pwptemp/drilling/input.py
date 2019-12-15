@@ -35,8 +35,6 @@ def info(about='all'):
     conditions_parameters = 'PARAMETERS RELATED TO SIMULATION CONDITIONS' + '\n' + \
                             'ts: surface temperature, °C' + '\n' + \
                             'wd: water depth, m' + '\n' + \
-                            'dsr: surrounding space inner diameter, m' + '\n' + \
-                            'dsro: surrounding space outer diameter, m' + '\n' + \
                             'dfm: undisturbed formation diameter, m' + '\n'
 
     heatcoeff_parameters = 'PARAMETERS RELATED TO HEAT COEFFICIENTS' + '\n' + \

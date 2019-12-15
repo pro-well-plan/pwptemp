@@ -39,3 +39,36 @@ def profile(temp_distribution, sr=False):
     plt.ylim(plt.ylim()[::-1])  # reversing y axis
     plt.legend()  # applying the legend
     plt.show()
+
+
+def profile_multitime(temps, tdsi=True, ta=False, tr=False, tcsg=False, tfm=True, tsr=False):
+    import secrets
+    md = temps.values[0].md
+    riser = temps.values[0].riser
+    csg = temps.values[0].csgs_reach
+    if tfm:
+        plt.plot(temps.values[0].tfm, md, color='k', label='Formation - Initial')  # Temp. due to gradient vs Depth
+
+    color = ['r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8', '0.2']
+    if len(temps.values) > len(color):
+        color = color * round((len(temps.values) / len(color)))
+    for x in range(len(temps.values)):
+        # Plotting Temperature PROFILE
+        if tdsi:
+            plt.plot(temps.values[x].tdsi, md, c=color[x], label='Fluid in Drill String at %1.1f hours' % temps.times[x])
+        if ta:
+            plt.plot(temps.values[x].ta, md, c=color[x], label='Fluid in Annulus at %1.1f hours' % temps.times[x])
+        if riser > 0 and tr:
+            plt.plot(temps.values[x].tr, md, c=color[x], label='Riser at %1.1f hours' % temps.times[x])
+        if csg > 0 and tcsg:
+            plt.plot(temps.values[x].tcsg, md, c=color[x], label='Casing at %1.1f hours' % temps.times[x])
+        if tsr:
+            # Temp. due to gradient vs Depth
+            plt.plot(temps.values[x].tsr, md, c=color[x], ls='-', marker='', label='Surrounding Space')
+    plt.xlabel('Temperature, °C')
+    plt.ylabel('Depth, m')
+    title = 'Temperature Profiles'
+    plt.title(title)
+    plt.ylim(plt.ylim()[::-1])  # reversing y axis
+    plt.legend()  # applying the legend
+    plt.show()

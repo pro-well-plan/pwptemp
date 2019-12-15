@@ -10,8 +10,7 @@ class TestAnalysis(TestCase):
         well = input.set_well(tdata, depths)
         td = main.temp_time(24, well)
         eff = analysis.param_effect(td, well)
-        total = eff.flow + eff.hs + eff.fm
-        self.assertEqual(round(total), 100)
-        self.assertIsInstance(eff.flow, float)
+        final = round(eff.cc + eff.hs + eff.t1, 1)
+        self.assertEqual(final, round(eff.t2, 1))
+        self.assertIsInstance(eff.cc, float)
         self.assertIsInstance(eff.hs, float)
-        self.assertIsInstance(eff.fm, float)

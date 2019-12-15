@@ -185,7 +185,7 @@ def get(mdt, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, 
         z_checkpoint = tvd[-1]
         hz_checkpoint = horizontal[-1]
 
-        for x in range(round((eob2 - kop2) / deltaz) - 1):
+        for x in range(cells_drop):
             hz_displacement = r * (sin(theta) - sin(theta - (theta_delta * (x + 1))))
             horizontal.append(round(hz_checkpoint + hz_displacement, 2))
 
