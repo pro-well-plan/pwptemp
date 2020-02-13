@@ -4,7 +4,7 @@ Get information about the parameters involved.
 
 > **Parameters:**
 *  **about:** *string, default 'all'*
-    - 'casings': parameters related to casings/riser
+    - 'tubular': values related to tubular sizes
     - 'conditions': parameters related to simulation conditions
     - 'heatcoeff': parameters related to heat coefficients
     - 'densities': parameters related to densities
@@ -26,13 +26,13 @@ parameter ID: general description, units
 
 PARAMETERS RELATED TO THE OPERATION
 tin: fluid inlet temperature, °C
-q: flow rate, m3/h
+q: flow rate, lpm
 rpm: revolutions per minute
 t: torque on the drill string, kN*m
 tbit: torque on the bit, kN*m
 wob: reight on bit, kN
 rop: rate of penetration, m/h
-an: area of the nozzles, m2
+an: area of the nozzles, in2
 ```
 
 See the [pwptemp.drilling](https://github.com/pro-well-plan/pwptemp/blob/master/docs/pwptemp.drilling.md) documentation.
