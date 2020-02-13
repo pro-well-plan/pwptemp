@@ -1,20 +1,20 @@
 def data(casings=[], bit=0.216):
     from numpy import asarray
-    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 100.0,  'ddi': 0.101, 'ddo': 0.114, 'dri': 0.45, 'dro': 0.5334, 'dfm': 2.0,
-            'q': 47.696, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
+    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 100.0,  'ddi': 4, 'ddo': 4.5, 'dri': 17.716, 'dro': 21, 'dfm': 80,
+            'q': 47.696 * 16.667, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
-            'cw': 4000.0, 'cfm': 800.0, 'h1': 1800.0, 'h2': 2000.0, 'h3': 200.0, 'h3r': 200.0, 'rhol': 1198.0,
-            'rhod': 7600.0, 'rhoc': 7800.0, 'rhor': 7800.0, 'rhofm': 2245.0, 'rhow': 1029.0, 'rhocem': 2700.0,
-            'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 't': 2.0, 'tbit': 1.35, 'wob': 22.41, 'rop': 14.4, 'an': 2.0}
+            'cw': 4000.0, 'cfm': 800.0, 'h1': 1800.0, 'h2': 2000.0, 'h3': 200.0, 'h3r': 200.0, 'rhol': 1.198,
+            'rhod': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7,
+            'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 't': 2.0, 'tbit': 1.35, 'wob': 22.41, 'rop': 14.4, 'an': 3100.0}
 
     if len(casings) > 0:
-        od = sorted([x['od'] for x in casings])
-        id = sorted([x['id'] for x in casings])
+        od = sorted([x['od'] * 0.0254 for x in casings])
+        id = sorted([x['id'] * 0.0254 for x in casings])
         depth = sorted([x['depth'] for x in casings], reverse=True)
         dict['casings'] = [[od[x], id[x], depth[x]] for x in range(len(casings))]
         dict['casings'] = asarray(dict['casings'])
     else:
-        dict['casings'] = [[bit+dict['dro'], bit, 0]]
+        dict['casings'] = [[(bit + dict['dro'] * 0.0254), bit, 0]]
         dict['casings'] = asarray(dict['casings'])
 
     return dict
@@ -26,11 +26,11 @@ def info(about='all'):
     print('Notice that the information is provided as follows:' + '\n' +
           'parameter ID: general description, units' + '\n')
 
-    casings_parameters = 'PARAMETERS RELATED TO CASINGS/RISER' + '\n' + \
-                         'ddi: drill string inner diameter, m' + '\n' + \
-                         'ddo: drill string outer diameter, m' + '\n' + \
-                         'dri: riser inner diameter, m' + '\n' + \
-                         'dro: riser outer diameter, m' + '\n'
+    tubular_parameters = 'VALUES RELATED TO TUBULAR SIZES' + '\n' + \
+                         'ddi: drill string inner diameter, in' + '\n' + \
+                         'ddo: drill string outer diameter, in' + '\n' + \
+                         'dri: riser inner diameter, in' + '\n' + \
+                         'dro: riser outer diameter, in' + '\n'
 
     conditions_parameters = 'PARAMETERS RELATED TO SIMULATION CONDITIONS' + '\n' + \
                             'ts: surface temperature, °C' + '\n' + \
@@ -60,26 +60,26 @@ def info(about='all'):
                            'wtg: seawater thermal gradient, °C/m' + '\n'
 
     densities_parameters = 'PARAMETERS RELATED TO DENSITIES' + '\n' + \
-                           'rhol: fluid density, kg/m3' + '\n' + \
-                           'rhod: drill pipe density, kg/m3' + '\n' + \
-                           'rhoc: casing density, kg/m3' + '\n' + \
-                           'rhor: riser density, kg/m3' + '\n' + \
-                           'rhofm: formation density, kg/m3' + '\n' + \
-                           'rhow: seawater density, kg/m3' + '\n' + \
-                           'rhocem: cement density, kg/m3' + '\n'
+                           'rhol: fluid density, sg' + '\n' + \
+                           'rhod: drill pipe density, sg' + '\n' + \
+                           'rhoc: casing density, sg' + '\n' + \
+                           'rhor: riser density, sg' + '\n' + \
+                           'rhofm: formation density, sg' + '\n' + \
+                           'rhow: seawater density, sg' + '\n' + \
+                           'rhocem: cement density, sg' + '\n'
 
     operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
                              'tin: fluid inlet temperature, °C' + '\n' + \
-                             'q: flow rate, m3/h' + '\n' + \
+                             'q: flow rate, lpm' + '\n' + \
                              'rpm: revolutions per minute' + '\n' + \
                              't: torque on the drill string, kN*m' + '\n' + \
                              'tbit: torque on the bit, kN*m' + '\n' + \
                              'wob: weight on bit, kN' + '\n' + \
                              'rop: rate of penetration, m/h' + '\n' + \
-                             'an: area of the nozzles, m2' + '\n'
+                             'an: area of the nozzles, in2' + '\n'
 
     if about == 'casings':
-        print(casings_parameters)
+        print(tubular_parameters)
 
     if about == 'conditions':
         print(conditions_parameters)
@@ -94,7 +94,7 @@ def info(about='all'):
         print(operational_parameters)
 
     if about == 'all':
-        print(casings_parameters + '\n' + conditions_parameters + '\n' + heatcoeff_parameters + '\n' +
+        print(tubular_parameters + '\n' + conditions_parameters + '\n' + heatcoeff_parameters + '\n' +
               densities_parameters + '\n' + operational_parameters)
 
 
@@ -114,10 +114,10 @@ def set_well(temp_dict, depths):
             # TUBULAR
             self.casings = temp_dict["casings"]  # casings array
             self.riser = round(temp_dict["wd"] / self.deltaz)  # number of grid cells for the riser
-            self.ddi = temp_dict["ddi"]  # Drill String Inner  Diameter, m
-            self.ddo = temp_dict["ddo"]  # Drill String Outer Diameter, m
-            self.dri = temp_dict["dri"]  # Riser diameter Inner Diameter, m
-            self.dro = temp_dict["dro"]  # Riser diameter Outer Diameter, m
+            self.ddi = temp_dict["ddi"] * 0.0254  # Drill String Inner  Diameter, m
+            self.ddo = temp_dict["ddo"] * 0.0254   # Drill String Outer Diameter, m
+            self.dri = temp_dict["dri"] * 0.0254  # Riser diameter Inner Diameter, m
+            self.dro = temp_dict["dro"] * 0.0254   # Riser diameter Outer Diameter, m
 
             # CONDITIONS
             self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
@@ -158,18 +158,18 @@ def set_well(temp_dict, depths):
             self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
 
-            # DENSITIES
-            self.rhol = temp_dict["rhol"]  # Fluid
-            self.rhod = temp_dict["rhod"]  # Drill Pipe
-            self.rhoc = temp_dict["rhoc"]  # Casing
-            self.rhor = temp_dict["rhor"]  # Riser
-            self.rhocem = temp_dict["rhocem"]
-            self.rhofm = temp_dict["rhofm"]     # Formation
-            self.rhow = temp_dict["rhow"]       # Seawater
+            # DENSITIES kg/m3
+            self.rhol = temp_dict["rhol"] * 1000  # Fluid
+            self.rhod = temp_dict["rhod"] * 1000  # Drill Pipe
+            self.rhoc = temp_dict["rhoc"] * 1000  # Casing
+            self.rhor = temp_dict["rhor"] * 1000  # Riser
+            self.rhocem = temp_dict["rhocem"] * 1000  # Cement Sheath
+            self.rhofm = temp_dict["rhofm"] * 1000  # Formation
+            self.rhow = temp_dict["rhow"] * 1000  # Seawater
 
             # OPERATIONAL
             self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
-            self.q = temp_dict["q"]     # Flow rate, m^3/h
+            self.q = temp_dict["q"] * 0.06    # Flow rate, m^3/h
             self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600   # Fluid velocity through the annular
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600    # Fluid velocity through the drill pipe
             self.rpm = temp_dict["rpm"]    # Revolutions per minute
@@ -177,7 +177,7 @@ def set_well(temp_dict, depths):
             self.tbit = temp_dict["tbit"]       # Torque on the bit, kN*m
             self.wob = temp_dict["wob"]     # Weight on bit, kN
             self.rop = temp_dict["rop"]     # Rate of Penetration, m/h
-            self.an = temp_dict["an"]       # Area of the nozzles, m^2
+            self.an = temp_dict["an"] / 1550       # Area of the nozzles, m^2
 
             # Raise Errors:
 

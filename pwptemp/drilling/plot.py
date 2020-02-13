@@ -42,7 +42,6 @@ def profile(temp_distribution, sr=False):
 
 
 def profile_multitime(temps, tdsi=True, ta=False, tr=False, tcsg=False, tfm=True, tsr=False):
-    import secrets
     md = temps.values[0].md
     riser = temps.values[0].riser
     csg = temps.values[0].csgs_reach
