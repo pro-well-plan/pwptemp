@@ -4,13 +4,13 @@
 |2| Surface Temperature                                                   |  15    |°C       |
 |3| Well Depth                                                            |  -     |m        |
 |4| Water Depth                                                           |    0   |m        |
-|5| Drill Pipe Inner Diameter                                             |  0.101 |in        |
-|6| Drill Pipe Outer Diameter                                             |  0.104 |in        |
-|7| Casing Inner Diameter                                                 |  0.216 |in        |
-|8| Riser Inner Diameter                                                  |  0.45  |in        |
-|9| Riser Outer Diameter                                                 | 0.5334 |in        |
-|10| Nearby Formation Diameter                                            |  80     |in        |
-|11| Circulation Rate                                                     | 47.69  |lpm    |
+|5| Drill Pipe Inner Diameter                                             |  4     |in       |
+|6| Drill Pipe Outer Diameter                                             |  4.5   |in       |
+|7| First Casing / Borehole Inner Diameter                                |  8.5   |in       |
+|8| Riser Inner Diameter                                                  |  17.716|in       |
+|9| Riser Outer Diameter                                                  | 21     |in       |
+|10| Nearby Formation Diameter                                            |  80    |in       |
+|11| Circulation Rate                                                     | 794.93 |lpm      |
 |12| Fluid Thermal Conductivity                                           |  0.635 |W/(m°K)  |
 |13| Casing Thermal Conductivity                                          |  43.3  |W/(m°K)  |
 |14| Drill Pipe Thermal Conductivity                                      |  40    |W/(m°K)  |
@@ -31,14 +31,14 @@
 |29| Geothermal Gradient                                                  |  0.0238|°C/m     |
 |30| Seawater Thermal Gradient                                            |  -0.005|°C/m     | 
 |31| Fluid Density                                                        |  1198  |sg       |
-|32| Drill Pipe Density                                                   |  7600  |sg       | 
-|33| Casing Density                                                       |  7800  |sg       |
-|34| Riser Density                                                        |  7800  |sg       |
-|35| Formation Density                                                    |  2245  |sg       | 
-|36| Seawater Density                                                     |  1029  |sg       |
+|32| Drill Pipe Density                                                   |  7.6   |sg       | 
+|33| Casing Density                                                       |  7.8   |sg       |
+|34| Riser Density                                                        |  7.8   |sg       |
+|35| Formation Density                                                    |  2.245 |sg       | 
+|36| Seawater Density                                                     |  1.029 |sg       |
 |37| Average Density of Surrouding Formation                              |  -     |sg       |
 |38| Weight on bit (WOB)                                                  |  22.41 |kN       |
 |39| Rate of Penetration (ROP)                                            |  14.4  |m/h      |
-|40| Area of Drill Bit Nozzles                                            |  2     |in^2     |
+|40| Area of Drill Bit Nozzles                                            |  3100  |in^2     |
 |41| Reynolds number                                                      |  -     |unit less|
 |42| Measured Depth at Target                                             |  -     |m        |

@@ -4,10 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - 2019-12-14
+## [v0.1.4] - 2019-12-15
+### Changed
+- Units on inputs: diameters [in], flow rate [lpm], area of nuzzles [in2], densities [sg].
+
+## [v0.1.2 -> v0.1.3] - 2019-12-15
 ### Added
 - Horizontal displacement added in wellpath.get() function.
 - Method plot() wellpath.get().
+- Function `ptd.temps` for calculating at multiple time steps.
 
 ## [v0.1.1] - 2019-12-02
 ### Changed
@@ -42,7 +47,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v0.0.7] - 2019-09-23
 ### Added
-- Functions `wellPath.get()` and `analysis.hs_ratio()`.
+- Functions `wellpath.get()` and `analysis.hs_ratio()`.
 - Analysis Module.
 - Testing Module.
 - Web server in server.py, runs default script and returns plot to template
