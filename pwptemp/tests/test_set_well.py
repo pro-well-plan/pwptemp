@@ -6,7 +6,7 @@ from pwptemp.drilling import input
 class TestSetWell(TestCase):
     def test_set_well(self):
         # with casings
-        casings = [{'od': 0.24, 'id': 0.216, 'depth': 25}, {'od': 0.66, 'id': 0.63, 'depth': 10}]
+        casings = [{'od': 9.5, 'id': 8.5, 'depth': 25.0}, {'od': 20.0, 'id': 18.0, 'depth': 10.0}]
         tdata = input.data(casings)
         depths = wellpath.get(100, 10)
         well = input.set_well(tdata, depths)
@@ -14,7 +14,7 @@ class TestSetWell(TestCase):
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
         for x, value in tdata.items():
-            self.assertIsInstance(value, float)
+            self.assertEqual(value/value, 1)
 
         # without casings
         tdata = input.data()
@@ -23,5 +23,5 @@ class TestSetWell(TestCase):
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
         for x, value in tdata.items():
-            self.assertIsInstance(value, float)
+            self.assertEqual(value/value, 1)
 
