@@ -3,10 +3,9 @@ def data(casings=[], bit=0.216):
     dict = {'tin': 20.0, 'ts': 15.0, 'wd': 0.0,  'ddi': 4, 'ddo': 4.5, 'dri': 17.716, 'dro': 21, 'dfm': 80,
             'q': 794.933, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
-            'cw': 4000.0, 'cfm': 800.0, 'h1': 1800.0, 'h2': 2000.0, 'h3': 200.0, 'h3r': 200.0, 'rhol': 1.198,
-            'rhod': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238,
-            'wtg': -0.005, 'rpm': 100.0, 't': 2.0, 'tbit': 1.35, 'wob': 22.41, 'rop': 14.4, 'an': 3100.0, 'bit_n': 1.0,
-            'dp_e': 0.0, 'visc': 3.0}
+            'cw': 4000.0, 'cfm': 800.0, 'rhol': 1.198, 'rhod': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
+            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 't': 2.0, 'tbit': 1.35,
+            'wob': 22.41, 'rop': 14.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'visc': 3.0}
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -53,10 +52,6 @@ def info(about='all'):
                            'cr: riser - specific heat capacity, J/(kg*°C)' + '\n' + \
                            'cw: water - specific heat capacity, J/(kg*°C)' + '\n' + \
                            'cfm: formation - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'h1: drill pipe inner - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
-                           'h2: drill pipe outer - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
-                           'h3: casing inner - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
-                           'h3r: riser inner - convective heat transfer coefficient, W/(m^2*°C)' + '\n' + \
                            'gt: geothermal gradient, °C/m' + '\n' + \
                            'wtg: seawater thermal gradient, °C/m' + '\n'
 
@@ -140,6 +135,33 @@ def set_well(temp_dict, depths):
             self.r5 = self.dsro / 2  # Surrounding Space Outer Radius, m
             self.rfm = self.dfm / 2  # Undisturbed Formation Radius, m
 
+            # DENSITIES kg/m3
+            self.rhol = temp_dict["rhol"] * 1000  # Fluid
+            self.rhod = temp_dict["rhod"] * 1000  # Drill Pipe
+            self.rhoc = temp_dict["rhoc"] * 1000  # Casing
+            self.rhor = temp_dict["rhor"] * 1000  # Riser
+            self.rhocem = temp_dict["rhocem"] * 1000  # Cement Sheath
+            self.rhofm = temp_dict["rhofm"] * 1000  # Formation
+            self.rhow = temp_dict["rhow"] * 1000  # Seawater
+            self.visc = temp_dict["visc"] / 1000  # Fluid viscosity [Pas]
+
+            # OPERATIONAL
+            self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
+            self.q = temp_dict["q"] * 0.06  # Flow rate, m^3/h
+            self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600  # Fluid velocity through the annular
+            self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the drill pipe
+            self.re_p = self.rhol * self.vp * 2 * self.r1 / self.visc  # Reynolds number inside drill pipe
+            self.re_a = self.rhol * self.va * 2 * (self.r3 - self.r2) / self.visc  # Reynolds number - annular
+            self.f_p = 1.63 / log(6.9 / self.re_p) ** 2  # Friction factor inside drill pipe
+            self.rpm = temp_dict["rpm"]  # Revolutions per minute
+            self.t = temp_dict["t"]  # Torque on the drill string, kN*m
+            self.tbit = temp_dict["tbit"]  # Torque on the bit, kN*m
+            self.wob = temp_dict["wob"]  # Weight on bit, kN
+            self.rop = temp_dict["rop"]  # Rate of Penetration, m/h
+            self.an = temp_dict["an"] / 1550  # Area of the nozzles, m^2
+            self.bit_n = temp_dict["bit_n"]  # drill bit efficiency
+            self.dp_e = temp_dict["dp_e"]  # drill pipe eccentricity
+
             # HEAT COEFFICIENTS
             self.lambdal = temp_dict["lambdal"]  # Fluid
             self.lambdac = temp_dict["lambdac"]  # Casing
@@ -155,39 +177,19 @@ def set_well(temp_dict, depths):
             self.cr = temp_dict["cr"]     # Riser
             self.cw = temp_dict["cw"]      # Seawater
             self.cfm = temp_dict["cfm"]       # Formation
-            self.h1 = temp_dict["h1"]       # Drill Pipe inner wall
-            self.h2 = temp_dict["h2"]       # Drill Pipe outer wall
-            self.h3 = temp_dict["h3"]       # Casing inner wall
-            self.h3r = temp_dict["h3r"]    # Riser inner wall
+            self.prandtl = self.visc * self.cl / self.lambdal       # Prandtl number
+            self.nu_dpi = 0.027 * (self.re_p ** (4/5)) * (self.prandtl ** (1/3)) * (1 ** 0.14)
+            self.nu_dpo = 0.027 * (self.re_a ** (4 / 5)) * (self.prandtl ** (1 / 3)) * (1 ** 0.14)
+            # convective heat transfer coefficients, W/(m^2*°C)
+            self.h1 = self.lambdal * self.nu_dpi / self.ddi      # Drill Pipe inner wall
+            self.h2 = self.lambdal * self.nu_dpo / self.ddo        # Drill Pipe outer wall
+            self.nu_a = 1.86 * ((self.re_a * self.prandtl) ** (1/3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) **
+                                                                        (1/3)) * (1 ** (1/4))
+            self.h3 = self.lambdal * self.nu_a / (self.r2 * log(self.r3 / self.r2))       # Casing inner wall
+            self.h3r = self.lambdal * self.nu_a / (self.r2 * log(self.r3r / self.r2))    # Riser inner wall
             self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
 
-            # DENSITIES kg/m3
-            self.rhol = temp_dict["rhol"] * 1000  # Fluid
-            self.rhod = temp_dict["rhod"] * 1000  # Drill Pipe
-            self.rhoc = temp_dict["rhoc"] * 1000  # Casing
-            self.rhor = temp_dict["rhor"] * 1000  # Riser
-            self.rhocem = temp_dict["rhocem"] * 1000  # Cement Sheath
-            self.rhofm = temp_dict["rhofm"] * 1000  # Formation
-            self.rhow = temp_dict["rhow"] * 1000  # Seawater
-            self.visc = temp_dict["visc"] / 1000       # Fluid viscosity [Pas]
-
-            # OPERATIONAL
-            self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
-            self.q = temp_dict["q"] * 0.06    # Flow rate, m^3/h
-            self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600   # Fluid velocity through the annular
-            self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600    # Fluid velocity through the drill pipe
-            self.re_p = self.rhol * self.vp * 2 * self.r1 / self.visc       # Reynolds number inside drill pipe
-            self.re_a = self.rhol * self.va * 2 * (self.r3 - self.r2) / self.visc       # Reynolds number - annular
-            self.f_p = 1.63 / log(6.9 / self.re_p) ** 2     # Friction factor inside drill pipe
-            self.rpm = temp_dict["rpm"]    # Revolutions per minute
-            self.t = temp_dict["t"]     # Torque on the drill string, kN*m
-            self.tbit = temp_dict["tbit"]       # Torque on the bit, kN*m
-            self.wob = temp_dict["wob"]     # Weight on bit, kN
-            self.rop = temp_dict["rop"]     # Rate of Penetration, m/h
-            self.an = temp_dict["an"] / 1550       # Area of the nozzles, m^2
-            self.bit_n = temp_dict["bit_n"]     # drill bit efficiency
-            self.dp_e = temp_dict["dp_e"]     # drill pipe eccentricity
 
             # Raise Errors:
 
