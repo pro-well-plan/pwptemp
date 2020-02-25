@@ -1,11 +1,12 @@
 def data(casings=[], bit=0.216):
     from numpy import asarray
-    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 100.0,  'ddi': 4, 'ddo': 4.5, 'dri': 17.716, 'dro': 21, 'dfm': 80,
+    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 0.0,  'ddi': 4, 'ddo': 4.5, 'dri': 17.716, 'dro': 21, 'dfm': 80,
             'q': 794.933, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'h1': 1800.0, 'h2': 2000.0, 'h3': 200.0, 'h3r': 200.0, 'rhol': 1.198,
-            'rhod': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7,
-            'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 't': 2.0, 'tbit': 1.35, 'wob': 22.41, 'rop': 14.4, 'an': 3100.0}
+            'rhod': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238,
+            'wtg': -0.005, 'rpm': 100.0, 't': 2.0, 'tbit': 1.35, 'wob': 22.41, 'rop': 14.4, 'an': 3100.0, 'bit_n': 1.0,
+            'dp_e': 0.0, 'visc': 3.0}
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -66,7 +67,8 @@ def info(about='all'):
                            'rhor: riser density, sg' + '\n' + \
                            'rhofm: formation density, sg' + '\n' + \
                            'rhow: seawater density, sg' + '\n' + \
-                           'rhocem: cement density, sg' + '\n'
+                           'rhocem: cement density, sg' + '\n' + \
+                           'visc: fluid viscosity, cp' + '\n'
 
     operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
                              'tin: fluid inlet temperature, °C' + '\n' + \
@@ -76,7 +78,9 @@ def info(about='all'):
                              'tbit: torque on the bit, kN*m' + '\n' + \
                              'wob: weight on bit, kN' + '\n' + \
                              'rop: rate of penetration, m/h' + '\n' + \
-                             'an: area of the nozzles, in2' + '\n'
+                             'an: area of the nozzles, in2' + '\n' + \
+                             'bit_n: drill bit efficiency' + '\n' + \
+                             'dp_e: drill pipe eccentricity' + '\n'
 
     if about == 'casings':
         print(tubular_parameters)
@@ -99,7 +103,7 @@ def info(about='all'):
 
 
 def set_well(temp_dict, depths):
-    from math import pi
+    from math import pi, log
     from .main import stab_time
     from .analysis import hs_effect
 
@@ -166,18 +170,24 @@ def set_well(temp_dict, depths):
             self.rhocem = temp_dict["rhocem"] * 1000  # Cement Sheath
             self.rhofm = temp_dict["rhofm"] * 1000  # Formation
             self.rhow = temp_dict["rhow"] * 1000  # Seawater
+            self.visc = temp_dict["visc"] / 1000       # Fluid viscosity [Pas]
 
             # OPERATIONAL
             self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
             self.q = temp_dict["q"] * 0.06    # Flow rate, m^3/h
             self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600   # Fluid velocity through the annular
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600    # Fluid velocity through the drill pipe
+            self.re_p = self.rhol * self.vp * 2 * self.r1 / self.visc       # Reynolds number inside drill pipe
+            self.re_a = self.rhol * self.va * 2 * (self.r3 - self.r2) / self.visc       # Reynolds number - annular
+            self.f_p = 1.63 / log(6.9 / self.re_p) ** 2     # Friction factor inside drill pipe
             self.rpm = temp_dict["rpm"]    # Revolutions per minute
             self.t = temp_dict["t"]     # Torque on the drill string, kN*m
             self.tbit = temp_dict["tbit"]       # Torque on the bit, kN*m
             self.wob = temp_dict["wob"]     # Weight on bit, kN
             self.rop = temp_dict["rop"]     # Rate of Penetration, m/h
             self.an = temp_dict["an"] / 1550       # Area of the nozzles, m^2
+            self.bit_n = temp_dict["bit_n"]     # drill bit efficiency
+            self.dp_e = temp_dict["dp_e"]     # drill pipe eccentricity
 
             # Raise Errors:
 

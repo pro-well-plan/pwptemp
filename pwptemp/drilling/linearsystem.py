@@ -1,31 +1,42 @@
 def define_coef(coefficients, section):
-    c1z = coefficients[section, 0][0]
-    c1e = coefficients[section, 0][1]
-    c1 = coefficients[section, 0][2]
-    c1t = coefficients[section, 0][3]
+    section1 = coefficients[0][section, 0]
+    c1z = section1[0]
+    c1e = section1[1]
+    c1 = section1[2]
+    c1t = section1[3]
 
-    c2z = coefficients[section, 1][0]
-    c2e = coefficients[section, 1][1]
-    c2w = coefficients[section, 1][2]
-    c2t = coefficients[section, 1][3]
+    section2 = coefficients[0][section, 1]
+    c2z = section2[0]
+    c2e = section2[1]
+    c2w = section2[2]
+    c2t = section2[3]
 
-    c3z = coefficients[section, 2][0]
-    c3e = coefficients[section, 2][1]
-    c3w = coefficients[section, 2][2]
-    c3 = coefficients[section, 2][3]
-    c3t = coefficients[section, 2][4]
+    section3 = coefficients[0][section, 2]
+    c3z = section3[0]
+    c3e = section3[1]
+    c3w = section3[2]
+    c3 = section3[3]
+    c3t = section3[4]
 
-    c4z = coefficients[section, 3][0]
-    c4e = coefficients[section, 3][1]
-    c4w = coefficients[section, 3][2]
-    c4t = coefficients[section, 3][3]
+    section4 = coefficients[0][section, 3]
+    c4z = section4[0]
+    c4e = section4[1]
+    c4w = section4[2]
+    c4t = section4[3]
 
-    c5z = coefficients[section, 4][0]
-    c5e = coefficients[section, 4][1]
-    c5w = coefficients[section, 4][2]
-    c5t = coefficients[section, 4][3]
+    section5 = coefficients[0][section, 4]
+    c5z = section5[0]
+    c5e = section5[1]
+    c5w = section5[2]
+    c5t = section5[3]
 
-    return c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t
+    cb = coefficients[1]
+    cbe = coefficients[2]
+    cbt = coefficients[3]
+    cbz = coefficients[4]
+
+    return [c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb,
+            cbe, cbt, cbz]
 
 
 def temp_calc(well, initcond, heatcoeff):
@@ -49,8 +60,10 @@ def temp_calc(well, initcond, heatcoeff):
     section = 0
     limit = well.riser
 
-    c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t = \
-        define_coef(heatcoeff, section)
+    hc = define_coef(heatcoeff, section)  # Heat Coefficient List
+    c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb, cbe, \
+    cbt, cbz = hc[0], hc[1], hc[2], hc[3], hc[4], hc[5], hc[6], hc[7], hc[8], hc[9], hc[10], hc[11], hc[12], hc[13], \
+               hc[14], hc[15], hc[16], hc[17], hc[18], hc[19], hc[20], hc[21], hc[22], hc[23], hc[24]
 
     for j in range(well.zstep):
 
@@ -58,8 +71,11 @@ def temp_calc(well, initcond, heatcoeff):
             section += 1
             if section <= len(well.casings):
                 limit = round(well.casings[-section, 2] / well.deltaz)
-            c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t = \
-                define_coef(heatcoeff, section)
+            hc = define_coef(heatcoeff, section)  # Heat Coefficient List
+            c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb, \
+            cbe, cbt, cbz = hc[0], hc[1], hc[2], hc[3], hc[4], hc[5], hc[6], hc[7], hc[8], hc[9], hc[10], hc[11], \
+                            hc[12], hc[13], hc[14], hc[15], hc[16], hc[17], hc[18], hc[19], hc[20], hc[21], hc[22], \
+                            hc[23], hc[24]
 
         for i in range(xi):
             if i == 0:  # Inside Drill String
@@ -68,8 +84,11 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c1t + c1e + c1z)
                     E.append(-c1e)
                     S.append(0)
-                    B.append(c1t * initcond.tdsio[j] + c1 + c1e * (initcond.tdso[j] - initcond.tdsio[j]) + c1z *
-                             (initcond.tdsio[j - 1] - initcond.tdsio[j]) + c1z * (Tdsi[j - 1]))
+                    B.append(c1t * initcond.tdsio[j]    # Center(t=0)
+                             + c1   # Heat Source
+                             + c1e * (initcond.tdso[j] - initcond.tdsio[j])     # East(t=0)
+                             + c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j])       # N/S(t=0)
+                             + c1z * (Tdsi[j - 1]))     # Tin
 
                 if 1 < j < well.zstep - 1:
                     N.append(-c1z)
@@ -77,17 +96,20 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c1t + c1e + c1z)
                     E.append(-c1e)
                     S.append(0)
-                    B.append(c1t * initcond.tdsio[j] + c1 + c1e * (initcond.tdso[j] - initcond.tdsio[j]) + c1z *
-                             (initcond.tdsio[j - 1] - initcond.tdsio[j]))
+                    B.append(c1t * initcond.tdsio[j]    # Center(t=0)
+                             + c1       # Heat Source
+                             + c1e * (initcond.tdso[j] - initcond.tdsio[j])     # East(t=0)
+                             + c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j]))       # N/S(t=0)
 
-                if j == well.zstep - 1:
-                    N.append(-c1z - c2z)
+                if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
+                    N.append(-cbz)
                     W.append(0)
-                    C.append(c1t + c1z + c2z + c3e)
-                    E.append(-c3e)
-                    B.append(c1t * initcond.tdsio[j] + c1 + c1z * (initcond.tdsio[j - 1] - initcond.tdsio[j])
-                             + c3 + c2z * (initcond.tdso[j - 1] -
-                             initcond.tdso[j]) + c3e * (initcond.tsro[j] - initcond.tdsio[j]))
+                    C.append(cbt + cbz + cbe)     # Note that c1t = c3t since it's the same fluid
+                    E.append(-cbe)
+                    B.append(cbt * initcond.tdsio[j]    # Center(t=0)
+                             + cb       # Heat Source
+                             + cbe * (initcond.tdso[j] - initcond.tdsio[j])     # East(t=0)
+                             + cbz * (initcond.tdsio[j - 1] - initcond.tdsio[j]))       # N/S(t=0)
 
             if i == 1:  # Drill string wall
 
@@ -134,33 +156,35 @@ def temp_calc(well, initcond, heatcoeff):
                 if j == 0:
                     W.append(-c4w)
                     C.append(c4t + c4e + c4w + c4z)
-                    E.append(0)
+                    E.append(- c4e)
                     S.append(-c4z)
-                    B.append(c4t * initcond.tcsgo[j] + c4e * initcond.tsro[j] + c4e * (initcond.tsro[j] -
-                                initcond.tcsgo[j]) + c4w * (initcond.tao[j] - initcond.tcsgo[j]) + c4z *
-                                (initcond.tcsgo[j + 1] - initcond.tcsgo[j]))
+                    B.append(c4t * initcond.tcsgo[j]   # Center(t=0)
+                             + c4e * (initcond.tsro[j] - initcond.tcsgo[j])  # East(t=0)
+                             + c4w * (initcond.tao[j] - initcond.tcsgo[j])  # West(t=0)
+                             + c4z * (initcond.tcsgo[j + 1] - initcond.tcsgo[j]))   # N/S(t=0)
 
                 if 0 < j < well.zstep - 1:
                     N.append(-c4z)
                     W.append(-c4w)
                     C.append(c4t + c4e + c4w + 2 * c4z)
-                    E.append(0)
+                    E.append(- c4e)
                     S.append(-c4z)
-                    B.append(c4t * initcond.tcsgo[j] + c4e * initcond.tsro[j] + c4e * (initcond.tsro[j] -
-                                initcond.tcsgo[j]) + c4w * (initcond.tao[j] - initcond.tcsgo[j]) + c4z *
-                                (initcond.tcsgo[j + 1] - initcond.tcsgo[j]) + c4z * (initcond.tcsgo[j - 1] -
-                                initcond.tcsgo[j]))
+                    B.append(c4t * initcond.tcsgo[j]    # Center(t=0)
+                             + c4e * (initcond.tsro[j] - initcond.tcsgo[j])     # East(t=0)
+                             + c4w * (initcond.tao[j] - initcond.tcsgo[j])      # West(t=0)
+                             + c4z * (initcond.tcsgo[j + 1] - 2 * initcond.tcsgo[j] + initcond.tcsgo[j - 1])) # N/S(t=0)
 
                 if j == well.zstep - 1:
                     N.append(-c4z)
                     W.append(-c4w)
                     C.append(c4t + c4e + c4w + c4z)
-                    E.append(0)
-                    B.append(c4t * initcond.tcsgo[j] + c4e * initcond.tsro[j] + c4e * (initcond.tsro[j] -
-                                initcond.tcsgo[j]) + c4w * (initcond.tao[j] - initcond.tcsgo[j]) + c4z *
-                                (initcond.tcsgo[j - 1] - initcond.tcsgo[j]))
+                    E.append(- c4e)
+                    B.append(c4t * initcond.tcsgo[j]    # Center(t=0)
+                             + c4e * (initcond.tsro[j] - initcond.tcsgo[j])     # East(t=0)
+                             + c4w * (initcond.tao[j] - initcond.tcsgo[j])      # West(t=0)
+                             + c4z * (initcond.tcsgo[j - 1] - initcond.tcsgo[j]))       # N/S(t=0)
 
-            if i == 4:  # Formation
+            if i == 4:  # Surrounding Space
 
                 if j == 0:
                     W.append(-c5w)

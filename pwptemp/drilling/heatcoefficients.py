@@ -5,13 +5,30 @@ import numpy as np
 def heat_coef(well, deltat):
     sections = len(well.casings) + 2  # sections = # of casings + riser section + open hole section
 
-    # Heat Source Terms
-    qp = 2 * math.pi * (well.rpm / 60) * well.t + 2 * 0.24 * well.rhol * (well.vp ** 2) * (well.md[-1] /
-            (well.ddi * 127.094 * 10 ** 6)) * (1 / 0.24 ** .5)
-    qa = 0.05 * (well.wob * (well.rop / 3600) + 2 * math.pi * (well.rpm / 60) * well.tbit) + (well.rhol / 2 * 9.81) * (
-            (well.q / 3600) / (0.095 * well.an)) + (2 * 0.3832 * well.md[-1] / ((well.r3 - well.r2) *
-            (127.094 * 10 ** 6))) * ((2 * (0.7 + 1) * well.va) / (0.7 * math.pi * (well.r3 + well.r2) *
-            (well.r3 - well.r2) ** 2)) ** 0.7
+    # HEAT SOURCE TERMS
+
+        # 1. heat coefficients at bottom
+
+    J = 4.1868    # Joule's constant  [Nm/cal]
+    qbit = (1/J)*(1-well.bit_n)*(well.wob*well.rop+2*math.pi*(well.rpm / 60)*well.tbit) \
+           + (well.rhol/(2*9.81)) * 0.7 * (well.q/(0.95*well.an))**2
+
+    vbit = well.q / well.an
+    cbz = ((well.rhol * well.cl * vbit) / well.deltaz) / 2  # Vertical component (North-South)
+    cbe = (2 * well.h1 / well.r3) / 2  # East component
+    cb = qbit / well.an  # Heat source term
+    cbt = well.rhol * well.cl / deltat  # Time component
+
+        # 2. heat coefficients fluid inside drill pipe
+
+    qp = 2 * math.pi * (well.rpm / 60) * well.t + 0.2 * 2 * (well.f_p * well.rhol * (well.vp ** 2) * (well.md[-1] /
+            (well.ddi * 127.094 * 10 ** 6)))
+
+        # 3. heat coefficients fluid inside annular
+
+    qa = (0.085 * (2 * 0.3832 * well.md[-1] / ((well.r3 - well.r2) * (127.094 * 10 ** 6))) * \
+         ((2 * (0.7 + 1) * well.va) / (0.7 * math.pi * (well.r3 + well.r2) *
+            (well.r3 - well.r2) ** 2)) ** 0.7) * (1 + (3/2) * well.dp_e**2)
 
     coefficients = []
     for x in range(sections):
@@ -112,7 +129,7 @@ def heat_coef(well, deltat):
 
         coefficients.append(total)
 
-    coefficients = np.asarray(coefficients)
+    coefficients = [np.asarray(coefficients), cb, cbe, cbt, cbz]
 
     return coefficients
 
