@@ -14,7 +14,7 @@ class TestSetWell(TestCase):
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
         for x, value in tdata.items():
-            self.assertEqual(value/value, 1)
+            self.assertIsInstance(value, float)
 
         # without casings
         tdata = input.data()
@@ -23,5 +23,5 @@ class TestSetWell(TestCase):
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
         for x, value in tdata.items():
-            self.assertEqual(value/value, 1)
+            self.assertIsInstance(value, float)
 

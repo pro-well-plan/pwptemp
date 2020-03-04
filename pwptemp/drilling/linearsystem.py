@@ -117,8 +117,11 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c2t + c2e + c2w + c2z)
                     E.append(-c2e)
                     S.append(-c2z)
-                    B.append(c2t * initcond.tdso[j] + c2w * Tdsi[j] + c2e * (initcond.tao[j] - initcond.tdso[j]) + c2w *
-                             (initcond.tdsio[j] - initcond.tdso[j]) + c2z * (initcond.tdso[j + 1] - initcond.tdso[j]))
+                    B.append(c2t * initcond.tdso[j]
+                             + c2w * Tdsi[j]
+                             + c2e * (initcond.tao[j] - initcond.tdso[j])
+                             + c2w * (initcond.tdsio[j] - initcond.tdso[j])
+                             + c2z * (initcond.tdso[j + 1] - initcond.tdso[j]))
 
                 if 0 < j < well.zstep - 1:
                     N.append(-c2z)
@@ -127,9 +130,11 @@ def temp_calc(well, initcond, heatcoeff):
                     E.append(-c2e)
                     if j < well.zstep - 2:
                         S.append(-c2z)
-                    B.append(c2t * initcond.tdso[j] + c2e * (initcond.tao[j] - initcond.tdso[j]) + c2w *
-                             (initcond.tdsio[j] - initcond.tdso[j]) + c2z * (initcond.tdso[j + 1] - initcond.tdso[j]) +
-                             c2z * (initcond.tdso[j - 1] - initcond.tdso[j]))
+                    B.append(c2t * initcond.tdso[j]
+                             + c2e * (initcond.tao[j] - initcond.tdso[j])
+                             + c2w * (initcond.tdsio[j] - initcond.tdso[j])
+                             + c2z * (initcond.tdso[j + 1] - initcond.tdso[j])
+                             + c2z * (initcond.tdso[j - 1] - initcond.tdso[j]))
 
             if i == 2:  # Annular
 
@@ -138,8 +143,11 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c3t + c3e + c3w + c3z)
                     E.append(-c3e)
                     S.append(-c3z)
-                    B.append(c3t * initcond.tao[j] + c3 + c3e * (initcond.tcsgo[j] - initcond.tao[j]) + c3w *
-                             (initcond.tdso[j] - initcond.tao[j]) + c3z * (initcond.tao[j + 1] - initcond.tao[j]))
+                    B.append(c3t * initcond.tao[j]
+                             + c3
+                             + c3e * (initcond.tcsgo[j] - initcond.tao[j])
+                             + c3w * (initcond.tdso[j] - initcond.tao[j])
+                             + c3z * (initcond.tao[j + 1] - initcond.tao[j]))
 
                 if 0 < j < well.zstep - 1:
                     N.append(0)
@@ -148,8 +156,11 @@ def temp_calc(well, initcond, heatcoeff):
                     E.append(-c3e)
                     if j < well.zstep - 2:
                         S.append(-c3z)
-                    B.append(c3t * initcond.tao[j] + c3 + c3e * (initcond.tcsgo[j] - initcond.tao[j]) + c3w *
-                             (initcond.tdso[j] - initcond.tao[j]) + c3z * (initcond.tao[j + 1] - initcond.tao[j]))
+                    B.append(c3t * initcond.tao[j]
+                             + c3
+                             + c3e * (initcond.tcsgo[j] - initcond.tao[j])
+                             + c3w * (initcond.tdso[j] - initcond.tao[j])
+                             + c3z * (initcond.tao[j + 1] - initcond.tao[j]))
 
             if i == 3:  # Casing
 
@@ -191,8 +202,10 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c5w + c5z + c5e + c5t)
                     E.append(0)
                     S.append(-c5z)
-                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j]) + c5z * (initcond.tsro[j + 1] -
-                                initcond.tsro[j]) + c5e * initcond.tsro[j] + c5t * initcond.tsro[j])
+                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j])
+                             + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
+                             + c5e * initcond.tsro[j]
+                             + c5t * initcond.tsro[j])
 
                 if 0 < j < well.zstep - 1:
                     N.append(-c5z)
@@ -200,16 +213,20 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c5w + c5e + 2 * c5z + c5t)
                     E.append(0)
                     S.append(-c5z)
-                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j]) + c5z * (initcond.tsro[j + 1] -
-                                initcond.tsro[j]) + c5z * (initcond.tsro[j - 1] - initcond.tsro[j]) + c5e *
-                                initcond.tsro[j] + c5t * initcond.tsro[j])
+                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j])
+                             + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
+                             + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
+                             + c5e * initcond.tsro[j] +
+                             c5t * initcond.tsro[j])
 
                 if j == well.zstep - 1:
                     N.append(-c5z)
                     W.append(-c5w)
                     C.append(c5w + c5e + c5z + c5t)
-                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j]) + c5z * (initcond.tsro[j - 1] -
-                                initcond.tsro[j]) + c5e * initcond.tsro[j] + c5t * initcond.tsro[j])
+                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j])
+                             + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
+                             + c5e * initcond.tsro[j]
+                             + c5t * initcond.tsro[j])
 
     #LINEARSYSTEM
     # Creating pentadiagonal matrix

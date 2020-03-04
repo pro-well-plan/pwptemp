@@ -27,7 +27,7 @@ def heat_coef(well, deltat):
         # 3. heat coefficients fluid inside annular
 
     qa = (0.085 * (2 * 0.3832 * well.md[-1] / ((well.r3 - well.r2) * (127.094 * 10 ** 6))) * \
-         ((2 * (0.7 + 1) * well.va) / (0.7 * math.pi * (well.r3 + well.r2) *
+         ((2 * (0.7 + 1) * well.q) / (0.7 * math.pi * (well.r3 + well.r2) *
             (well.r3 - well.r2) ** 2)) ** 0.7) * (1 + (3/2) * well.dp_e**2)
 
     coefficients = []
@@ -41,7 +41,7 @@ def heat_coef(well, deltat):
         total.append([c1z, c1e, c1, c1t])
 
         # drill string wall
-        c2z = (well.lambdal / (well.deltaz ** 2)) / 2  # Vertical component (North-South)
+        c2z = (well.lambdad / (well.deltaz ** 2)) / 2  # Vertical component (North-South)
         c2e = (2 * well.r2 * well.h2 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2  # East component
         c2w = (2 * well.r1 * well.h1 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2  # West component
         c2t = well.rhod * well.cd / deltat  # Time component

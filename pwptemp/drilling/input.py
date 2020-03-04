@@ -1,6 +1,6 @@
-def data(casings=[], bit=0.216):
+def data(casings=[], d_openhole=0.216):
     from numpy import asarray
-    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 0.0,  'ddi': 4, 'ddo': 4.5, 'dri': 17.716, 'dro': 21, 'dfm': 80,
+    dict = {'tin': 20.0, 'ts': 15.0, 'wd': 100.0,  'ddi': 4.0, 'ddo': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
             'q': 794.933, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'rhol': 1.198, 'rhod': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
@@ -14,7 +14,7 @@ def data(casings=[], bit=0.216):
         dict['casings'] = [[od[x], id[x], depth[x]] for x in range(len(casings))]
         dict['casings'] = asarray(dict['casings'])
     else:
-        dict['casings'] = [[(bit + dict['dro'] * 0.0254), bit, 0]]
+        dict['casings'] = [[(d_openhole + dict['dro'] * 0.0254), d_openhole, 0]]
         dict['casings'] = asarray(dict['casings'])
 
     return dict
@@ -177,16 +177,16 @@ def set_well(temp_dict, depths):
             self.cr = temp_dict["cr"]     # Riser
             self.cw = temp_dict["cw"]      # Seawater
             self.cfm = temp_dict["cfm"]       # Formation
-            self.prandtl = self.visc * self.cl / self.lambdal       # Prandtl number
-            self.nu_dpi = 0.027 * (self.re_p ** (4/5)) * (self.prandtl ** (1/3)) * (1 ** 0.14)
-            self.nu_dpo = 0.027 * (self.re_a ** (4 / 5)) * (self.prandtl ** (1 / 3)) * (1 ** 0.14)
+            self.pr = self.visc * self.cl / self.lambdal       # Prandtl number
+            self.nu_dpi = 0.027 * (self.re_p ** (4/5)) * (self.pr ** (1/3)) * (1 ** 0.14)
+            self.nu_dpo = 0.027 * (self.re_a ** (4/5)) * (self.pr ** (1/3)) * (1 ** 0.14)
             # convective heat transfer coefficients, W/(m^2*°C)
             self.h1 = self.lambdal * self.nu_dpi / self.ddi      # Drill Pipe inner wall
             self.h2 = self.lambdal * self.nu_dpo / self.ddo        # Drill Pipe outer wall
-            self.nu_a = 1.86 * ((self.re_a * self.prandtl) ** (1/3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) **
+            self.nu_a = 1.86 * ((self.re_a * self.pr) ** (1/3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) **
                                                                         (1/3)) * (1 ** (1/4))
-            self.h3 = self.lambdal * self.nu_a / (self.r2 * log(self.r3 / self.r2))       # Casing inner wall
-            self.h3r = self.lambdal * self.nu_a / (self.r2 * log(self.r3r / self.r2))    # Riser inner wall
+            self.h3 = self.lambdal * self.nu_a / (2 * self.r3)       # Casing inner wall
+            self.h3r = self.lambdal * self.nu_a / (2 * self.r3r)    # Riser inner wall
             self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
 
