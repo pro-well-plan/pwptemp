@@ -117,7 +117,7 @@ def heat_coef(well, deltat, tt, tc):
             # thermal conductivity
             lambdasr = well.lambdac * xcsr + well.lambdacem * xcem + well.lambdafm * xfm
             lambdacsr = (well.lambdac * (well.r4 - well.r3) + lambdasr * (well.r5 - well.r4)) / (well.r5 - well.r3)
-            lambdasrfm = (well.lambdac * (well.r5 - well.r4) + lambdasr * (well.rfm - well.r5)) / (well.rfm - well.r4)
+            lambdasrfm = (well.lambdac * (well.r5 - well.r4) + lambdasr *   (well.rfm - well.r5)) / (well.rfm - well.r4)
 
             # Specific Heat Capacity
             csr = (well.cc * tcsr + well.ccem * tcem) / (well.r5 - well.r4)

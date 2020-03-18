@@ -3,9 +3,9 @@ def data(casings=[], d_openhole=0.216):
     dict = {'tin': 20.0, 'ts': 15.0, 'wd': 100.0,  'ddi': 4.0, 'ddo': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
             'q': 794.933, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
-            'cw': 4000.0, 'cfm': 800.0, 'rhol': 1.198, 'rhod': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
-            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 't': 2.0, 'tbit': 1.35,
-            'wob': 22.41, 'rop': 14.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'visc': 3.0}
+            'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhod': 7.8, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
+            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 'tbit': 9,
+            'wob': 50, 'rop': 30.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'visc': 3.0}
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -56,7 +56,7 @@ def info(about='all'):
                            'wtg: seawater thermal gradient, °C/m' + '\n'
 
     densities_parameters = 'PARAMETERS RELATED TO DENSITIES' + '\n' + \
-                           'rhol: fluid density, sg' + '\n' + \
+                           'rhof: fluid density, sg' + '\n' + \
                            'rhod: drill pipe density, sg' + '\n' + \
                            'rhoc: casing density, sg' + '\n' + \
                            'rhor: riser density, sg' + '\n' + \
@@ -101,6 +101,7 @@ def set_well(temp_dict, depths):
     from math import pi, log
     from .main import stab_time
     from .analysis import hs_effect
+    from .torque_drag import calc_torque_drag
 
     class NewWell(object):
         def __init__(self):
@@ -109,6 +110,12 @@ def set_well(temp_dict, depths):
             self.tvd = depths.tvd
             self.deltaz = depths.deltaz
             self.zstep = depths.zstep
+            self.sections = depths.sections
+            self.north = depths.north
+            self.east = depths.east
+            self.inclination = depths.inclination
+            self.dogleg = depths.dogleg
+            self.azimuth = depths.azimuth
 
             # TUBULAR
             self.casings = temp_dict["casings"]  # casings array
@@ -136,7 +143,7 @@ def set_well(temp_dict, depths):
             self.rfm = self.dfm / 2  # Undisturbed Formation Radius, m
 
             # DENSITIES kg/m3
-            self.rhol = temp_dict["rhol"] * 1000  # Fluid
+            self.rhof = temp_dict["rhof"] * 1000  # Fluid
             self.rhod = temp_dict["rhod"] * 1000  # Drill Pipe
             self.rhoc = temp_dict["rhoc"] * 1000  # Casing
             self.rhor = temp_dict["rhor"] * 1000  # Riser
@@ -150,17 +157,17 @@ def set_well(temp_dict, depths):
             self.q = temp_dict["q"] * 0.06  # Flow rate, m^3/h
             self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600  # Fluid velocity through the annular
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the drill pipe
-            self.re_p = self.rhol * self.vp * 2 * self.r1 / self.visc  # Reynolds number inside drill pipe
-            self.re_a = self.rhol * self.va * 2 * (self.r3 - self.r2) / self.visc  # Reynolds number - annular
+            self.re_p = self.rhof * self.vp * 2 * self.r1 / self.visc  # Reynolds number inside drill pipe
+            self.re_a = self.rhof * self.va * 2 * (self.r3 - self.r2) / self.visc  # Reynolds number - annular
             self.f_p = 1.63 / log(6.9 / self.re_p) ** 2  # Friction factor inside drill pipe
             self.rpm = temp_dict["rpm"]  # Revolutions per minute
-            self.t = temp_dict["t"]  # Torque on the drill string, kN*m
-            self.tbit = temp_dict["tbit"]  # Torque on the bit, kN*m
+            self.tbit = temp_dict["tbit"] # Torque on the bit, kN*m
             self.wob = temp_dict["wob"]  # Weight on bit, kN
             self.rop = temp_dict["rop"]  # Rate of Penetration, m/h
             self.an = temp_dict["an"] / 1550  # Area of the nozzles, m^2
             self.bit_n = temp_dict["bit_n"]  # drill bit efficiency
             self.dp_e = temp_dict["dp_e"]  # drill pipe eccentricity
+            self.drag, self.torque = calc_torque_drag(self)  # Torque/Forces, kN*m / kN
 
             # HEAT COEFFICIENTS
             self.lambdal = temp_dict["lambdal"]  # Fluid
@@ -215,5 +222,9 @@ def set_well(temp_dict, depths):
         def stab(self):
             result = stab_time(self)
             return result
+
+        def plot_torque_drag(self, plot='torque'):
+            from .plot import plot_torque_drag
+            plot_torque_drag(self, plot)
 
     return NewWell()

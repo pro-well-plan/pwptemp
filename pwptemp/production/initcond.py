@@ -3,7 +3,7 @@ def init_cond(well):
     Tfto = [well.ts]   # Temperature of the fluid inside the tubing at RKB
     Tto = [well.ts]    # Temperature of the tubing at RKB, t=0
     Tao = [well.ts]      # Temperature of the fluid inside the annulus at RKB, t=0
-    Tcsgo = [well.ts]    # Temperature of the casing at RKB, t=0
+    Tco = [well.ts]    # Temperature of the casing at RKB, t=0
     Tsro = [well.ts]    # Temperature of the surrounding space at RKB, t=0
     Tfm = [well.ts]      # Temperature of the formation at RKB
 
@@ -19,7 +19,7 @@ def init_cond(well):
         Tfto.append(deltaT)
         Tto.append(deltaT)
         Tao.append(deltaT)
-        Tcsgo.append(deltaT)
+        Tco.append(deltaT)
         Tsro.append(deltaT)
         Tfm.append(deltaT)
 
@@ -28,7 +28,7 @@ def init_cond(well):
             self.tfto = Tfto
             self.tto = Tto
             self.tao = Tao
-            self.tcsgo = Tcsgo
+            self.tco = Tco
             self.tsro = Tsro
             self.tfm = Tfm
 

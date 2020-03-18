@@ -1,9 +1,8 @@
 import math
-import numpy as np
 
 
 def heat_coef(well, deltat):
-    sections = len(well.casings) + 2  # sections = # of casings + riser section + open hole section
+    sections = [well.wd]
 
     # HEAT SOURCE TERMS
 
@@ -11,18 +10,13 @@ def heat_coef(well, deltat):
 
     J = 4.1868    # Joule's constant  [Nm/cal]
     qbit = (1/J)*(1-well.bit_n)*(well.wob*well.rop+2*math.pi*(well.rpm / 60)*well.tbit) \
-           + (well.rhol/(2*9.81)) * 0.7 * (well.q/(0.95*well.an))**2
+           + (well.rhof/(2*9.81)) * 0.7 * (well.q/(0.95*well.an))**2
 
     vbit = well.q / well.an
-    cbz = ((well.rhol * well.cl * vbit) / well.deltaz) / 2  # Vertical component (North-South)
+    cbz = ((well.rhof * well.cl * vbit) / well.deltaz) / 2  # Vertical component (North-South)
     cbe = (2 * well.h1 / well.r3) / 2  # East component
     cb = qbit / well.an  # Heat source term
-    cbt = well.rhol * well.cl / deltat  # Time component
-
-        # 2. heat coefficients fluid inside drill pipe
-
-    qp = 2 * math.pi * (well.rpm / 60) * well.t + 0.2 * 2 * (well.f_p * well.rhol * (well.vp ** 2) * (well.md[-1] /
-            (well.ddi * 127.094 * 10 ** 6)))
+    cbt = well.rhof * well.cl / deltat  # Time component
 
         # 3. heat coefficients fluid inside annular
 
@@ -30,32 +24,66 @@ def heat_coef(well, deltat):
          ((2 * (0.7 + 1) * well.q) / (0.7 * math.pi * (well.r3 + well.r2) *
             (well.r3 - well.r2) ** 2)) ** 0.7) * (1 + (3/2) * well.dp_e**2)
 
-    coefficients = []
-    for x in range(sections):
-        total = []
+    c1z = []
+    c1e = []
+    c1 = []
+    c1t = []
+
+    c2z = []
+    c2e = []
+    c2w = []
+    c2t = []
+
+    c3z = []
+    c3e = []
+    c3w = []
+    c3 = []
+    c3t = []
+
+    c4z = []
+    c4e = []
+    c4w = []
+    c4t = []
+
+    c5z = []
+    c5e = []
+    c5w = []
+    c5t = []
+
+    in_section = 1
+    section_checkpoint = sections[0]
+
+    for x in range(well.zstep):
+        if x*well.deltaz > section_checkpoint:
+            in_section += 1
+            if len(sections) > 1:
+                section_checkpoint = sections[in_section]
+
+        # heat coefficients fluid inside drill pipe
+
+        qp = 2 * math.pi * (well.rpm / 60) * well.torque[x] + 0.2 * 2 * (well.f_p * well.rhof * (well.vp ** 2) *
+                                                                    (well.md[-1] / (well.ddi * 127.094 * 10 ** 6)))
+
         # fluid inside drill string
-        c1z = ((well.rhol * well.cl * well.vp) / well.deltaz) / 2  # Vertical component (North-South)
-        c1e = (2 * well.h1 / well.r1) / 2  # East component
-        c1 = qp / (math.pi * (well.r1 ** 2))  # Heat source term
-        c1t = well.rhol * well.cl / deltat  # Time component
-        total.append([c1z, c1e, c1, c1t])
+        c1z.append(((well.rhof * well.cl * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)
+        c1e.append((2 * well.h1 / well.r1) / 2)  # East component
+        c1.append(qp / (math.pi * (well.r1 ** 2)))  # Heat source term
+        c1t.append(well.rhof * well.cl / deltat)  # Time component
 
         # drill string wall
-        c2z = (well.lambdad / (well.deltaz ** 2)) / 2  # Vertical component (North-South)
-        c2e = (2 * well.r2 * well.h2 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2  # East component
-        c2w = (2 * well.r1 * well.h1 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2  # West component
-        c2t = well.rhod * well.cd / deltat  # Time component
-        total.append([c2z, c2e, c2w, c2t])
+        c2z.append((well.lambdad / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
+        c2e.append((2 * well.r2 * well.h2 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # East component
+        c2w.append((2 * well.r1 * well.h1 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # West component
+        c2t.append(well.rhod * well.cd / deltat)  # Time component
 
         # fluid inside annular
-        c3z = (well.rhol * well.cl * well.va / well.deltaz) / 2  # Vertical component (North-South)
-        c3e = (2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2  # East component
-        c3w = (2 * well.r2 * well.h2 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2  # West component
-        c3 = qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2)))  # Heat source term
-        c3t = well.rhol * well.cl / deltat  # Time component
-        total.append([c3z, c3e, c3w, c3, c3t])
+        c3z.append((well.rhof * well.cl * well.va / well.deltaz) / 2)  # Vertical component (North-South)
+        c3e.append((2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # East component
+        c3w.append((2 * well.r2 * well.h2 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # West component
+        c3.append(qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2))))  # Heat source term
+        c3t.append(well.rhof * well.cl / deltat)  # Time component
 
-        if x == 0:
+        if in_section == 1:
             lambda4 = well.lambdar  # Thermal conductivity of the casing (riser in this section)
             lambda5 = well.lambdaw  # Thermal conductivity of the surrounding space (seawater)
             lambda45 = (lambda4 * (well.r4r - well.r3r) + lambda5 * (well.r5 - well.r4r)) / (
@@ -66,7 +94,7 @@ def heat_coef(well, deltat):
             rho4 = well.rhor  # Density of the casing (riser)
             rho5 = well.rhow  # Density of the surrounding space (seawater)
 
-        if 0 < x < sections - 1:
+        if 1 < in_section < len(sections):
 
             # calculation for surrounding space
             # thickness
@@ -103,7 +131,7 @@ def heat_coef(well, deltat):
             rho4 = well.rhoc  # Density of the casing
             rho5 = rhosr  # Density of the surrounding space
 
-        if x == sections - 1:
+        if in_section == len(sections):
             lambda4 = well.lambdafm
             lambda45 = well.lambdafm
             lambda5 = well.lambdafm
@@ -114,22 +142,23 @@ def heat_coef(well, deltat):
             rho5 = well.rhofm  # Density of the surrounding space (formation)
 
         # first casing wall
-        c4z = (lambda4 / (well.deltaz ** 2)) / 2
-        c4e = (2 * lambda45 / ((well.r4 ** 2) - (well.r3 ** 2))) / 2
-        c4w = (2 * well.r3 * well.h3 / ((well.r4 ** 2) - (well.r3 ** 2))) / 2
-        c4t = rho4 * c4 / deltat
-        total.append([c4z, c4e, c4w, c4t])
+        c4z.append((lambda4 / (well.deltaz ** 2)) / 2)
+        c4e.append((2 * lambda45 / ((well.r4 ** 2) - (well.r3 ** 2))) / 2)
+        c4w.append((2 * well.r3 * well.h3 / ((well.r4 ** 2) - (well.r3 ** 2))) / 2)
+        c4t.append(rho4 * c4 / deltat)
 
         # surrounding space
-        c5z = (lambda5 / (well.deltaz ** 2)) / 2
-        c5w = (2 * lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.r5 / well.r4))) / 2
-        c5e = (2 * lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.rfm / well.r5))) / 2
-        c5t = rho5 * c5 / deltat
-        total.append([c5z, c5e, c5w, c5t])
+        c5z.append((lambda5 / (well.deltaz ** 2)) / 2)
+        c5w.append((2 * lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.r5 / well.r4))) / 2)
+        c5e.append((2 * lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.rfm / well.r5))) / 2)
+        c5t.append(rho5 * c5 / deltat)
 
-        coefficients.append(total)
-
-    coefficients = [np.asarray(coefficients), cb, cbe, cbt, cbz]
+    hc_1 = [c1z, c1e, c1, c1t]
+    hc_2 = [c2z, c2e, c2w, c2t]
+    hc_3 = [c3z, c3e, c3w, c3, c3t]
+    hc_4 = [c4z, c4e, c4w, c4t]
+    hc_5 = [c5z, c5e, c5w, c5t]
+    coefficients = [hc_1, hc_2, hc_3, hc_4, hc_5, cb, cbe, cbt, cbz]
 
     return coefficients
 

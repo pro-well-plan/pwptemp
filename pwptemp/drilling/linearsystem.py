@@ -1,42 +1,42 @@
-def define_coef(coefficients, section):
-    section1 = coefficients[0][section, 0]
-    c1z = section1[0]
-    c1e = section1[1]
-    c1 = section1[2]
-    c1t = section1[3]
+def define_coef(coefficients, zstep):
+    hc_1 = coefficients[0]
+    c1z = hc_1[0][zstep]
+    c1e = hc_1[1][zstep]
+    c1 = hc_1[2][zstep]
+    c1t = hc_1[3][zstep]
 
-    section2 = coefficients[0][section, 1]
-    c2z = section2[0]
-    c2e = section2[1]
-    c2w = section2[2]
-    c2t = section2[3]
+    hc_2 = coefficients[1]
+    c2z = hc_2[0][zstep]
+    c2e = hc_2[1][zstep]
+    c2w = hc_2[2][zstep]
+    c2t = hc_2[3][zstep]
 
-    section3 = coefficients[0][section, 2]
-    c3z = section3[0]
-    c3e = section3[1]
-    c3w = section3[2]
-    c3 = section3[3]
-    c3t = section3[4]
+    hc_3 = coefficients[2]
+    c3z = hc_3[0][zstep]
+    c3e = hc_3[1][zstep]
+    c3w = hc_3[2][zstep]
+    c3 = hc_3[3][zstep]
+    c3t = hc_3[4][zstep]
 
-    section4 = coefficients[0][section, 3]
-    c4z = section4[0]
-    c4e = section4[1]
-    c4w = section4[2]
-    c4t = section4[3]
+    hc_4 = coefficients[3]
+    c4z = hc_4[0][zstep]
+    c4e = hc_4[1][zstep]
+    c4w = hc_4[2][zstep]
+    c4t = hc_4[3][zstep]
 
-    section5 = coefficients[0][section, 4]
-    c5z = section5[0]
-    c5e = section5[1]
-    c5w = section5[2]
-    c5t = section5[3]
+    hc_5 = coefficients[4]
+    c5z = hc_5[0][zstep]
+    c5e = hc_5[1][zstep]
+    c5w = hc_5[2][zstep]
+    c5t = hc_5[3][zstep]
 
-    cb = coefficients[1]
-    cbe = coefficients[2]
-    cbt = coefficients[3]
-    cbz = coefficients[4]
+    cb = coefficients[5]
+    cbe = coefficients[6]
+    cbt = coefficients[7]
+    cbz = coefficients[8]
 
-    return [c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb,
-            cbe, cbt, cbz]
+    return c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb, \
+           cbe, cbt, cbz
 
 
 def temp_calc(well, initcond, heatcoeff):
@@ -60,22 +60,14 @@ def temp_calc(well, initcond, heatcoeff):
     section = 0
     limit = well.riser
 
-    hc = define_coef(heatcoeff, section)  # Heat Coefficient List
-    c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb, cbe, \
-    cbt, cbz = hc[0], hc[1], hc[2], hc[3], hc[4], hc[5], hc[6], hc[7], hc[8], hc[9], hc[10], hc[11], hc[12], hc[13], \
-               hc[14], hc[15], hc[16], hc[17], hc[18], hc[19], hc[20], hc[21], hc[22], hc[23], hc[24]
-
     for j in range(well.zstep):
+        c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb, \
+        cbe, cbt, cbz = define_coef(heatcoeff, j)
 
         if j == limit:
             section += 1
             if section <= len(well.casings):
                 limit = round(well.casings[-section, 2] / well.deltaz)
-            hc = define_coef(heatcoeff, section)  # Heat Coefficient List
-            c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb, \
-            cbe, cbt, cbz = hc[0], hc[1], hc[2], hc[3], hc[4], hc[5], hc[6], hc[7], hc[8], hc[9], hc[10], hc[11], \
-                            hc[12], hc[13], hc[14], hc[15], hc[16], hc[17], hc[18], hc[19], hc[20], hc[21], hc[22], \
-                            hc[23], hc[24]
 
         for i in range(xi):
             if i == 0:  # Inside Drill String

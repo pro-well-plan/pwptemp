@@ -71,3 +71,21 @@ def profile_multitime(temps, tdsi=True, ta=False, tr=False, tcsg=False, tfm=True
     plt.ylim(plt.ylim()[::-1])  # reversing y axis
     plt.legend()  # applying the legend
     plt.show()
+
+
+def plot_torque_drag(well, plot='torque'):
+    if plot == 'torque' or plot == 'both':
+        plt.plot(well.torque, well.md, c='r', label='Torque')
+        plt.xlabel('Torque, kNm')
+        plt.ylabel('Depth, m')
+        plt.ylim(plt.ylim()[::-1])  # reversing y axis
+        plt.legend()  # applying the legend
+        plt.show()
+    if plot == 'drag' or plot == 'both':
+        plt.plot(well.drag, well.md, c='b', label='Drag')
+        plt.xlabel('Drag Force, kN')
+        plt.ylabel('Depth, m')
+        plt.ylim(plt.ylim()[::-1])  # reversing y axis
+        plt.legend()  # applying the legend
+        plt.show()
+

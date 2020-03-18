@@ -16,19 +16,19 @@ def temp_time(n, well):
     ic = init_cond(well)
     tfm = ic.tfm
     tt = ic.tto
-    tcsg = ic.tcsgo
-    hc = heat_coef(well, deltat, tt, tcsg)
+    tc = ic.tco
+    hc = heat_coef(well, deltat, tt, tc)
     temp = temp_calc(well, ic, hc)
     for x in range(1, tstep):
         ic_new = ic
         ic_new.tfto = temp.tft
         ic.tto = temp.tt
         ic.tao = temp.ta
-        ic.tcsgo = temp.tcsg
+        ic.tco = temp.tc
         ic.tsr = temp.tsr
         tt_new = temp.tt
-        tcsg_new = temp.tcsg
-        hc_new = heat_coef(well, deltat, tt_new, tcsg_new)
+        tc_new = temp.tcsg
+        hc_new = heat_coef(well, deltat, tt_new, tc_new)
         temp = temp_calc(well, ic_new, hc_new)
 
     class TempDist(object):
@@ -36,7 +36,7 @@ def temp_time(n, well):
             self.tft = temp.tft
             self.tt = temp.tt
             self.ta = temp.ta
-            self.tcsg = temp.tcsg
+            self.tc = temp.tc
             self.tsr = temp.tsr
             self.tfm = tfm
             self.time = time

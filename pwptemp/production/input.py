@@ -1,6 +1,6 @@
 def data(casings=[], d_openhole=0.216):
     from numpy import asarray
-    dict = {'ts': 15.0, 'wd': 0.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
+    dict = {'ts': 15.0, 'wd': 100.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
             'q': 300, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhot': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
