@@ -4,7 +4,8 @@ def data(casings=[], d_openhole=0.216):
             'q': 300, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhot': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
-            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'dp_e': 0.0, 'visc': 3, 'beta': 960 * 10 ** -6}
+            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'visc': 3, 'beta': 44983 * 10 ** 5,
+            'alpha': 960 * 10 ** -6}
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -70,7 +71,6 @@ def set_well(temp_dict, depths):
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the tubing
             self.re_p = self.rhof * self.vp * 2 * self.r1 / self.visc  # Reynolds number inside tubing
             self.f_p = 1.63 / log(6.9 / self.re_p) ** 2  # Friction factor inside drill pipe
-            self.dp_e = temp_dict["dp_e"]  # drill pipe eccentricity
 
             # HEAT COEFFICIENTS
             # Thermal conductivity
@@ -83,6 +83,7 @@ def set_well(temp_dict, depths):
             self.lambdaw = temp_dict["lambdaw"]     # Seawater
 
             self.beta = temp_dict["beta"]       # Fluid Thermal Expansion Coefficient
+            self.alpha = temp_dict['alpha']
             # Heat capacity
             self.cf = temp_dict["cf"]       # Fluid
             self.cc = temp_dict["cc"]    # Casing

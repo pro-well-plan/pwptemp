@@ -1,9 +1,9 @@
 def define_coef(coefficients, zstep):
     hc_1 = coefficients[0]
-    c1z = hc_1[0]
-    c1e = hc_1[1]
-    c1 = hc_1[2]
-    c1t = hc_1[3]
+    c1z = hc_1[0][zstep]
+    c1e = hc_1[1][zstep]
+    c1 = hc_1[2][zstep]
+    c1t = hc_1[3][zstep]
 
     hc_2 = coefficients[1]
     c2z = hc_2[0][zstep]
@@ -43,7 +43,7 @@ def temp_calc(well, initcond, heatcoeff):
     Tft = []
     Tt = []
     Ta = []
-    Tcsg = []
+    tc = []
     Tsr = []
     xi = 5
 
@@ -155,7 +155,7 @@ def temp_calc(well, initcond, heatcoeff):
                     E.append(-c3e)
                     S.append(-c3z)
                     B.append(c3t * initcond.tao[j]
-                             + c3e * (initcond.tcsgo[j] - initcond.tao[j])
+                             + c3e * (initcond.tco[j] - initcond.tao[j])
                              + c3w * (initcond.tto[j] - initcond.tao[j])
                              + c3z * (initcond.tao[j + 1] - initcond.tao[j]))
 
@@ -167,14 +167,14 @@ def temp_calc(well, initcond, heatcoeff):
                     if j < well.zstep - 3:
                         S.append(-c3z)
                         B.append(c3t * initcond.tao[j]
-                                 + c3e * (initcond.tcsgo[j] - initcond.tao[j])
+                                 + c3e * (initcond.tco[j] - initcond.tao[j])
                                  + c3w * (initcond.tto[j] - initcond.tao[j])
                                  + c3z * (initcond.tao[j + 1] - initcond.tao[j])
                                  + c3z * (initcond.tao[j - 1] - initcond.tao[j]))
                     else:
                         S.append(0)
                         B.append(c3t * initcond.tao[j]
-                                 + c3e * (initcond.tcsgo[j] - initcond.tao[j])
+                                 + c3e * (initcond.tco[j] - initcond.tao[j])
                                  + c3w * (initcond.tto[j] - initcond.tao[j])
                                  + c3z * (initcond.tao[j + 1] - initcond.tao[j])
                                  + c3z * (initcond.tao[j - 1] - initcond.tao[j])
@@ -188,7 +188,7 @@ def temp_calc(well, initcond, heatcoeff):
                     B.append(c3t * initcond.tao[j]
                                  + c3e * (initcond.tao[j] - initcond.tto[j])
                                  + c3w * (initcond.tfto[j] - initcond.tto[j])
-                                 + c3e * initcond.tcsgo[j]
+                                 + c3e * initcond.tco[j]
                                  + c3w * initcond.tto[j]
                                  + c3z * (initcond.tto[j - 1] - initcond.tto[j]))
 
@@ -199,10 +199,10 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c4t + c4e + c4w + c4z)
                     E.append(-c4e)
                     S.append(-c4z)
-                    B.append(c4t * initcond.tcsgo[j]   # Center(t=0)
-                             + c4e * (initcond.tsro[j] - initcond.tcsgo[j])  # East(t=0)
-                             + c4w * (initcond.tao[j] - initcond.tcsgo[j])  # West(t=0)
-                             + c4z * (initcond.tcsgo[j + 1] - initcond.tcsgo[j]))   # N/S(t=0)
+                    B.append(c4t * initcond.tco[j]   # Center(t=0)
+                             + c4e * (initcond.tsro[j] - initcond.tco[j])  # East(t=0)
+                             + c4w * (initcond.tao[j] - initcond.tco[j])  # West(t=0)
+                             + c4z * (initcond.tco[j + 1] - initcond.tco[j]))   # N/S(t=0)
 
                 if 0 < j < well.zstep - 2:
                     N.append(-c4z)
@@ -210,10 +210,10 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c4t + c4e + c4w + 2 * c4z)
                     E.append(-c4e)
                     S.append(-c4z)
-                    B.append(c4t * initcond.tcsgo[j]    # Center(t=0)
-                             + c4e * (initcond.tsro[j] - initcond.tcsgo[j])     # East(t=0)
-                             + c4w * (initcond.tao[j] - initcond.tcsgo[j])      # West(t=0)
-                             + c4z * (initcond.tcsgo[j + 1] - 2 * initcond.tcsgo[j] + initcond.tcsgo[j - 1])) # N/S(t=0)
+                    B.append(c4t * initcond.tco[j]    # Center(t=0)
+                             + c4e * (initcond.tsro[j] - initcond.tco[j])     # East(t=0)
+                             + c4w * (initcond.tao[j] - initcond.tco[j])      # West(t=0)
+                             + c4z * (initcond.tco[j + 1] - 2 * initcond.tco[j] + initcond.tco[j - 1])) # N/S(t=0)
 
                 if j == well.zstep - 2:
                     N.append(-c4z)
@@ -221,10 +221,10 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c4t + c4e + c4w + 2 * c4z)
                     E.append(- c4e)
                     S.append(-0)
-                    B.append(c4t * initcond.tcsgo[j]  # Center(t=0)
-                             + c4e * (initcond.tsro[j] - initcond.tcsgo[j])  # East(t=0)
-                             + c4w * (initcond.tao[j] - initcond.tcsgo[j])  # West(t=0)
-                             + c4z * (initcond.tcsgo[j + 1] - 2 * initcond.tcsgo[j] + initcond.tcsgo[j - 1])  # N/S(t=0)
+                    B.append(c4t * initcond.tco[j]  # Center(t=0)
+                             + c4e * (initcond.tsro[j] - initcond.tco[j])  # East(t=0)
+                             + c4w * (initcond.tao[j] - initcond.tco[j])  # West(t=0)
+                             + c4z * (initcond.tco[j + 1] - 2 * initcond.tco[j] + initcond.tco[j - 1])  # N/S(t=0)
                              + c4z * initcond.tfto[-1])
 
                 if j == well.zstep - 1:
@@ -232,10 +232,10 @@ def temp_calc(well, initcond, heatcoeff):
                     W.append(0)
                     C.append(c4t + c4e + c4w + c4z)
                     E.append(0)
-                    B.append(c4t * initcond.tcsgo[j]    # Center(t=0)
-                             + c4e * (initcond.tsro[j] - initcond.tcsgo[j])     # East(t=0)
-                             + c4w * (initcond.tao[j] - initcond.tcsgo[j])      # West(t=0)
-                             + c4z * (initcond.tcsgo[j - 1] - initcond.tcsgo[j])       # N/S(t=0)
+                    B.append(c4t * initcond.tco[j]    # Center(t=0)
+                             + c4e * (initcond.tsro[j] - initcond.tco[j])     # East(t=0)
+                             + c4w * (initcond.tao[j] - initcond.tco[j])      # West(t=0)
+                             + c4z * (initcond.tco[j - 1] - initcond.tco[j])       # N/S(t=0)
                              + c4z * initcond.tfto[-1]
                              + c4w * initcond.tfto[-1])
 
@@ -246,7 +246,7 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c5w + c5z + c5e + c5t)
                     E.append(-c5e)
                     S.append(-c5z)
-                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j])
+                    B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
                              + c5t * initcond.tsro[j])
 
@@ -256,7 +256,7 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c5w + c5e + 2 * c5z + c5t)
                     E.append(-c5e)
                     S.append(-c5z)
-                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j])
+                    B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
                              + c5t * initcond.tsro[j])
@@ -267,7 +267,7 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c5w + c5e + 2 * c5z + c5t)
                     E.append(-c5e)
                     S.append(0)
-                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j])
+                    B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
                              + c5t * initcond.tsro[j]
@@ -277,7 +277,7 @@ def temp_calc(well, initcond, heatcoeff):
                     N.append(-c5z)
                     W.append(0)
                     C.append(c5w + c5e + c5z + c5t)
-                    B.append(c5w * (initcond.tcsgo[j] - initcond.tsro[j])
+                    B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
                              + c5z * initcond.tsro[j]
                              + c5t * initcond.tsro[j])
@@ -323,9 +323,9 @@ def temp_calc(well, initcond, heatcoeff):
             Ta.append(initcond.tao[-1])
     for x in range(well.zstep):
         if x < well.zstep - 1:
-            Tcsg.append(Temp[5 * x + 3])
+            tc.append(Temp[5 * x + 3])
         if x == well.zstep - 1:
-            Tcsg.append(initcond.tcsgo[-1])
+            tc.append(initcond.tco[-1])
     for x in range(well.zstep):
         if x < well.zstep - 1:
             Tsr.append(Temp[5 * x + 4])
@@ -337,7 +337,7 @@ def temp_calc(well, initcond, heatcoeff):
             self.tft = Tft
             self.tt = Tt
             self.ta = Ta
-            self.tcsg = Tcsg
+            self.tc = tc
             self.tsr = Tsr
 
     return TempCalc()

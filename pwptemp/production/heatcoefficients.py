@@ -12,19 +12,16 @@ def heat_coef(well, deltat, tt, tc):
         # 1. heat coefficients at bottom
 
     vb = well.q / (math.pi * well.r3 ** 2)
-    cbz = ((well.rhof * well.cf * vb) / well.deltaz) / 2  # Vertical component (North-South)
+    cbz = ((well.rhof[-1] * well.cf * vb) / well.deltaz) / 2  # Vertical component (North-South)
     cbe = (2 * well.h1 / well.r3) / 2  # East component
-    cbt = well.rhof * well.cf / deltat  # Time component
+    cbt = well.rhof[-1] * well.cf / deltat  # Time component
 
         # 2. heat coefficients fluid inside drill pipe
 
-    qp = 0.2 * 2 * (well.f_p * well.rhof * (well.vp ** 2) * (well.md[-1] / (well.dti * 127.094 * 10 ** 6)))
-
-    c1z = ((well.rhof * well.cf * well.vp) / well.deltaz) / 2  # Vertical component (North-South)
-    c1e = (2 * well.h1 / well.r1) / 2  # East component
-    c1 = qp / (math.pi * (well.r1 ** 2))  # Heat source term
-    c1t = well.rhof * well.cf / deltat  # Time component
-    hc_1 = [c1z, c1e, c1, c1t]
+    c1z = []
+    c1e = []
+    c1 = []
+    c1t = []
 
     c2z = []
     c2e = []
@@ -55,8 +52,8 @@ def heat_coef(well, deltat, tt, tc):
             if len(sections) > 1:
                 section_checkpoint = sections[in_section]
 
-        gr_t = 9.81 * well.beta * abs((tt[x] - tc[x])) * (well.rhof ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
-        gr_c = 9.81 * well.beta * abs((tt[x] - tc[x])) * (well.rhof ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
+        gr_t = 9.81 * well.beta * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
+        gr_c = 9.81 * well.beta * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
         ra_t = gr_t * well.pr
         ra_c = gr_c * well.pr
         c = 0.049
@@ -67,7 +64,15 @@ def heat_coef(well, deltat, tt, tc):
         h3r = h3
         lambdal_eq = well.lambdaf * nu_a_t
 
-        # drill string wall
+        # fluid inside tubing
+        qp = 0.2 * 2 * (well.f_p * well.rhof[x] * (well.vp ** 2) * (well.md[-1] / (well.dti * 127.094 * 10 ** 6)))
+
+        c1z.append(((well.rhof[x] * well.cf * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)
+        c1e.append((2 * well.h1 / well.r1) / 2)  # East component
+        c1.append(qp / (math.pi * (well.r1 ** 2)))  # Heat source term
+        c1t.append(well.rhof[x] * well.cf / deltat)  # Time component
+
+        # tubing wall
         c2z.append((well.lambdat / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
         c2e.append((2 * well.r2 * h2 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # East component
         c2w.append((2 * well.r1 * well.h1 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # West component
@@ -88,14 +93,14 @@ def heat_coef(well, deltat, tt, tc):
             c3z.append((lambdal_eq / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
             c3e.append((2 * well.r3 * h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # East component
             c3w.append((2 * well.r2 * h2 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # West component
-            c3t.append(well.rhof * well.cf / deltat)  # Time component
+            c3t.append(well.rhof[x] * well.cf / deltat)  # Time component
 
         else:
             # fluid inside annular
             c3z.append((lambdal_eq / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
             c3e.append((2 * well.r3 * h3r / ((well.r3r ** 2) - (well.r2 ** 2))) / 2)  # East component
             c3w.append((2 * well.r2 * h2 / ((well.r3r ** 2) - (well.r2 ** 2))) / 2)  # West component
-            c3t.append(well.rhof * well.cf / deltat)  # Time component
+            c3t.append(well.rhof[x] * well.cf / deltat)  # Time component
 
         if 1 < in_section < len(sections):
 
@@ -156,6 +161,7 @@ def heat_coef(well, deltat, tt, tc):
         c5e.append((2 * lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.rfm / well.r5))) / 2)
         c5t.append(rho5 * c5 / deltat)
 
+    hc_1 = [c1z, c1e, c1, c1t]
     hc_2 = [c2z, c2e, c2w, c2t]
     hc_3 = [c3z, c3e, c3w, c3t]
     hc_4 = [c4z, c4e, c4w, c4t]
