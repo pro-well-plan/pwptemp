@@ -273,6 +273,8 @@ def temp_calc(well, initcond, heatcoeff):
         if x == well.zstep - 1:
             Tsr.append(Temp[lenC - 1])
 
+    t3 = Tcsg.copy()
+
     Tr = Tcsg[:well.riser]+[None]*(well.zstep-well.riser)
     for x in range(well.riser):
         Tcsg[x] = None
@@ -289,6 +291,7 @@ def temp_calc(well, initcond, heatcoeff):
             self.tds = Tds
             self.ta = Ta
             self.tr = Tr
+            self.t3 = t3
             self.tcsg = Tcsg
             self.toh = Toh
             self.tsr = Tsr

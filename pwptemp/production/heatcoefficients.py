@@ -7,16 +7,10 @@ def heat_coef(well, deltat, tt, tc):
         for i in range(len(well.casings)):
             sections.append(well.casings[i, 2])
 
-    # HEAT SOURCE TERMS
-
-        # 1. heat coefficients at bottom
-
     vb = well.q / (math.pi * well.r3 ** 2)
     cbz = ((well.rhof[-1] * well.cf * vb) / well.deltaz) / 2  # Vertical component (North-South)
     cbe = (2 * well.h1 / well.r3) / 2  # East component
     cbt = well.rhof[-1] * well.cf / deltat  # Time component
-
-        # 2. heat coefficients fluid inside drill pipe
 
     c1z = []
     c1e = []
@@ -52,8 +46,8 @@ def heat_coef(well, deltat, tt, tc):
             if len(sections) > 1:
                 section_checkpoint = sections[in_section]
 
-        gr_t = 9.81 * well.beta * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
-        gr_c = 9.81 * well.beta * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
+        gr_t = 9.81 * well.alpha * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
+        gr_c = 9.81 * well.alpha * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
         ra_t = gr_t * well.pr
         ra_c = gr_c * well.pr
         c = 0.049

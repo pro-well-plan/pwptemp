@@ -10,13 +10,13 @@ def heat_coef(well, deltat):
 
     J = 4.1868    # Joule's constant  [Nm/cal]
     qbit = (1/J)*(1-well.bit_n)*(well.wob*well.rop+2*math.pi*(well.rpm / 60)*well.tbit) \
-           + (well.rhof/(2*9.81)) * 0.7 * (well.q/(0.95*well.an))**2
+           + (well.rhof[-1]/(2*9.81)) * 0.7 * (well.q/(0.95*well.an))**2
 
     vbit = well.q / well.an
-    cbz = ((well.rhof * well.cl * vbit) / well.deltaz) / 2  # Vertical component (North-South)
+    cbz = ((well.rhof[-1] * well.cl * vbit) / well.deltaz) / 2  # Vertical component (North-South)
     cbe = (2 * well.h1 / well.r3) / 2  # East component
     cb = qbit / well.an  # Heat source term
-    cbt = well.rhof * well.cl / deltat  # Time component
+    cbt = well.rhof[-1] * well.cl / deltat  # Time component
 
         # 3. heat coefficients fluid inside annular
 
@@ -61,14 +61,14 @@ def heat_coef(well, deltat):
 
         # heat coefficients fluid inside drill pipe
 
-        qp = 2 * math.pi * (well.rpm / 60) * well.torque[x] + 0.2 * 2 * (well.f_p * well.rhof * (well.vp ** 2) *
+        qp = 2 * math.pi * (well.rpm / 60) * well.torque[x] + 0.2 * 2 * (well.f_p * well.rhof[x] * (well.vp ** 2) *
                                                                     (well.md[-1] / (well.ddi * 127.094 * 10 ** 6)))
 
         # fluid inside drill string
-        c1z.append(((well.rhof * well.cl * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)
+        c1z.append(((well.rhof[x] * well.cl * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)
         c1e.append((2 * well.h1 / well.r1) / 2)  # East component
         c1.append(qp / (math.pi * (well.r1 ** 2)))  # Heat source term
-        c1t.append(well.rhof * well.cl / deltat)  # Time component
+        c1t.append(well.rhof[x] * well.cl / deltat)  # Time component
 
         # drill string wall
         c2z.append((well.lambdad / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
@@ -77,11 +77,11 @@ def heat_coef(well, deltat):
         c2t.append(well.rhod * well.cd / deltat)  # Time component
 
         # fluid inside annular
-        c3z.append((well.rhof * well.cl * well.va / well.deltaz) / 2)  # Vertical component (North-South)
+        c3z.append((well.rhof[x] * well.cl * well.va / well.deltaz) / 2)  # Vertical component (North-South)
         c3e.append((2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # East component
         c3w.append((2 * well.r2 * well.h2 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # West component
         c3.append(qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2))))  # Heat source term
-        c3t.append(well.rhof * well.cl / deltat)  # Time component
+        c3t.append(well.rhof[x] * well.cl / deltat)  # Time component
 
         if in_section == 1:
             lambda4 = well.lambdar  # Thermal conductivity of the casing (riser in this section)

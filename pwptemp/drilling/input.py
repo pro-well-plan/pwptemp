@@ -4,8 +4,8 @@ def data(casings=[], d_openhole=0.216):
             'q': 794.933, 'lambdal': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdad': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhod': 7.8, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
-            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 'tbit': 9,
-            'wob': 50, 'rop': 30.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'visc': 3.0}
+            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 'tbit': 9, 'wob': 50, 'rop': 30.4,
+            'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'visc': 3.0, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6}
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -167,7 +167,6 @@ def set_well(temp_dict, depths):
             self.an = temp_dict["an"] / 1550  # Area of the nozzles, m^2
             self.bit_n = temp_dict["bit_n"]  # drill bit efficiency
             self.dp_e = temp_dict["dp_e"]  # drill pipe eccentricity
-            self.drag, self.torque = calc_torque_drag(self)  # Torque/Forces, kN*m / kN
 
             # HEAT COEFFICIENTS
             self.lambdal = temp_dict["lambdal"]  # Fluid
@@ -177,6 +176,8 @@ def set_well(temp_dict, depths):
             self.lambdafm = temp_dict["lambdafm"]       # Formation
             self.lambdar = temp_dict["lambdar"]     # Riser
             self.lambdaw = temp_dict["lambdaw"]     # Seawater
+            self.beta = temp_dict["beta"]  # Fluid Thermal Expansion Coefficient
+            self.alpha = temp_dict['alpha']
             self.cl = temp_dict["cl"]       # Fluid
             self.cc = temp_dict["cc"]    # Casing
             self.ccem = temp_dict["ccem"]     # Cement

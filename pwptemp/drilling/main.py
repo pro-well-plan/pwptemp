@@ -9,29 +9,45 @@ def temp_time(n, well):
     from .linearsystem import temp_calc
     from .plot import profile
     from .analysis import param_effect
+    from .torque_drag import calc_torque_drag
+    from .fluid import initial_density, calc_density
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
-    tstep = 1
-    deltat = tcirc / tstep
+    deltat = 60
+    tstep = int(tcirc / deltat)
     ic = init_cond(well)
+    well.rhof, rhof_initial = initial_density(well, ic)
+    well.drag, well.torque = calc_torque_drag(well)  # Torque/Forces, kN*m / kN
     hc = heat_coef(well, deltat)
-    tc = temp_calc(well, ic, hc)
+    temp = temp_calc(well, ic, hc)
+
+    for x in range(1, tstep):
+        well.rhof = calc_density(well, ic, rhof_initial)
+        well.drag, well.torque = calc_torque_drag(well)  # Torque/Forces, kN*m / kN
+
+        ic.tdsio = temp.tdsi
+        ic.tdso = temp.tds
+        ic.tao = temp.ta
+        ic.tcsgo = temp.t3
+        ic.tsr = temp.tsr
+        hc_new = heat_coef(well, deltat)
+        temp = temp_calc(well, ic, hc_new)
 
     class TempDist(object):
         def __init__(self):
-            self.tdsi = tc.tdsi
-            self.tds = tc.tds
-            self.ta = tc.ta
-            self.tr = tc.tr
-            self.tcsg = tc.tcsg
-            self.toh = tc.toh
-            self.tsr = tc.tsr
+            self.tdsi = temp.tdsi
+            self.tds = temp.tds
+            self.ta = temp.ta
+            self.tr = temp.tr
+            self.tcsg = temp.tcsg
+            self.toh = temp.toh
+            self.tsr = temp.tsr
             self.tfm = ic.tfm
             self.time = time
             self.md = well.md
             self.riser = well.riser
-            self.csgs_reach = tc.csgs_reach
+            self.csgs_reach = temp.csgs_reach
             self.deltat = deltat
 
         def plot(self, sr=False):

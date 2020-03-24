@@ -13,8 +13,8 @@ def calc_torque_drag(well):
     unit_pipe_weight = well.rhod * 9.81 * pi * (well.r2 ** 2 - well.r1 ** 2)
     area_a = pi * ((well.r3 ** 2) - (well.r2 ** 2))
     area_ds = pi * (well.r1 ** 2)
-    buoyancy = 1 - ((well.rhof * area_a) - (well.rhof * area_ds)) / (well.rhod * (area_a - area_ds))
-    w = unit_pipe_weight * well.deltaz * buoyancy
+    buoyancy = [1 - ((x * area_a) - (x * area_ds)) / (well.rhod * (area_a - area_ds)) for x in well.rhof]
+    w = [unit_pipe_weight * well.deltaz * x for x in buoyancy]
     force = [well.wob]
     torque = [well.tbit]
     for x in reversed(range(well.zstep - 1)):
@@ -22,8 +22,8 @@ def calc_torque_drag(well):
         delta_inc = radians(well.inclination[x] - well.inclination[x-1])
         inc_avg = radians((well.inclination[x] + well.inclination[x-1]) / 2)
 
-        fn = ((force[-1] * delta_azi * sin(inc_avg))**2 + (force[-1] * delta_inc + w * sin(inc_avg))**2) ** 0.5
-        delta_ft = w * cos(inc_avg) - fric * fn
+        fn = ((force[-1] * delta_azi * sin(inc_avg))**2 + (force[-1] * delta_inc + w[x] * sin(inc_avg))**2) ** 0.5
+        delta_ft = w[x] * cos(inc_avg) - fric * fn
         ft = force[-1] + delta_ft
 
         force.append(ft)
