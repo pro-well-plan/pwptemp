@@ -228,4 +228,7 @@ def set_well(temp_dict, depths):
             from .plot import plot_torque_drag
             plot_torque_drag(self, plot)
 
+        def wellpath(self):
+            return depths
+
     return NewWell()

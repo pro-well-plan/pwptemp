@@ -193,7 +193,11 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
     if profile == 'H2':        # Horizontal double-curve well
         # Vertical section
         tvd = md[:round(kop / deltaz) + 2]  # True Vertical Depth from RKB, m
-        horizontal = [0] * len(tvd)  # x axis
+        north = [0] * len(tvd)  # x axis
+        east = [0] * len(tvd)  # x axis
+        inclination = [0] * len(tvd)
+        azimuth = [0] * len(tvd)
+        dogleg = [0] * len(tvd)
 
         # Build section
         s = deltaz
@@ -206,7 +210,11 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         z_count = z_displacement
 
         hz_displacement = r * (1 - cos(theta))
-        horizontal.append(round(horizontal[-1] + hz_displacement, 2))
+        north.append(round(north[-1] + hz_displacement, 2))
+        east.append(0)
+        inclination.append(degrees(theta))
+        dogleg.append(abs(inclination[-1] - inclination[-2]))
+        azimuth.append(0)
 
         for x in range(round((eob - kop) / deltaz)-1):
             theta = theta + theta_delta
@@ -214,15 +222,23 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             tvd.append(round(tvd[-1] + z_displacement, 2))
             z_count += z_displacement
 
-            hz_displacement = r * (1 - cos(theta)) - horizontal[-1]
-            horizontal.append(round(horizontal[-1] + hz_displacement, 2))
+            hz_displacement = r * (1 - cos(theta)) - north[-1]
+            inclination.append(degrees(theta))
+            dogleg.append(abs(inclination[-1] - inclination[-2]))
+            north.append(round(north[-1] + hz_displacement, 2))
+            east.append(0)
+            azimuth.append(0)
 
         # Tangent section
         z_displacement = (deltaz * cos(radians(build_angle)))
         hz_displacement = (deltaz * sin(radians(build_angle)))
         for x in range(round((kop2-eob)/deltaz)):
             tvd.append(round(tvd[-1] + z_displacement, 2))
-            horizontal.append(round(horizontal[-1] + hz_displacement, 2))
+            inclination.append(inclination[-1])
+            dogleg.append(0)
+            north.append(round(north[-1] + hz_displacement, 2))
+            east.append(0)
+            azimuth.append(0)
 
         # Build section 2
         s = deltaz
@@ -232,11 +248,15 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         theta = radians(build_angle)
         r = s / theta_delta
         z_checkpoint = tvd[-1]
-        hz_checkpoint = horizontal[-1]
+        hz_checkpoint = north[-1]
 
         for x in range(cells_drop):
             hz_displacement = r * (sin(theta) - sin(theta - (theta_delta * (x + 1))))
-            horizontal.append(round(hz_checkpoint + hz_displacement, 2))
+            north.append(round(hz_checkpoint + hz_displacement, 2))
+            inclination.append(inclination[-1] + degrees(theta_delta))
+            dogleg.append(abs(inclination[-1] - inclination[-2]))
+            east.append(0)
+            azimuth.append(0)
 
             z_displacement = r * (1 - cos(theta)) - r * (1 - cos(theta - (theta_delta * (x + 1))))
             tvd.append(round(z_checkpoint + z_displacement, 2))
@@ -244,7 +264,11 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         # Horizontal section
         for x in range(round((mdt - eob2) / deltaz)):
             tvd.append(tvd[-1])
-            horizontal.append(horizontal[-1] + deltaz)
+            north.append(north[-1] + deltaz)
+            inclination.append(degrees(theta))
+            dogleg.append(abs(inclination[-1] - inclination[-2]))
+            east.append(0)
+            azimuth.append(0)
 
     # Defining type of section
     sections = ['vertical', 'vertical']
