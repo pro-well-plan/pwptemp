@@ -101,7 +101,6 @@ def set_well(temp_dict, depths):
     from math import pi, log
     from .main import stab_time
     from .analysis import hs_effect
-    from .torque_drag import calc_torque_drag
 
     class NewWell(object):
         def __init__(self):
@@ -200,7 +199,6 @@ def set_well(temp_dict, depths):
 
 
             # Raise Errors:
-
             if self.casings[-1, 0] > self.dsro:
                 raise ValueError('Last casing outer diameter must be smaller than the surrounding space diameter.')
 

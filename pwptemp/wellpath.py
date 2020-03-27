@@ -1,5 +1,5 @@
 from numpy import interp, arange
-from math import radians, sin, cos, degrees
+from math import radians, sin, cos, degrees, acos, tan
 
 
 def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0):
@@ -12,7 +12,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         east = [0] * zstep  # x axis
         inclination = [0] * zstep
         azimuth = [0] * zstep
-        dogleg = [0] * zstep
 
     if profile == 'J':        # J-type well
         # Vertical section
@@ -21,7 +20,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         east = [0] * len(tvd)   # x axis
         inclination = [0] * len(tvd)
         azimuth = [0] * len(tvd)
-        dogleg = [0] * len(tvd)
 
         # Build section
         s = deltaz
@@ -37,13 +35,11 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         north.append(round(north[-1] + hz_displacement, 2))
         east.append(0)
         inclination.append(degrees(theta))
-        dogleg.append(abs(inclination[-1] - inclination[-2]))
         azimuth.append(0)
 
         for x in range(round((eob - kop) / deltaz)-1):
             theta += theta_delta
             inclination.append(degrees(theta))
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
 
             z_displacement = (r * sin(theta))
             tvd.append(round(z_vertical + z_displacement, 2))
@@ -61,7 +57,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             north.append(round(north[-1] + hz_displacement, 2))
             east.append(0)
             inclination.append(inclination[-1])
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             azimuth.append(0)
 
     if profile == 'S':  # S-type well
@@ -71,7 +66,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         east = [0] * len(tvd)  # x axis
         inclination = [0] * len(tvd)
         azimuth = [0] * len(tvd)
-        dogleg = [0] * len(tvd)
 
         # Build section
         s = deltaz
@@ -85,14 +79,13 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
 
         hz_displacement = r * (1 - cos(theta))
         north.append(round(north[-1] + hz_displacement, 2))
+        east.append(0)
         inclination.append(degrees(theta))
-        dogleg.append(abs(inclination[-1] - inclination[-2]))
         azimuth.append(0)
 
         for x in range(round((eob - kop) / deltaz) - 1):
             theta += theta_delta
             inclination.append(degrees(theta))
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             z_displacement = (r * sin(theta)) - z_count
             tvd.append(round(tvd[-1] + z_displacement, 2))
             z_count += z_displacement
@@ -111,7 +104,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             north.append(round(north[-1] + hz_displacement, 2))
             east.append(0)
             inclination.append(inclination[-1])
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             azimuth.append(0)
 
         # Drop section
@@ -130,7 +122,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             north.append(round(hz_checkpoint + hz_displacement, 2))
             east.append(0)
             inclination.append(inclination[-1] - degrees(theta_delta))
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             azimuth.append(0)
 
         # Vertical section
@@ -139,7 +130,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             north.append(north[-1])  # x axis
             east.append(0)
             inclination.append(0)
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             azimuth.append(0)
 
     if profile == 'H1':        # Horizontal single-curve well
@@ -149,7 +139,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         east = [0] * len(tvd)  # x axis
         inclination = [0] * len(tvd)
         azimuth = [0] * len(tvd)
-        dogleg = [0] * len(tvd)
 
         # Build section
         s = deltaz
@@ -165,7 +154,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         north.append(round(north[-1] + hz_displacement, 2))
         east.append(0)
         inclination.append(degrees(theta))
-        dogleg.append(abs(inclination[-1] - inclination[-2]))
         azimuth.append(0)
 
         for x in range(round((eob - kop) / deltaz)-1):
@@ -176,7 +164,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
 
             hz_displacement = r * (1 - cos(theta)) - north[-1]
             inclination.append(degrees(theta))
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             north.append(round(north[-1] + hz_displacement, 2))
             east.append(0)
             azimuth.append(0)
@@ -187,7 +174,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             north.append(north[-1] + deltaz)
             east.append(0)
             inclination.append(90)
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             azimuth.append(0)
 
     if profile == 'H2':        # Horizontal double-curve well
@@ -197,7 +183,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         east = [0] * len(tvd)  # x axis
         inclination = [0] * len(tvd)
         azimuth = [0] * len(tvd)
-        dogleg = [0] * len(tvd)
 
         # Build section
         s = deltaz
@@ -213,7 +198,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         north.append(round(north[-1] + hz_displacement, 2))
         east.append(0)
         inclination.append(degrees(theta))
-        dogleg.append(abs(inclination[-1] - inclination[-2]))
         azimuth.append(0)
 
         for x in range(round((eob - kop) / deltaz)-1):
@@ -224,7 +208,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
 
             hz_displacement = r * (1 - cos(theta)) - north[-1]
             inclination.append(degrees(theta))
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             north.append(round(north[-1] + hz_displacement, 2))
             east.append(0)
             azimuth.append(0)
@@ -235,7 +218,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         for x in range(round((kop2-eob)/deltaz)):
             tvd.append(round(tvd[-1] + z_displacement, 2))
             inclination.append(inclination[-1])
-            dogleg.append(0)
             north.append(round(north[-1] + hz_displacement, 2))
             east.append(0)
             azimuth.append(0)
@@ -254,7 +236,6 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             hz_displacement = r * (sin(theta) - sin(theta - (theta_delta * (x + 1))))
             north.append(round(hz_checkpoint + hz_displacement, 2))
             inclination.append(inclination[-1] + degrees(theta_delta))
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
             east.append(0)
             azimuth.append(0)
 
@@ -265,8 +246,7 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
         for x in range(round((mdt - eob2) / deltaz)):
             tvd.append(tvd[-1])
             north.append(north[-1] + deltaz)
-            inclination.append(degrees(theta))
-            dogleg.append(abs(inclination[-1] - inclination[-2]))
+            inclination.append(inclination[-1])
             east.append(0)
             azimuth.append(0)
 
@@ -296,6 +276,15 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
     azimuth = azimuth[0::grid_length]
     sections = sections[0::grid_length]
 
+    dogleg = [0]
+    inc = inclination.copy()
+    for x in range(1, len(md)):
+        dogleg.append(acos(
+            cos(radians(inc[x])) * cos(radians(inc[x - 1]))
+            + sin(radians(inc[x])) * sin(radians(inc[x - 1])) * cos(radians(azimuth[x] - azimuth[x - 1]))
+        ))
+    dogleg = [degrees(x) for x in dogleg]
+
     class WellDepths(object):
         def __init__(self):
             self.md = md
@@ -309,41 +298,121 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             self.azimuth = azimuth
             self.sections = sections
 
-        def plot(self):
+        def plot(self, azim=45, elev=20):
             import matplotlib.pyplot as plt
+            from mpl_toolkits.mplot3d import Axes3D
+            fig = plt.figure()
+            ax = Axes3D(fig)
+            ax.view_init(azim=azim, elev=elev)
             # Plotting well profile (TVD vs Horizontal Displacement)
-            plt.plot(self.north, self.tvd, 'b')
-            plt.xlabel('Horizontal Displacement, m')
-            plt.ylabel('TVD, m')
+            ax.plot(xs=self.east, ys=self.north, zs=self.tvd)
+            ax.set_xlabel('East, m')
+            ax.set_ylabel('North, m')
+            ax.set_zlabel('TVD, m')
             title = 'Well Profile'
-            plt.title(title)
-            plt.ylim(plt.ylim()[::-1])  # reversing y axis
-            plt.show()
+            ax.set_title(title)
+            ax.invert_zaxis()
+            fig.show()
 
     return WellDepths()
 
 
 def load(data, grid_length=50):
 
-    if len(data) == 2:
-        md = data[0]
-        tvd = data[1]
-    else:
-        md = [x['md'] for x in data]
-        tvd = [x['tvd'] for x in data]
+    md = [x['md'] for x in data]
+    tvd = [x['tvd'] for x in data]
+    inc = [x['inclination'] for x in data]
+    az = [x['azimuth'] for x in data]
 
     deltaz = grid_length
     md_new = list(arange(0, max(md) + deltaz, deltaz))
     tvd_new = [0]
+    inc_new = [0]
+    az_new = [0]
     for i in md_new[1:]:
         tvd_new.append(interp(i, md, tvd))
+        inc_new.append(interp(i, md, inc))
+        az_new.append(interp(i, md, az))
     zstep = len(md_new)
+
+    dogleg = [0]
+    for x in range(1, len(md_new)):
+        dogleg.append(acos(
+            cos(radians(inc_new[x])) * cos(radians(inc_new[x - 1]))
+            + sin(radians(inc_new[x])) * sin(radians(inc_new[x - 1])) * cos(radians(az_new[x] - az_new[x - 1]))
+        ))
+
+    if 'north' and 'east' in data:
+        north = [x['north'] for x in data]
+        east = [x['east'] for x in data]
+        north_new = [0]
+        east_new = [0]
+        for i in md_new[1:]:
+            north_new.append(interp(i, md, north))
+            east_new.append(interp(i, md, east))
+    else:
+        north = [0]
+        east = [0]
+        for x in range(1, len(md_new)):
+            delta_md = md_new[x] - md_new[x - 1]
+            if dogleg[x] == 0:
+                RF = 1
+            else:
+                RF = tan(dogleg[x] / 2) / (dogleg[x] / 2)
+            north_delta = 0.5 * delta_md * (sin(radians(inc_new[x - 1])) * cos(radians(az_new[x - 1]))
+                                            + sin(radians(inc_new[x])) * cos(radians(az_new[x]))) * RF
+            north.append(north[-1] + north_delta)
+            east_delta = 0.5 * delta_md * (sin(radians(inc_new[x - 1])) * sin(radians(az_new[x - 1]))
+                                           + sin(radians(inc_new[x])) * sin(radians(az_new[x]))) * RF
+            east.append(east[-1] + east_delta)
+
+    dogleg = [degrees(x) for x in dogleg]
+
+    # Defining type of section
+    sections = ['vertical', 'vertical']
+    for z in range(2, len(tvd_new)):
+        delta_tvd = round(tvd_new[z] - tvd_new[z - 1], 9)
+        if inc_new[z] == 0:  # Vertical Section
+            sections.append('vertical')
+        else:
+            if round(inc_new[z], 2) == round(inc_new[z - 1], 2):
+                if delta_tvd == 0:
+                    sections.append('horizontal')  # Horizontal Section
+                else:
+                    sections.append('hold')  # Straight Inclined Section
+            else:
+                if inc_new[z] > inc_new[z - 1]:  # Built-up Section
+                    sections.append('build-up')
+                if inc_new[z] < inc_new[z - 1]:  # Drop-off Section
+                    sections.append('drop-off')
 
     class WellDepths(object):
         def __init__(self):
             self.md = md_new
             self.tvd = tvd_new
+            self.inclination = inc_new
+            self.azimuth = az_new
+            self.dogleg = dogleg
             self.deltaz = deltaz
             self.zstep = zstep
+            self.north = north
+            self.east = east
+            self.sections = sections
+
+        def plot(self, azim=45, elev=20):
+            import matplotlib.pyplot as plt
+            from mpl_toolkits.mplot3d import Axes3D
+            fig = plt.figure()
+            ax = Axes3D(fig)
+            ax.view_init(azim=azim, elev=elev)
+            # Plotting well profile (TVD vs Horizontal Displacement)
+            ax.plot(xs=self.east, ys=self.north, zs=self.tvd)
+            ax.set_xlabel('East, m')
+            ax.set_ylabel('North, m')
+            ax.set_zlabel('TVD, m')
+            title = 'Well Profile'
+            ax.set_title(title)
+            ax.invert_zaxis()
+            fig.show()
 
     return WellDepths()
