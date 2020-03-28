@@ -9,6 +9,7 @@ def temp_time(n, well):
     from .heatcoefficients import heat_coef
     from .linearsystem import temp_calc
     from .plot import profile
+    from math import log
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
@@ -20,12 +21,24 @@ def temp_time(n, well):
     tc = ic.tco
 
     from .fluid import initial_density, calc_density
-    well.rhof, rhof_initial = initial_density(well, ic)
+    well.rhof, rhof_initial = initial_density(well, ic, section='tubing')
+    well.rhof_a, rhof_a_initial = initial_density(well, ic, section='annular')
+    well.re_p = [x * well.vp * 2 * well.r1 / well.visc for x in well.rhof]  # Reynolds number inside tubing
+    well.f_p = [1.63 / log(6.9 / x) ** 2 for x in well.re_p]  # Friction factor inside drill pipe
+    well.nu_dpi = [0.027 * (x ** (4 / 5)) * (well.pr ** (1 / 3)) * (1 ** 0.14) for x in well.re_p]
+    # convective heat transfer coefficients, W/(m^2*°C)
+    well.h1 = [well.lambdaf * x / well.dti for x in well.nu_dpi]  # Tubing inner wall
 
     hc = heat_coef(well, deltat, tt, tc)
     temp = temp_calc(well, ic, hc)
     for x in range(1, tstep):
-        well.rhof = calc_density(well, ic, rhof_initial)
+        well.rhof = calc_density(well, ic, rhof_initial, section='tubing')
+        well.rhof_a = calc_density(well, ic, rhof_a_initial, section='annular')
+        well.re_p = [x * well.vp * 2 * well.r1 / well.visc for x in well.rhof]  # Reynolds number inside tubing
+        well.f_p = [1.63 / log(6.9 / x) ** 2 for x in well.re_p]  # Friction factor inside drill pipe
+        well.nu_dpi = [0.027 * (x ** (4 / 5)) * (well.pr ** (1 / 3)) * (1 ** 0.14) for x in well.re_p]
+        # convective heat transfer coefficients, W/(m^2*°C)
+        well.h1 = [well.lambdaf * x / well.dti for x in well.nu_dpi]  # Tubing inner wall
 
         ic.tfto = temp.tft
         ic.tto = temp.tt

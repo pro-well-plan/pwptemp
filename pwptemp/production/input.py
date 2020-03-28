@@ -3,9 +3,9 @@ def data(casings=[], d_openhole=0.216):
     dict = {'ts': 15.0, 'wd': 100.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
             'q': 300, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0,
-            'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhot': 7.6, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
-            'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'visc': 3, 'beta': 44983 * 10 ** 5,
-            'alpha': 960 * 10 ** -6}
+            'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhof_a': 1.2, 'rhot': 7.6, 'rhoc': 7.8, 'rhor': 7.8,
+            'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'visc': 3,
+            'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6, 'beta_a': 44983 * 10 ** 5, 'alpha_a': 960 * 10 ** -6}
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -58,6 +58,7 @@ def set_well(temp_dict, depths):
 
             # DENSITIES kg/m3
             self.rhof = temp_dict["rhof"] * 1000  # Fluid
+            self.rhof_a = temp_dict["rhof_a"] * 1000  # Fluid
             self.rhot = temp_dict["rhot"] * 1000  # Tubing
             self.rhoc = temp_dict["rhoc"] * 1000  # Casing
             self.rhor = temp_dict["rhor"] * 1000  # Riser
@@ -69,8 +70,6 @@ def set_well(temp_dict, depths):
             # OPERATIONAL
             self.q = temp_dict["q"] * 0.06  # Flow rate, m^3/h
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the tubing
-            self.re_p = self.rhof * self.vp * 2 * self.r1 / self.visc  # Reynolds number inside tubing
-            self.f_p = 1.63 / log(6.9 / self.re_p) ** 2  # Friction factor inside drill pipe
 
             # HEAT COEFFICIENTS
             # Thermal conductivity
@@ -84,6 +83,8 @@ def set_well(temp_dict, depths):
 
             self.beta = temp_dict["beta"]       # Fluid Thermal Expansion Coefficient
             self.alpha = temp_dict['alpha']
+            self.beta_a = temp_dict["beta_a"]  # Fluid Thermal Expansion Coefficient
+            self.alpha_a = temp_dict['alpha_a']
             # Heat capacity
             self.cf = temp_dict["cf"]       # Fluid
             self.cc = temp_dict["cc"]    # Casing
@@ -94,10 +95,7 @@ def set_well(temp_dict, depths):
             self.cfm = temp_dict["cfm"]       # Formation
 
             self.pr = self.visc * self.cf / self.lambdaf       # Prandtl number
-            self.nu_dpi = 0.027 * (self.re_p ** (4/5)) * (self.pr ** (1/3)) * (1 ** 0.14)
 
-            # convective heat transfer coefficients, W/(m^2*°C)
-            self.h1 = self.lambdaf * self.nu_dpi / self.dti      # Tubing inner wall
             self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
 
