@@ -38,14 +38,16 @@ def calc_density(well, initcond, rhof_initial, section='tubing'):
         alpha = well.alpha
         flow = True
         temp = initcond.tfto
+        rho = well.rhof
     if section == 'annular':
         beta = well.beta_a
         alpha = well.alpha_a
         flow = False
         temp = initcond.tao
-    pressure_h = [x * 9.81 * y for x, y in zip(well.rhof, well.tvd)]
+        rho = well.rhof_a
+    pressure_h = [x * 9.81 * y for x, y in zip(rho, well.tvd)]
     if flow:
-        pressure_f = [x * (well.md[-1] / well.dti) * (1/2) * y * well.vp **2 for x, y in zip(well.f_p, well.rhof)]
+        pressure_f = [x * (well.md[-1] / well.dti) * (1/2) * y * well.vp **2 for x, y in zip(well.f_p, rho)]
     else:
         pressure_f = [0] * len(well.md)
     pressure = [x + y for x, y in zip(pressure_h, pressure_f)]
