@@ -25,7 +25,7 @@ def calc_density(well, initcond, rhof_initial):
     :return: density profile
     """
     pressure_h = [x * 9.81 * y for x, y in zip(well.rhof, well.tvd)]
-    pressure_f = [well.f_p * (well.md[-1] / well.ddi) * (1/2) * x * well.vp **2 for x in well.rhof]
+    pressure_f = [x * (well.md[-1] / well.ddi) * (1/2) * y * well.vp **2 for x, y in zip(well.f_p, well.rhof)]
     pressure = [x + y for x, y in zip(pressure_h, pressure_f)]
     rhof = [rhof_initial * (1 + (x - 10 ** 5) / well.beta - well.alpha * (y - well.ts)) for x, y in
             zip(pressure, initcond.tdsio)]

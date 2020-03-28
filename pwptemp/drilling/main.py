@@ -11,6 +11,7 @@ def temp_time(n, well):
     from .analysis import param_effect
     from .torque_drag import calc_torque_drag
     from .fluid import initial_density, calc_density
+    from math import log
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
@@ -19,6 +20,19 @@ def temp_time(n, well):
     ic = init_cond(well)
     well.rhof, rhof_initial = initial_density(well, ic)
     well.drag, well.torque = calc_torque_drag(well)  # Torque/Forces, kN*m / kN
+    well.re_p = [x * well.vp * 2 * well.r1 / well.visc for x in well.rhof]  # Reynolds number inside drill pipe
+    well.re_a = [x * well.va * 2 * (well.r3 - well.r2) / well.visc for x in well.rhof]  # Reynolds number - annular
+    well.f_p = [1.63 / log(6.9 / x) ** 2 for x in well.re_p]  # Friction factor inside drill pipe
+    well.nu_dpi = [0.027 * (x ** (4 / 5)) * (well.pr ** (1 / 3)) * (1 ** 0.14) for x in well.re_p]
+    well.nu_dpo = [0.027 * (x ** (4 / 5)) * (well.pr ** (1 / 3)) * (1 ** 0.14) for x in well.re_a]
+    well.h1 = [well.lambdal * x / well.ddi for x in well.nu_dpi]  # Drill Pipe inner wall
+    well.h2 = [well.lambdal * x / well.ddo for x in well.nu_dpo]  # Drill Pipe outer wall
+    well.nu_a = [1.86 * ((x * well.pr) ** (1 / 3)) * ((2 * (well.r3 - well.r2) / well.md[-1]) ** (1 / 3))
+                 * (1 ** (1 / 4)) for x in well.re_a]
+    # convective heat transfer coefficients, W/(m^2*°C)
+    well.h3 = [well.lambdal * x / (2 * well.r3) for x in well.nu_a]  # Casing inner wall
+    well.h3r = [well.lambdal * x / (2 * well.r3r) for x in well.nu_a]  # Riser inner wall
+
     hc = heat_coef(well, deltat)
     temp = temp_calc(well, ic, hc)
 

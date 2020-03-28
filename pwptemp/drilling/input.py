@@ -156,9 +156,6 @@ def set_well(temp_dict, depths):
             self.q = temp_dict["q"] * 0.06  # Flow rate, m^3/h
             self.va = (self.q / (pi * ((self.r3 ** 2) - (self.r2 ** 2)))) / 3600  # Fluid velocity through the annular
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the drill pipe
-            self.re_p = self.rhof * self.vp * 2 * self.r1 / self.visc  # Reynolds number inside drill pipe
-            self.re_a = self.rhof * self.va * 2 * (self.r3 - self.r2) / self.visc  # Reynolds number - annular
-            self.f_p = 1.63 / log(6.9 / self.re_p) ** 2  # Friction factor inside drill pipe
             self.rpm = temp_dict["rpm"]  # Revolutions per minute
             self.tbit = temp_dict["tbit"] # Torque on the bit, kN*m
             self.wob = temp_dict["wob"]  # Weight on bit, kN
@@ -185,15 +182,6 @@ def set_well(temp_dict, depths):
             self.cw = temp_dict["cw"]      # Seawater
             self.cfm = temp_dict["cfm"]       # Formation
             self.pr = self.visc * self.cl / self.lambdal       # Prandtl number
-            self.nu_dpi = 0.027 * (self.re_p ** (4/5)) * (self.pr ** (1/3)) * (1 ** 0.14)
-            self.nu_dpo = 0.027 * (self.re_a ** (4/5)) * (self.pr ** (1/3)) * (1 ** 0.14)
-            # convective heat transfer coefficients, W/(m^2*°C)
-            self.h1 = self.lambdal * self.nu_dpi / self.ddi      # Drill Pipe inner wall
-            self.h2 = self.lambdal * self.nu_dpo / self.ddo        # Drill Pipe outer wall
-            self.nu_a = 1.86 * ((self.re_a * self.pr) ** (1/3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) **
-                                                                        (1/3)) * (1 ** (1/4))
-            self.h3 = self.lambdal * self.nu_a / (2 * self.r3)       # Casing inner wall
-            self.h3r = self.lambdal * self.nu_a / (2 * self.r3r)    # Riser inner wall
             self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
 

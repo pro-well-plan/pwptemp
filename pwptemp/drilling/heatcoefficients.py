@@ -14,7 +14,7 @@ def heat_coef(well, deltat):
 
     vbit = well.q / well.an
     cbz = ((well.rhof[-1] * well.cl * vbit) / well.deltaz) / 2  # Vertical component (North-South)
-    cbe = (2 * well.h1 / well.r3) / 2  # East component
+    cbe = (2 * well.h1[-1] / well.r3) / 2  # East component
     cb = qbit / well.an  # Heat source term
     cbt = well.rhof[-1] * well.cl / deltat  # Time component
 
@@ -61,25 +61,25 @@ def heat_coef(well, deltat):
 
         # heat coefficients fluid inside drill pipe
 
-        qp = 2 * math.pi * (well.rpm / 60) * well.torque[x] + 0.2 * 2 * (well.f_p * well.rhof[x] * (well.vp ** 2) *
+        qp = 2 * math.pi * (well.rpm / 60) * well.torque[x] + 0.2 * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) *
                                                                     (well.md[-1] / (well.ddi * 127.094 * 10 ** 6)))
 
         # fluid inside drill string
         c1z.append(((well.rhof[x] * well.cl * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)
-        c1e.append((2 * well.h1 / well.r1) / 2)  # East component
+        c1e.append((2 * well.h1[x] / well.r1) / 2)  # East component
         c1.append(qp / (math.pi * (well.r1 ** 2)))  # Heat source term
         c1t.append(well.rhof[x] * well.cl / deltat)  # Time component
 
         # drill string wall
         c2z.append((well.lambdad / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
-        c2e.append((2 * well.r2 * well.h2 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # East component
-        c2w.append((2 * well.r1 * well.h1 / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # West component
+        c2e.append((2 * well.r2 * well.h2[x] / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # East component
+        c2w.append((2 * well.r1 * well.h1[x] / ((well.r2 ** 2) - (well.r1 ** 2))) / 2)  # West component
         c2t.append(well.rhod * well.cd / deltat)  # Time component
 
         # fluid inside annular
         c3z.append((well.rhof[x] * well.cl * well.va / well.deltaz) / 2)  # Vertical component (North-South)
-        c3e.append((2 * well.r3 * well.h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # East component
-        c3w.append((2 * well.r2 * well.h2 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # West component
+        c3e.append((2 * well.r3 * well.h3[x] / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # East component
+        c3w.append((2 * well.r2 * well.h2[x] / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # West component
         c3.append(qa / (math.pi * ((well.r3 ** 2) - (well.r2 ** 2))))  # Heat source term
         c3t.append(well.rhof[x] * well.cl / deltat)  # Time component
 
@@ -144,7 +144,7 @@ def heat_coef(well, deltat):
         # first casing wall
         c4z.append((lambda4 / (well.deltaz ** 2)) / 2)
         c4e.append((2 * lambda45 / ((well.r4 ** 2) - (well.r3 ** 2))) / 2)
-        c4w.append((2 * well.r3 * well.h3 / ((well.r4 ** 2) - (well.r3 ** 2))) / 2)
+        c4w.append((2 * well.r3 * well.h3[x] / ((well.r4 ** 2) - (well.r3 ** 2))) / 2)
         c4t.append(rho4 * c4 / deltat)
 
         # surrounding space
