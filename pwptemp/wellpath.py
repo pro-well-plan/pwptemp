@@ -1,8 +1,7 @@
-from numpy import interp, arange
-from math import radians, sin, cos, degrees, acos, tan
-
-
 def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0):
+    from numpy import arange
+    from math import radians, sin, cos, degrees, acos
+
     deltaz = 1
     md = list(arange(0, mdt + deltaz, deltaz))  # Measured Depth from RKB, m
     zstep = len(md)  # Number of cells from RKB up to the bottom
@@ -318,7 +317,8 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
 
 
 def load(data, grid_length=50):
-
+    from numpy import interp, arange
+    from math import radians, sin, cos, degrees, acos, tan
     md = [x['md'] for x in data]
     tvd = [x['tvd'] for x in data]
     inc = [x['inclination'] for x in data]

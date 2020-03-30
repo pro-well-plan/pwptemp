@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v0.1.4] - 2019-12-15
+## [Unreleased] - 2020-03-30
+### Added
+- Production Module
+- Sub-module for Torque and Drag
+- Density Model
+### Changed
+- 3D concept for Wellpath module
+
+## [v0.1.4] - 2020-02-13
 ### Changed
 - Units on inputs: diameters [in], flow rate [lpm], area of nuzzles [in2], densities [sg].
 
