@@ -1,8 +1,10 @@
-def temp_time(n, well):
+def temp_time(n, well, log=False):
     """
-    :param n:
-    :param well:
-    :return:
+    Function to calculate the well temperature distribution during drilling at a certain circulation time n.
+    :param n: circulation time, hours
+    :param well: a well object created from the function set_well()
+    :param log: save distributions between initial time and circulation time n (each 1 hour)
+    :return: a temperature distribution object
     """
     from .initcond import init_cond
     from .heatcoefficients import heat_coef
@@ -35,6 +37,7 @@ def temp_time(n, well):
 
     hc = heat_coef(well, deltat)
     temp = temp_calc(well, ic, hc)
+    temp_log = []
 
     for x in range(1, tstep):
         well.rhof = calc_density(well, ic, rhof_initial)
@@ -47,6 +50,9 @@ def temp_time(n, well):
         ic.tsr = temp.tsr
         hc_new = heat_coef(well, deltat)
         temp = temp_calc(well, ic, hc_new)
+
+        if log:
+            temp_log.append(temp)
 
     class TempDist(object):
         def __init__(self):
@@ -63,6 +69,8 @@ def temp_time(n, well):
             self.riser = well.riser
             self.csgs_reach = temp.csgs_reach
             self.deltat = deltat
+            if log:
+                self.temp_log = temp_log[::60]
 
         def plot(self, sr=False):
             profile(self, sr)
@@ -142,7 +150,7 @@ def temp_times(n, x, well):
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=50, profile='V', build_angle=1, kop=0, eob=0,
-             sod=0, eod=0, kop2=0, eob2=0, change_input={}):
+             sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False):
     from .input import data, set_well
     from .. import wellpath
     tdata = data(casings, bit)
@@ -156,7 +164,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=50, p
     else:
         depths = wellpath.load(wellpath_data, grid_length)
     well = set_well(tdata, depths)
-    temp_distribution = temp_time(n, well)
+    temp_distribution = temp_time(n, well, log)
 
     return temp_distribution
 
