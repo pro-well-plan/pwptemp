@@ -61,8 +61,8 @@ def temp_time(n, well, log=False):
         def well(self):
             return well
 
-        def plot(self, sr=True):
-            profile(self, sr)
+        def plot(self, tft=True, tt=False, ta=True, tc=False, tr=False, sr=False):
+            profile(self, tft, tt, ta, tc, tr, sr)
 
         def behavior(self):
             temp_behavior_drilling = temp_behavior(self)

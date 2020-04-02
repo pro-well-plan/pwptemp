@@ -1,21 +1,25 @@
 import matplotlib.pyplot as plt
 
 
-def profile(temp_distribution, sr=False):
+def profile(temp_distribution, tft=True, tt=False, ta=True, tc=False, tr=False, sr=False):
 
     # Plotting Temperature PROFILE
     md = temp_distribution.md
     riser = temp_distribution.riser
     csg = temp_distribution.csgs_reach
-    plt.plot(temp_distribution.tft, md, c='r', label='Fluid in Drill String')  # Temp. inside Tubing vs Depth
-    plt.plot(temp_distribution.ta, md, 'b', label='Fluid in Annulus')  # Temp. of annulus
-    if riser > 0:
+    if tft:
+        plt.plot(temp_distribution.tft, md, c='r', label='Fluid in Drill String')  # Temp. inside Tubing vs Depth
+    if ta:
+        plt.plot(temp_distribution.ta, md, 'b', label='Fluid in Annulus')  # Temp. of annulus
+    if riser > 0 and tr:
         plt.plot(temp_distribution.tr, md, 'g', label='Riser')  # Temp. due to gradient vs Depth
     if csg > 0:
         plt.plot(temp_distribution.tc, md, 'c', label='Casing')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tc, md, 'c', label='Casing')  # Temp. of first casing layer vs Depth
+    if tc:
+        plt.plot(temp_distribution.tc, md, 'c', label='Casing')  # Temp. of first casing layer vs Depth
     plt.plot(temp_distribution.tfm, md, color='k', label='Formation')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tt, md, color='k', label='Tubing')  # Temp. of Tubing wall vs Depth
+    if tt:
+        plt.plot(temp_distribution.tt, md, color='k', label='Tubing')  # Temp. of Tubing wall vs Depth
     if sr:
         # Temp. due to gradient vs Depth
         plt.plot(temp_distribution.tsr, md, c='0.6', ls='-', marker='', label='Surrounding Space')

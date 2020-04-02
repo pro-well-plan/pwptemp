@@ -57,8 +57,8 @@ def temp_time(n, well, log=False):
                 self.temp_log = temp_log[::60]
                 self.time_log = time_log[::60]
 
-        def plot(self, sr=False):
-            profile(self, sr)
+        def plot(self, tdsi=True, ta=True, sr=False):
+            profile(self, tdsi, ta, sr)
 
         def well(self):
             return well
