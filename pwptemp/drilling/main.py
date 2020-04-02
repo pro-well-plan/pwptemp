@@ -149,11 +149,32 @@ def temp_times(n, x, well):
 # BUILDING GENERAL FUNCTIONS FOR DRILLING MODULE
 
 
-def temp(n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=50, profile='V', build_angle=1, kop=0, eob=0,
-             sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False):
+def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
+         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False):
+    """
+    Main function to calculate the well temperature distribution during drilling operation. This function allows to
+    set the wellpath and different parameters involved.
+    :param n: circulation time, hours
+    :param mdt: measured depth of target, m
+    :param casings: list of dictionaries with casings characteristics (od, id and depth)
+    :param wellpath_data: load own wellpath as a list
+    :param d_openhole: diameter of open hole section, m
+    :param grid_length: number of cells through depth
+    :param profile: type of well to generate. Vertical ('V'), S-type ('S'), J-type ('J') and Horizontal ('H1' or 'H2')
+    :param build_angle: build angle, °
+    :param kop: kick-off point, m
+    :param eob: end of build, m
+    :param sod: start of drop, m
+    :param eod: end of drop, m
+    :param kop2: kick-off point 2, m
+    :param eob2: end of build 2, m
+    :param change_input: dictionary with parameters to set.
+    :param log: save distributions between initial time and circulation time n (each 1 hour)
+    :return: a well temperature distribution object
+    """
     from .input import data, set_well
     from .. import wellpath
-    tdata = data(casings, bit)
+    tdata = data(casings, d_openhole)
     for x in change_input:   # changing default values
         if x in tdata:
             tdata[x] = change_input[x]
@@ -169,8 +190,8 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=50, p
     return temp_distribution
 
 
-def temps(n, x, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=50, profile='V', build_angle=1, kop=0, eob=0,
-             sod=0, eod=0, kop2=0, eob2=0, change_input={}):
+def temps(n, x, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
+          eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}):
     from .input import data, set_well
     from .. import wellpath
     tdata = data(casings, bit)

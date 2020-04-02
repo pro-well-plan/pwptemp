@@ -1,8 +1,9 @@
-def temp_time(n, well):
+def temp_time(n, well, log=False):
     """
     Function to calculate the well temperature distribution during certain production time (n)
     :param n: production time, hours
     :param well: a well object created with the function set_well() from input.py
+    :param log: save distributions between initial time and circulation time n (each 1 hour)
     :return: a well temperature distribution object
     """
     from .initcond import init_cond
@@ -31,6 +32,8 @@ def temp_time(n, well):
 
     hc = heat_coef(well, deltat, tt, tc)
     temp = temp_calc(well, ic, hc)
+    temp_log = []
+
     for x in range(1, tstep):
         well.rhof = calc_density(well, ic, rhof_initial, section='tubing')
         well.rhof_a = calc_density(well, ic, rhof_a_initial, section='annular')
@@ -48,6 +51,9 @@ def temp_time(n, well):
         hc_new = heat_coef(well, deltat, ic.tto, ic.tco)
         temp = temp_calc(well, ic, hc_new)
 
+        if log:
+            temp_log.append(temp)
+
     class TempDist(object):
         def __init__(self):
             self.tft = temp.tft
@@ -60,6 +66,8 @@ def temp_time(n, well):
             self.md = well.md
             self.riser = well.riser
             self.deltat = deltat
+            if log:
+                self.temp_log = temp_log[::60]
 
         def well(self):
             return well
@@ -71,12 +79,12 @@ def temp_time(n, well):
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
-         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}):
+         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False):
     """
     Main function to calculate the well temperature distribution during production operation. This function allows to
     set the wellpath and different parameters involved.
     :param n: production time, hours
-    :param mdt: measured depth of target
+    :param mdt: measured depth of target, m
     :param casings: list of dictionaries with casings characteristics (od, id and depth)
     :param wellpath_data: load own wellpath as a list
     :param d_openhole: diameter of open hole section, m
@@ -90,6 +98,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     :param kop2: kick-off point 2, m
     :param eob2: end of build 2, m
     :param change_input: dictionary with parameters to set.
+    :param log: save distributions between initial time and circulation time n (each 1 hour)
     :return: a well temperature distribution object
     """
     from .input import data, set_well
@@ -105,6 +114,6 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length)
     well = set_well(tdata, depths)
-    temp_distribution = temp_time(n, well)
+    temp_distribution = temp_time(n, well, log)
 
     return temp_distribution
