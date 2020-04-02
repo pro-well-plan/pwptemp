@@ -10,7 +10,7 @@ def behavior(Behavior):
     plt.xlim(0, Behavior.finaltime - 1)
     plt.xlabel('Time, h')
     plt.ylabel('Temperature, °C')
-    title = 'Temperature behavior before stabilization (%1.1f hours)' % Behavior.finaltime
+    title = 'Temperature behavior (%1.1f hours)' % Behavior.finaltime
     plt.title(title)
     plt.legend()  # applying the legend
     plt.show()
@@ -41,29 +41,29 @@ def profile(temp_distribution, sr=False):
     plt.show()
 
 
-def profile_multitime(temps, tdsi=True, ta=False, tr=False, tcsg=False, tfm=True, tsr=False):
-    md = temps.values[0].md
-    riser = temps.values[0].riser
-    csg = temps.values[0].csgs_reach
+def profile_multitime(temp_dist, values, times, tdsi=True, ta=False, tr=False, tcsg=False, tfm=True, tsr=False):
+    md = temp_dist.md
+    riser = temp_dist.riser
+    csg = temp_dist.csgs_reach
     if tfm:
-        plt.plot(temps.values[0].tfm, md, color='k', label='Formation - Initial')  # Temp. due to gradient vs Depth
+        plt.plot(values[0].tfm, md, color='k', label='Formation - Initial')  # Temp. due to gradient vs Depth
 
-    color = ['r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8', '0.2']
-    if len(temps.values) > len(color):
-        color = color * round((len(temps.values) / len(color)))
-    for x in range(len(temps.values)):
+    color = ['r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8', '0.2', 'r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8']
+    if len(values) > len(color):
+        color = color * round((len(values) / len(color)))
+    for x in range(len(values)):
         # Plotting Temperature PROFILE
         if tdsi:
-            plt.plot(temps.values[x].tdsi, md, c=color[x], label='Fluid in Drill String at %1.1f hours' % temps.times[x])
+            plt.plot(values[x].tdsi, md, c=color[x], label='Fluid in Drill String at %1.1f hours' % times[x])
         if ta:
-            plt.plot(temps.values[x].ta, md, c=color[x], label='Fluid in Annulus at %1.1f hours' % temps.times[x])
+            plt.plot(values[x].ta, md, c=color[x], label='Fluid in Annulus at %1.1f hours' % times[x])
         if riser > 0 and tr:
-            plt.plot(temps.values[x].tr, md, c=color[x], label='Riser at %1.1f hours' % temps.times[x])
+            plt.plot(values[x].tr, md, c=color[x], label='Riser at %1.1f hours' % times[x])
         if csg > 0 and tcsg:
-            plt.plot(temps.values[x].tcsg, md, c=color[x], label='Casing at %1.1f hours' % temps.times[x])
+            plt.plot(values[x].tcsg, md, c=color[x], label='Casing at %1.1f hours' % times[x])
         if tsr:
             # Temp. due to gradient vs Depth
-            plt.plot(temps.values[x].tsr, md, c=color[x], ls='-', marker='', label='Surrounding Space')
+            plt.plot(values[x].tsr, md, c=color[x], ls='-', marker='', label='Surrounding Space')
     plt.xlabel('Temperature, °C')
     plt.ylabel('Depth, m')
     title = 'Temperature Profiles'

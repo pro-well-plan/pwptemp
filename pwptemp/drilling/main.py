@@ -21,7 +21,8 @@ def temp_time(n, well, log=False):
 
     hc = heat_coef(well, deltat)
     temp = temp_calc(well, ic, hc)
-    temp_log = []
+    temp_log = [temp]
+    time_log = [deltat/60]
 
     for x in range(1, tstep):
         well = well.define_density(ic, cond=1)
@@ -35,6 +36,7 @@ def temp_time(n, well, log=False):
 
         if log:
             temp_log.append(temp)
+            time_log.append((x+60)/60)
 
     class TempDist(object):
         def __init__(self):
@@ -53,6 +55,7 @@ def temp_time(n, well, log=False):
             self.deltat = deltat
             if log:
                 self.temp_log = temp_log[::60]
+                self.time_log = time_log[::60]
 
         def plot(self, sr=False):
             profile(self, sr)
@@ -61,8 +64,11 @@ def temp_time(n, well, log=False):
             return well
 
         def behavior(self):
-            stab = temp_behavior(self)
-            return stab
+            temp_behavior_drilling = temp_behavior(self)
+            return temp_behavior_drilling
+
+        def plot_multi(self):
+            plot_multitime(self, tdsi=True, ta=False, tr=False, tcsg=False, tfm=False, tsr=False)
 
     return TempDist()
 
@@ -92,25 +98,12 @@ def temp_behavior(temp_dist):
     return Behavior()
 
 
-def temp_times(n, x, well):
-    from numpy import arange
+def plot_multitime(temp_dist, tdsi=True, ta=False, tr=False, tcsg=False, tfm=False, tsr=False):
     from .plot import profile_multitime
-    temps_list = []
-    times_list = []
-    for i in list(arange(x, n+x, x)):
-        current_temp = temp_time(i, well)
-        temps_list.append(current_temp)
-        times_list.append(i)
 
-    class TempDist(object):
-        def __init__(self):
-            self.values = temps_list
-            self.times = times_list
-
-        def plot(self, tdsi=True, ta=False, tr=False, tcsg=False, tfm=True, tsr=False):
-            profile_multitime(self, tdsi=tdsi, ta=ta, tr=tr, tcsg=tcsg, tfm=tfm, tsr=tsr)
-
-    return TempDist()
+    values = temp_dist.temp_log
+    times = [x for x in temp_dist.time_log]
+    profile_multitime(temp_dist, values, times, tdsi=tdsi, ta=ta, tr=tr, tcsg=tcsg, tfm=tfm, tsr=tsr)
 
 
 # BUILDING GENERAL FUNCTIONS FOR DRILLING MODULE
@@ -155,26 +148,6 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     temp_distribution = temp_time(n, well, log)
 
     return temp_distribution
-
-
-def temps(n, x, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
-          eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}):
-    from .input import data, set_well
-    from .. import wellpath
-    tdata = data(casings, bit)
-    for i in change_input:   # changing default values
-        if i in tdata:
-            tdata[i] = change_input[i]
-        else:
-            raise TypeError('%s is not a parameter' % i)
-    if len(wellpath_data) == 0:
-        depths = wellpath.get(mdt, grid_length, profile, build_angle, kop, eob, sod, eod, kop2, eob2)
-    else:
-        depths = wellpath.load(wellpath_data, grid_length)
-    well = set_well(tdata, depths)
-    temp_distributions = temp_times(n, x, well)
-
-    return temp_distributions
 
 
 def input_info(about='all'):

@@ -1,7 +1,7 @@
 import math
 
 
-def heat_coef(well, deltat, tt, tc):
+def heat_coef(well, deltat, tt, t3):
     sections = [well.wd]
     if len(well.casings) > 0 and well.casings[0, 2] > 0:
         for i in range(len(well.casings)):
@@ -46,8 +46,8 @@ def heat_coef(well, deltat, tt, tc):
             if len(sections) > 1:
                 section_checkpoint = sections[in_section]
 
-        gr_t = 9.81 * well.alpha * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
-        gr_c = 9.81 * well.alpha * abs((tt[x] - tc[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
+        gr_t = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
+        gr_c = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
         ra_t = gr_t * well.pr
         ra_c = gr_c * well.pr
         c = 0.049

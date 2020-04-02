@@ -332,15 +332,28 @@ def temp_calc(well, initcond, heatcoeff):
         if x == well.zstep - 1:
             Tsr.append(initcond.tsro[-1])
 
+    t3 = tc.copy()
+
     tr = tc[:well.riser] + [None] * (well.zstep - well.riser)
+    for x in range(well.riser):
+        tc[x] = None
+
+    csgs_reach = int(well.casings[0, 2] / well.deltaz)  # final depth still covered with casing(s)
+
+    Toh = [None] * csgs_reach + tc[csgs_reach:]
+    for x in range(csgs_reach, well.zstep):
+        tc[x] = None
 
     class TempCalc(object):
         def __init__(self):
             self.tft = Tft
             self.tt = Tt
             self.ta = Ta
+            self.t3 = t3
             self.tc = tc
             self.tr = tr
             self.tsr = Tsr
+            self.toh = Toh
+            self.csgs_reach = csgs_reach
 
     return TempCalc()

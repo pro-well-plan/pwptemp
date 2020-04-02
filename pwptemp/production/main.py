@@ -19,11 +19,11 @@ def temp_time(n, well, log=False):
     ic = init_cond(well)
     tfm = ic.tfm
     tt = ic.tto
-    tc = ic.tco
+    t3 = ic.tco
 
     well = well.define_density(ic, cond=0)
 
-    hc = heat_coef(well, deltat, tt, tc)
+    hc = heat_coef(well, deltat, tt, t3)
     temp = temp_calc(well, ic, hc)
     temp_log = []
 
@@ -33,7 +33,7 @@ def temp_time(n, well, log=False):
         ic.tfto = temp.tft
         ic.tto = temp.tt
         ic.tao = temp.ta
-        ic.tco = temp.tc
+        ic.tco = temp.t3
         ic.tsr = temp.tsr
         hc_new = heat_coef(well, deltat, ic.tto, ic.tco)
         temp = temp_calc(well, ic, hc_new)
@@ -54,6 +54,7 @@ def temp_time(n, well, log=False):
             self.md = well.md
             self.riser = well.riser
             self.deltat = deltat
+            self.csgs_reach = temp.csgs_reach
             if log:
                 self.temp_log = temp_log[::60]
 
@@ -63,7 +64,33 @@ def temp_time(n, well, log=False):
         def plot(self, sr=True):
             profile(self, sr)
 
+        def behavior(self):
+            temp_behavior_drilling = temp_behavior(self)
+            return temp_behavior_drilling
+
     return TempDist()
+
+
+def temp_behavior(temp_dist):
+
+    ta = [x.ta for x in temp_dist.temp_log]
+
+    tout = []
+
+    for n in range(len(ta)):
+        tout.append(ta[n][0])
+
+    class Behavior(object):
+        def __init__(self):
+            self.finaltime = temp_dist.time
+            self.tout = tout
+            self.tfm = temp_dist.tfm
+
+        def plot(self):
+            from .plot import behavior
+            behavior(self)
+
+    return Behavior()
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,

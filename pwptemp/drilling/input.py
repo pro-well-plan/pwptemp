@@ -201,10 +201,6 @@ def set_well(temp_dict, depths):
             if self.dsro > self.dfm:
                 raise ValueError('Surrounding space diameter must be smaller than the undisturbed formation diameter.')
 
-        def effect(self):
-            effect = hs_effect(self)
-            return effect
-
         def plot_torque_drag(self, plot='torque'):
             from .plot import plot_torque_drag
             plot_torque_drag(self, plot)

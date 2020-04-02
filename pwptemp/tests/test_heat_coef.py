@@ -46,8 +46,8 @@ class TestHC(TestCase):
         ic = initcond.init_cond(well)
         well = well.define_density(ic)
         tt = ic.tto
-        tc = ic.tco
-        hc = heatcoefficients.heat_coef(well, 1, tt, tc)
+        t3 = ic.tco
+        hc = heatcoefficients.heat_coef(well, 1, tt, t3)
         self.assertEqual(len(hc), 8)
         self.assertEqual(len(hc[0]), 4)     # len of hc_1
         self.assertEqual(len(hc[0][0]), depths.zstep)   # len of c1z
