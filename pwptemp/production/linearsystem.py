@@ -332,12 +332,15 @@ def temp_calc(well, initcond, heatcoeff):
         if x == well.zstep - 1:
             Tsr.append(initcond.tsro[-1])
 
+    tr = tc[:well.riser] + [None] * (well.zstep - well.riser)
+
     class TempCalc(object):
         def __init__(self):
             self.tft = Tft
             self.tt = Tt
             self.ta = Ta
             self.tc = tc
+            self.tr = tr
             self.tsr = Tsr
 
     return TempCalc()

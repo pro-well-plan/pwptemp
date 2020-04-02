@@ -116,4 +116,19 @@ def set_well(temp_dict, depths):
             if self.dsro > self.dfm:
                 raise ValueError('Surrounding space diameter must be smaller than the undisturbed formation diameter.')
 
+        def define_density(self, ic, cond=0):
+            from .fluid import initial_density, calc_density
+            if cond == 0:
+                self.rhof, self.rhof_initial = initial_density(self, ic)
+                self.rhof_a, self.rhof_a_initial = initial_density(self, ic, section='annular')
+            else:
+                self.rhof = calc_density(self, ic, self.rhof_initial)
+                self.rhof_a = calc_density(self, ic, self.rhof_initial, section='annular')
+            self.re_p = [x * self.vp * 2 * self.r1 / self.visc for x in self.rhof]  # Reynolds number inside tubing
+            self.f_p = [1.63 / log(6.9 / x) ** 2 for x in self.re_p]  # Friction factor inside drill pipe
+            self.nu_dpi = [0.027 * (x ** (4 / 5)) * (self.pr ** (1 / 3)) * (1 ** 0.14) for x in self.re_p]
+            # convective heat transfer coefficients, W/(m^2*°C)
+            self.h1 = [self.lambdaf * x / self.dti for x in self.nu_dpi]  # Tubing inner wall
+            return self
+
     return NewWell()

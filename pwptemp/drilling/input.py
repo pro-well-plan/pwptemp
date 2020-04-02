@@ -217,4 +217,27 @@ def set_well(temp_dict, depths):
         def wellpath(self):
             return depths
 
+        def define_density(self, ic, cond=0):
+            from .fluid import initial_density, calc_density
+            from .torque_drag import calc_torque_drag
+            if cond == 0:
+                self.rhof, self.rhof_initial = initial_density(self, ic)
+            else:
+                self.rhof = calc_density(self, ic, self.rhof_initial)
+            self.drag, self.torque = calc_torque_drag(self)  # Torque/Forces, kN*m / kN
+            self.re_p = [x * self.vp * 2 * self.r1 / self.visc for x in self.rhof]  # Reynolds number inside drill pipe
+            self.re_a = [x * self.va * 2 * (self.r3 - self.r2) / self.visc for x in
+                         self.rhof]  # Reynolds number - annular
+            self.f_p = [1.63 / log(6.9 / x) ** 2 for x in self.re_p]  # Friction factor inside drill pipe
+            self.nu_dpi = [0.027 * (x ** (4 / 5)) * (self.pr ** (1 / 3)) * (1 ** 0.14) for x in self.re_p]
+            self.nu_dpo = [0.027 * (x ** (4 / 5)) * (self.pr ** (1 / 3)) * (1 ** 0.14) for x in self.re_a]
+            self.h1 = [self.lambdal * x / self.ddi for x in self.nu_dpi]  # Drill Pipe inner wall
+            self.h2 = [self.lambdal * x / self.ddo for x in self.nu_dpo]  # Drill Pipe outer wall
+            self.nu_a = [1.86 * ((x * self.pr) ** (1 / 3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) ** (1 / 3))
+                         * (1 ** (1 / 4)) for x in self.re_a]
+            # convective heat transfer coefficients, W/(m^2*°C)
+            self.h3 = [self.lambdal * x / (2 * self.r3) for x in self.nu_a]  # Casing inner wall
+            self.h3r = [self.lambdal * x / (2 * self.r3r) for x in self.nu_a]  # Riser inner wall
+            return self
+
     return NewWell()

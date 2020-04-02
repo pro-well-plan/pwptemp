@@ -1,7 +1,5 @@
-import math
-
-
 def heat_coef(well, deltat):
+    import math
     sections = [well.wd]
 
     # HEAT SOURCE TERMS
