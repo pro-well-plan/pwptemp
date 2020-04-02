@@ -9,7 +9,6 @@ def param_effect(temp_distribution, well, md_length=1):
                 (127.094 * 10 ** 6))) * ((2 * (0.7 + 1) * well.va) / (0.7 * pi * (well.r3 + well.r2) *
                 (well.r3 - well.r2) ** 2)) ** 0.7
 
-
     # Eq coefficients - Inside Drill String
     n_cells = well.zstep - 1
     Tdsi = temp_distribution.tdsi

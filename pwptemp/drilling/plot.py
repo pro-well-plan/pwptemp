@@ -1,16 +1,16 @@
 import matplotlib.pyplot as plt
 
 
-def behavior(stab_data):
+def behavior(Behavior):
 
     # Plotting Tbottom and Tout through time
-    plt.plot(range(stab_data.finaltime), stab_data.tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
-    plt.plot(range(stab_data.finaltime), stab_data.tout, 'r', label='Outlet (Annular)')  # Temp. inside Annulus vs Time
-    plt.axhline(y=stab_data.tfm[-1], color='k', label='Formation')  # Formation Temp. vs Time
-    plt.xlim(0, stab_data.finaltime - 1)
+    plt.plot(range(Behavior.finaltime), Behavior.tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
+    plt.plot(range(Behavior.finaltime), Behavior.tout, 'r', label='Outlet (Annular)')  # Temp. inside Annulus vs Time
+    plt.axhline(y=Behavior.tfm[-1], color='k', label='Formation')  # Formation Temp. vs Time
+    plt.xlim(0, Behavior.finaltime - 1)
     plt.xlabel('Time, h')
     plt.ylabel('Temperature, °C')
-    title = 'Temperature behavior before stabilization (%1.1f hours)' % stab_data.finaltime
+    title = 'Temperature behavior before stabilization (%1.1f hours)' % Behavior.finaltime
     plt.title(title)
     plt.legend()  # applying the legend
     plt.show()

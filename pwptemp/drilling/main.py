@@ -10,9 +10,6 @@ def temp_time(n, well, log=False):
     from .heatcoefficients import heat_coef
     from .linearsystem import temp_calc
     from .plot import profile
-    from .analysis import param_effect
-    from .torque_drag import calc_torque_drag
-    from .fluid import initial_density, calc_density
     from math import log
     # Simulation main parameters
     time = n  # circulating time, h
@@ -60,54 +57,39 @@ def temp_time(n, well, log=False):
         def plot(self, sr=False):
             profile(self, sr)
 
-        def effect(self, md_length=1):
-            effect = param_effect(self, well, md_length)
-            return effect
-
         def well(self):
             return well
 
-        def stab(self):
-            stab = stab_time(well)
+        def behavior(self):
+            stab = temp_behavior(self)
             return stab
 
     return TempDist()
 
 
-def stab_time(well):
-    from statistics import mean
-    from .initcond import init_cond
-    from.plot import behavior
-    ta = []
-    for n in range(1, 3):
-        ta.append(temp_time(n, well).ta)
+def temp_behavior(temp_dist):
 
-    valor = mean(ta[0]) - mean(ta[1])
-    finaltime = 2
-
-    while abs(valor) >= 0.01:
-        ta.append(temp_time(finaltime+1, well).ta)
-        valor = mean(ta[finaltime]) - mean(ta[finaltime-1])
-        finaltime = finaltime + 1
+    ta = [x.ta for x in temp_dist.temp_log]
 
     tbot = []
     tout = []
 
-    for n in range(finaltime):
+    for n in range(len(ta)):
         tbot.append(ta[n][-1])
         tout.append(ta[n][0])
 
-    class StabTime(object):
+    class Behavior(object):
         def __init__(self):
-            self.finaltime = finaltime
+            self.finaltime = temp_dist.time
             self.tbot = tbot
             self.tout = tout
-            self.tfm = init_cond(well).tfm
+            self.tfm = temp_dist.tfm
 
         def plot(self):
+            from .plot import behavior
             behavior(self)
 
-    return StabTime()
+    return Behavior()
 
 
 def temp_times(n, x, well):
@@ -198,23 +180,3 @@ def temps(n, x, mdt=3000, casings=[], wellpath_data=[], bit=0.216, grid_length=5
 def input_info(about='all'):
     from .input import info
     info(about)
-
-
-def stab(mdt=3000, casings=[], wellpath_data=[], bit=0.216, deltaz=50, profile='V', build_angle=1, kop=0, eob=0, sod=0,
-         eod=0, kop2=0, eob2=0, change_input={}):
-    from .input import data, set_well
-    from .. import wellpath
-    tdata = data(casings, bit)
-    for x in change_input:  # changing default values
-        if x in tdata:
-            tdata[x] = change_input[x]
-        else:
-            raise TypeError('%s is not a parameter' % x)
-    if len(wellpath_data) == 0:
-        depths = wellpath.get(mdt, deltaz, profile, build_angle, kop, eob, sod, eod, kop2, eob2)
-    else:
-        depths = wellpath.load(wellpath_data, deltaz)
-    well = set_well(tdata, depths)
-    stabilization = stab_time(well)
-
-    return stabilization

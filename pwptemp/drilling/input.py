@@ -99,7 +99,6 @@ def info(about='all'):
 
 def set_well(temp_dict, depths):
     from math import pi, log
-    from .main import stab_time
     from .analysis import hs_effect
 
     class NewWell(object):
@@ -205,10 +204,6 @@ def set_well(temp_dict, depths):
         def effect(self):
             effect = hs_effect(self)
             return effect
-
-        def stab(self):
-            result = stab_time(self)
-            return result
 
         def plot_torque_drag(self, plot='torque'):
             from .plot import plot_torque_drag
