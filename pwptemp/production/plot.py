@@ -44,3 +44,35 @@ def behavior(Behavior):
     plt.title(title)
     plt.legend()  # applying the legend
     plt.show()
+
+
+def profile_multitime(temp_dist, values, times, tft=True, ta=False, tr=False, tc=False, tfm=True, tsr=False):
+    md = temp_dist.md
+    riser = temp_dist.riser
+    csg = temp_dist.csgs_reach
+    if tfm:
+        plt.plot(values[0].tfm, md, color='k', label='Formation - Initial')  # Temp. due to gradient vs Depth
+
+    color = ['r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8', '0.2', 'r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8']
+    if len(values) > len(color):
+        color = color * round((len(values) / len(color)))
+    for x in range(len(values)):
+        # Plotting Temperature PROFILE
+        if tft:
+            plt.plot(values[x].tft, md, c=color[x], label='Fluid in Tubing at %1.1f hours' % times[x])
+        if ta:
+            plt.plot(values[x].ta, md, c=color[x], label='Fluid in Annulus at %1.1f hours' % times[x])
+        if riser > 0 and tr:
+            plt.plot(values[x].tr, md, c=color[x], label='Riser at %1.1f hours' % times[x])
+        if csg > 0 and tc:
+            plt.plot(values[x].tc, md, c=color[x], label='Casing at %1.1f hours' % times[x])
+        if tsr:
+            # Temp. due to gradient vs Depth
+            plt.plot(values[x].tsr, md, c=color[x], ls='-', marker='', label='Surrounding Space')
+    plt.xlabel('Temperature, °C')
+    plt.ylabel('Depth, m')
+    title = 'Temperature Profiles'
+    plt.title(title)
+    plt.ylim(plt.ylim()[::-1])  # reversing y axis
+    plt.legend()  # applying the legend
+    plt.show()

@@ -26,6 +26,7 @@ def temp_time(n, well, log=False):
     hc = heat_coef(well, deltat, tt, t3)
     temp = temp_calc(well, ic, hc)
     temp_log = []
+    time_log = [deltat / 60]
 
     for x in range(1, tstep):
         well = well.define_density(ic, cond=1)
@@ -40,6 +41,7 @@ def temp_time(n, well, log=False):
 
         if log:
             temp_log.append(temp)
+            time_log.append((x + 60) / 60)
 
     class TempDist(object):
         def __init__(self):
@@ -57,6 +59,7 @@ def temp_time(n, well, log=False):
             self.csgs_reach = temp.csgs_reach
             if log:
                 self.temp_log = temp_log[::60]
+                self.time_log = time_log[::60]
 
         def well(self):
             return well
@@ -67,6 +70,9 @@ def temp_time(n, well, log=False):
         def behavior(self):
             temp_behavior_drilling = temp_behavior(self)
             return temp_behavior_drilling
+
+        def plot_multi(self):
+            plot_multitime(self, tft=True, ta=False, tr=False, tc=False, tfm=False, tsr=False)
 
     return TempDist()
 
@@ -91,6 +97,14 @@ def temp_behavior(temp_dist):
             behavior(self)
 
     return Behavior()
+
+
+def plot_multitime(temp_dist, tft=True, ta=False, tr=False, tc=False, tfm=False, tsr=False):
+    from .plot import profile_multitime
+
+    values = temp_dist.temp_log
+    times = [x for x in temp_dist.time_log]
+    profile_multitime(temp_dist, values, times, tft=tft, ta=ta, tr=tr, tc=tc, tfm=tfm, tsr=tsr)
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
