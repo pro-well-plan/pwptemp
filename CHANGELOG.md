@@ -4,11 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased] - 2020-03-30
+## [v0.1.6] - 2020-04-04
+### Added
+- Attribute plot_multi() for temp_time() function in production module
+
+## [v0.1.5] - 2020-04-03
 ### Added
 - Production Module
 - Sub-module for Torque and Drag
 - Density Model
+- Attribute plot_multi() for temp_time() function in drilling module
 ### Changed
 - 3D concept for Wellpath module
 
