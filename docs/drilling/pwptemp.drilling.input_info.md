@@ -28,7 +28,6 @@ PARAMETERS RELATED TO THE OPERATION
 tin: fluid inlet temperature, °C
 q: flow rate, lpm
 rpm: revolutions per minute
-t: torque on the drill string, kN*m
 tbit: torque on the bit, kN*m
 wob: reight on bit, kN
 rop: rate of penetration, m/h

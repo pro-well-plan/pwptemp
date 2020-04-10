@@ -48,7 +48,7 @@ def profile_multitime(temp_dist, values, times, tdsi=True, ta=False, tr=False, t
     riser = temp_dist.riser
     csg = temp_dist.csgs_reach
     if tfm:
-        plt.plot(values[0].tfm, md, color='k', label='Formation - Initial')  # Temp. due to gradient vs Depth
+        plt.plot(temp_dist.tfm, md, color='k', label='Formation - Initial')  # Temp. due to gradient vs Depth
 
     color = ['r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8', '0.2', 'r', 'b', 'g', 'c', '0.4', '0.9', '0.6', '0.8']
     if len(values) > len(color):

@@ -63,13 +63,14 @@ def info(about='all'):
                            'rhofm: formation density, sg' + '\n' + \
                            'rhow: seawater density, sg' + '\n' + \
                            'rhocem: cement density, sg' + '\n' + \
+                           'beta: isothermal bulk modulus, Pa' + '\n' + \
+                           'alpha: expansion coefficient, 1/°C' + '\n' + \
                            'visc: fluid viscosity, cp' + '\n'
 
     operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
                              'tin: fluid inlet temperature, °C' + '\n' + \
                              'q: flow rate, lpm' + '\n' + \
                              'rpm: revolutions per minute' + '\n' + \
-                             't: torque on the drill string, kN*m' + '\n' + \
                              'tbit: torque on the bit, kN*m' + '\n' + \
                              'wob: weight on bit, kN' + '\n' + \
                              'rop: rate of penetration, m/h' + '\n' + \

@@ -2,69 +2,74 @@
 
 ## Index ##
 
-* [Introduction.](#introduction) 
-* [Well Profile.](#well-profile)  
-* [Casings.](#casings)
-* [Parameters.](#parameters)
-* [Plots.](#plots)
+* [Wellpath.](#wellpath)
+* [Drilling.](#drilling)
+* [Production.](#production)
 
-## Introduction
-Create a well temperature distribution easily with pwptemp:
+## Wellpath
+* [Create a well profile.](#create-a-well-profile)
+* [Load a well profile.](#load-a-well-profile)
+* [Plot.](#plot)
+
+### create a well profile
+get() function from wellpath module generates a vertical well by default. However, you can create a different case 
+(J-type, S-type or horizontal well):
+
+```
+>>> import pwptemp.wellpath as ptw
+>>> ptw.get( 
+            mdt=2800,           # set target depth at 2800 m.
+            grid_length=50     # set length of each cell. default = 50 m
+            profile='S',        # set S-type well
+            build_angle=30,     # set angle of 30 degrees
+            kop=600,            # set kick-off point at 600 m
+            eob=1200,           # set end of build at 1200 m
+            sod=1600,           # set start of drop at 1600 m
+            eod=2500           # set end of drop at 2500 m
+            )
+```
+
+### load a well profile
+Load your own MD-TVD data:
+```
+>>> ptw.load(10, wellpath_data = [{md:num, tvd:num, inclination:num, azimuth:num},{md:num2, tvd:num2, inclination:num, 
+            azimuth:num},...])
+```
+
+### plot
+Generate a 3D plot of the well by using the plot attribute included in the functions get() and load()
+```
+>>> ptw.get(3000).plot(azim=45, elev=20)
+```
+![](https://user-images.githubusercontent.com/52009346/78991923-6883a900-7b3a-11ea-80ce-6801950ff20d.PNG)
+
+## Drilling
+Create a well temperature distribution for a drilling operation:
 
 ```
 >>> import pwptemp.drilling as ptd
 >>> temp = ptd.temp(10)    # well temperature distribution at 10 hours of mud circulation. 
 ```
-Of course, you can also do more interesting things with pwptemp, since load your own wellpath up to generate analysis.
 
-## Well Profile
-### create a well profile
-ptd.temp() function generates a vertical well by default. However, you can create a different case (J-type, S-type or 
-horizontal well):
-
+### Casings
+Add as many casings as you want:
 ```
-ptd.temp(10, 
-         mdt=2800,           # set target depth at 2800 m. default = 3000 m
-         profile='S',        # set S-type well
-         build_angle=30,     # set angle of 30 degrees
-         kop=600,            # set kick-off point at 600 m
-         eob=1200,           # set end of build at 1200 m
-         sod=1600,           # set start of drop at 1600 m
-         eod=2500)           # set end of drop at 2500 m
+>>> ptd.temp(10, casings = [{od:num1, id:num1, depth:num1},{od:num2, id:num2, depth:num2},...])
 ```
 
-### load a well profile
-It is also possible to load your own MD-TVD data:
-1. data as a list of dictionaries:
+### Parameters
+Change any parameter involved during the operation:
 ```
-ptd.temp(10, wellpath_data = [{md:num, tvd:num},{md:num2, tvd:num2},...])
-```
-2. data as a list of lists [md, tvd]:
-```
-ptd.temp(10, wellpath_data = [[md1, md2,...],[tvd1, tvd2,...]])
-```
-
-> depths = pwptemp.wellpath.load(md, tvd, 50)
-
-## Casings
-It is also possible to add as many casings as you want:
-```
-ptd.temp(10, casings = [{od:num1, id:num1, depth:num1},{od:num2, id:num2, depth:num2},...])
-```
-Where depth is md in meters.
-
-## Parameters
-It is also possible to change any parameter:
-```
-ptd.temp(10, 
-         change_input={'wd': 100,       # set water-depth in m
-                       'ts': 20,        # set surface temperature in °C
-                       'q': 40,         # set flow rate in m3/h
-                       'gt: 0.024,      # set geothermal gradient in °C/m
-                       'wtg': -0.006,   # set water thermal gradient in °C/m
-                       'wob': 22.8,     # set weight on bit in kN
-                       'an': 1.86       # set area of the nozzles in m2 
-                       })
+>>> ptd.temp(10, 
+            change_input={'wd': 100,       # set water-depth in m
+                          'ts': 20,        # set surface temperature in °C
+                          'q': 40,         # set flow rate in m3/h
+                          'gt: 0.024,      # set geothermal gradient in °C/m
+                          'wtg': -0.006,   # set water thermal gradient in °C/m
+                          'wob': 22.8,     # set weight on bit in kN
+                          'an': 1.86       # set area of the nozzles in m2 
+                         }
+            )
 ```
 [click here](https://github.com/pro-well-plan/pwptemp/blob/master/physics/drilling/inputs.md)
 to check all the parameters used for the calculations or
@@ -72,32 +77,54 @@ to check all the parameters used for the calculations or
 to check a function to print the information.
 
 
-## Plots
-### well temperature distribution
+### Plots
+#### well temperature distribution
 ```
-ptd.temp(10).plot()
+>>> ptd.temp(10).plot()
 ```
 ![](https://user-images.githubusercontent.com/52009346/69182995-5fa22480-0b12-11ea-98cc-8331aeed5c1c.png)
 
-### stabilization time
+#### behavior
 ```
-ptd.stab().plot()
+>>> ptd.temp(10).behavior().plot()
 ```
-or from the temperature distribution object:
-```
-ptd.temp(10).stab().plot()
-```
-![](https://user-images.githubusercontent.com/52009346/69183056-7f394d00-0b12-11ea-89e7-e8c206925222.png)
+![](https://user-images.githubusercontent.com/52009346/78992254-21e27e80-7b3b-11ea-891f-43b961855b08.PNG)
 
-### analysis
-General effect:
+#### multiple times
 ```
-ptd.temp(10).effect().plot()
+>>> ptd.temp(10).plot_multi()
 ```
-![](https://user-images.githubusercontent.com/52009346/69183085-8f512c80-0b12-11ea-8fa2-bc032674fd08.png)
+![](https://user-images.githubusercontent.com/52009346/78992817-7c300f00-7b3c-11ea-9c2e-73f0dd32840e.PNG)
 
-Regarding heat source terms:
+## Production
+Create a well temperature distribution for a production operation:
+
 ```
-ptd.temp(10).well().effect().plot()
+>>> import pwptemp.production as ptp
+>>> temp = ptp.temp(10)    # well temperature distribution at 10 hours of production. 
 ```
-![](https://user-images.githubusercontent.com/52009346/69183029-70eb3100-0b12-11ea-9a94-36b849a55a90.png)
+
+### Casings
+Add as many casings as you want:
+```
+>>> ptp.temp(10, casings = [{od:num1, id:num1, depth:num1},{od:num2, id:num2, depth:num2},...])
+```
+
+### Plots
+#### well temperature distribution
+```
+>>> ptp.temp(10).plot()
+```
+![](https://user-images.githubusercontent.com/52009346/78993027-109a7180-7b3d-11ea-9cf9-722c007292d1.PNG)
+
+#### behavior
+```
+>>> ptp.temp(10).behavior().plot()
+```
+![](https://user-images.githubusercontent.com/52009346/78992954-d4ffa780-7b3c-11ea-9507-a4273a501eb7.PNG)
+
+#### multiple times
+```
+>>> ptp.temp(10).plot_multi()
+```
+![](https://user-images.githubusercontent.com/52009346/78992876-a5509f80-7b3c-11ea-99c8-4d654d755584.PNG)
