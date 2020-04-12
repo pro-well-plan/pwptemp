@@ -71,8 +71,8 @@ def temp_time(n, well, log=False):
             temp_behavior_drilling = temp_behavior(self)
             return temp_behavior_drilling
 
-        def plot_multi(self):
-            plot_multitime(self, tft=True, ta=False, tr=False, tc=False, tfm=False, tsr=False)
+        def plot_multi(self, tft=True, ta=False, tr=False, tc=False, tfm=False, tsr=False):
+            plot_multitime(self, tft, ta, tr, tc, tfm, tsr)
 
     return TempDist()
 
