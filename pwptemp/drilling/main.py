@@ -110,7 +110,7 @@ def plot_multitime(temp_dist, tdsi=True, ta=False, tr=False, tcsg=False, tfm=Fal
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
-         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False):
+         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, visc_eq=True):
     """
     Main function to calculate the well temperature distribution during drilling operation. This function allows to
     set the wellpath and different parameters involved.
@@ -130,21 +130,25 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     :param eob2: end of build 2, m
     :param change_input: dictionary with parameters to set.
     :param log: save distributions between initial time and circulation time n (each 1 hour)
+    :param visc_eq: boolean to use the same viscosity in the pipe and annular
     :return: a well temperature distribution object
     """
     from .input import data, set_well
     from .. import wellpath
+
     tdata = data(casings, d_openhole)
+
     for x in change_input:   # changing default values
         if x in tdata:
             tdata[x] = change_input[x]
         else:
             raise TypeError('%s is not a parameter' % x)
+
     if len(wellpath_data) == 0:
         depths = wellpath.get(mdt, grid_length, profile, build_angle, kop, eob, sod, eod, kop2, eob2)
     else:
         depths = wellpath.load(wellpath_data, grid_length)
-    well = set_well(tdata, depths)
+    well = set_well(tdata, depths, visc_eq)
     temp_distribution = temp_time(n, well, log)
 
     return temp_distribution

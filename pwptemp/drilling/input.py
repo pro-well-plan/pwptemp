@@ -5,7 +5,8 @@ def data(casings=[], d_openhole=0.216):
             'lambdar': 15.49, 'lambdaw': 0.6, 'cl': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'cd': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhod': 7.8, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
             'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 'tbit': 9, 'wob': 50, 'rop': 30.4,
-            'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'visc': 3.0, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6}
+            'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'thao_o': 1.82, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6,
+            'k': 0.3832, 'n': 0.7, 'visc': 0}
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -64,7 +65,12 @@ def info(about='all'):
                            'rhow: seawater density, sg' + '\n' + \
                            'rhocem: cement density, sg' + '\n' + \
                            'beta: isothermal bulk modulus, Pa' + '\n' + \
-                           'alpha: expansion coefficient, 1/°C' + '\n' + \
+                           'alpha: expansion coefficient, 1/°C' + '\n'
+
+    viscosity_parameters = 'PARAMETERS RELATED TO MUD VISCOSITY' + '\n' + \
+                           'thao_o: yield stress, Pa' + '\n' + \
+                           'n: flow behavior index, dimensionless' + '\n' + \
+                           'k: consistency index, Pa*s^n' + '\n' + \
                            'visc: fluid viscosity, cp' + '\n'
 
     operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
@@ -74,7 +80,7 @@ def info(about='all'):
                              'tbit: torque on the bit, kN*m' + '\n' + \
                              'wob: weight on bit, kN' + '\n' + \
                              'rop: rate of penetration, m/h' + '\n' + \
-                             'an: area of the nozzles, in2' + '\n' + \
+                             'an: area of the nozzles, in^2' + '\n' + \
                              'bit_n: drill bit efficiency' + '\n' + \
                              'dp_e: drill pipe eccentricity' + '\n'
 
@@ -98,9 +104,8 @@ def info(about='all'):
               densities_parameters + '\n' + operational_parameters)
 
 
-def set_well(temp_dict, depths):
+def set_well(temp_dict, depths, visc_eq=True):
     from math import pi, log
-    from .analysis import hs_effect
 
     class NewWell(object):
         def __init__(self):
@@ -149,7 +154,6 @@ def set_well(temp_dict, depths):
             self.rhocem = temp_dict["rhocem"] * 1000  # Cement Sheath
             self.rhofm = temp_dict["rhofm"] * 1000  # Formation
             self.rhow = temp_dict["rhow"] * 1000  # Seawater
-            self.visc = temp_dict["visc"] / 1000  # Fluid viscosity [Pas]
 
             # OPERATIONAL
             self.tin = temp_dict["tin"]  # Inlet Fluid temperature, °C
@@ -163,6 +167,32 @@ def set_well(temp_dict, depths):
             self.an = temp_dict["an"] / 1550  # Area of the nozzles, m^2
             self.bit_n = temp_dict["bit_n"]  # drill bit efficiency
             self.dp_e = temp_dict["dp_e"]  # drill pipe eccentricity
+
+            self.thao_o = temp_dict["thao_o"]
+            self.k = temp_dict["k"]
+            self.n = temp_dict["n"]
+
+            if temp_dict["visc"] == 0:
+                n = self.n
+                thao_w = ((self.q / (pi * n * (self.r3 - self.r2) ** 2 * (1 / (2 * (2 * n + 1) * self.k ** (1 / n))) *
+                          (self.r3 + self.r2))) + (self.thao_o * (2 * n + 1) / (n + 1)) ** (1 / n)) ** n
+                shear_rate = ((thao_w - self.thao_o) / self.k) ** (1/n)
+                self.visc_a = (self.thao_o / shear_rate) + self.k * shear_rate ** (n - 1)  # Fluid viscosity [Pas]
+
+                if visc_eq:
+                    self.visc_p = self.visc_a
+                else:
+                    from sympy import symbols, solve
+                    x = symbols('x')
+                    expr = self.q - (pi * n * self.r1 ** 3 * (1 / (3 * n + 1)) * (x / self.k) ** (1 / n) * (1 -
+                            (3 * n + 1) * (self.thao_o) / (n * (2 * n + 1) * x)))
+                    sol = solve(expr)
+                    thao_w_p = sol[0]
+                    shear_rate_p = ((thao_w_p - self.thao_o) / self.k) ** (1 / n)
+                    self.visc_p = float((self.thao_o / shear_rate_p) + self.k * shear_rate_p ** (n - 1))
+
+            else:
+                self.visc_p = self.visc_a = temp_dict["visc"] / 1000
 
             # HEAT COEFFICIENTS
             self.lambdal = temp_dict["lambdal"]  # Fluid
@@ -181,7 +211,8 @@ def set_well(temp_dict, depths):
             self.cr = temp_dict["cr"]     # Riser
             self.cw = temp_dict["cw"]      # Seawater
             self.cfm = temp_dict["cfm"]       # Formation
-            self.pr = self.visc * self.cl / self.lambdal       # Prandtl number
+            self.pr_p = self.visc_p * self.cl / self.lambdal       # Prandtl number
+            self.pr_a = self.visc_a * self.cl / self.lambdal  # Prandtl number
             self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
 
@@ -217,15 +248,15 @@ def set_well(temp_dict, depths):
             else:
                 self.rhof = calc_density(self, ic, self.rhof_initial)
             self.drag, self.torque = calc_torque_drag(self)  # Torque/Forces, kN*m / kN
-            self.re_p = [x * self.vp * 2 * self.r1 / self.visc for x in self.rhof]  # Reynolds number inside drill pipe
-            self.re_a = [x * self.va * 2 * (self.r3 - self.r2) / self.visc for x in
+            self.re_p = [x * self.vp * 2 * self.r1 / self.visc_p for x in self.rhof]  # Reynolds number inside drill pipe
+            self.re_a = [x * self.va * 2 * (self.r3 - self.r2) / self.visc_a for x in
                          self.rhof]  # Reynolds number - annular
             self.f_p = [1.63 / log(6.9 / x) ** 2 for x in self.re_p]  # Friction factor inside drill pipe
-            self.nu_dpi = [0.027 * (x ** (4 / 5)) * (self.pr ** (1 / 3)) * (1 ** 0.14) for x in self.re_p]
-            self.nu_dpo = [0.027 * (x ** (4 / 5)) * (self.pr ** (1 / 3)) * (1 ** 0.14) for x in self.re_a]
+            self.nu_dpi = [0.027 * (x ** (4 / 5)) * (self.pr_p ** (1 / 3)) * (1 ** 0.14) for x in self.re_p]
+            self.nu_dpo = [0.027 * (x ** (4 / 5)) * (self.pr_a ** (1 / 3)) * (1 ** 0.14) for x in self.re_a]
             self.h1 = [self.lambdal * x / self.ddi for x in self.nu_dpi]  # Drill Pipe inner wall
             self.h2 = [self.lambdal * x / self.ddo for x in self.nu_dpo]  # Drill Pipe outer wall
-            self.nu_a = [1.86 * ((x * self.pr) ** (1 / 3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) ** (1 / 3))
+            self.nu_a = [1.86 * ((x * self.pr_a) ** (1 / 3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) ** (1 / 3))
                          * (1 ** (1 / 4)) for x in self.re_a]
             # convective heat transfer coefficients, W/(m^2*°C)
             self.h3 = [self.lambdal * x / (2 * self.r3) for x in self.nu_a]  # Casing inner wall
