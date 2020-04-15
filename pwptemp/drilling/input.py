@@ -99,9 +99,12 @@ def info(about='all'):
     if about == 'operational':
         print(operational_parameters)
 
+    if about == 'viscosity':
+        print(viscosity_parameters)
+
     if about == 'all':
         print(tubular_parameters + '\n' + conditions_parameters + '\n' + heatcoeff_parameters + '\n' +
-              densities_parameters + '\n' + operational_parameters)
+              densities_parameters + '\n' + viscosity_parameters + '\n' + operational_parameters)
 
 
 def set_well(temp_dict, depths, visc_eq=True):

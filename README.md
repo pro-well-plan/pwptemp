@@ -10,7 +10,7 @@
 See the full list of [contributors](https://github.com/pro-well-plan/pwptemp/graphs/contributors) involved in this project.
 
 ## Introduction
-Pwptemp is a small LGPL licensed library for easy calculation of the
+Pwptemp is a LGPL licensed library for easy calculation of the
 temperature distribution along the well. Features are added as they
 are needed; suggestions and contributions of all kinds are very welcome.
 
