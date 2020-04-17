@@ -57,17 +57,9 @@ def temp_calc(well, initcond, heatcoeff):
     S = []
     B = []
 
-    section = 0
-    limit = well.riser
-
     for j in range(well.zstep):
         c1z, c1e, c1, c1t, c2z, c2e, c2w, c2t, c3z, c3e, c3w, c3, c3t, c4z, c4e, c4w, c4t, c5z, c5e, c5w, c5t, cb, \
         cbe, cbt, cbz = define_coef(heatcoeff, j)
-
-        if j == limit:
-            section += 1
-            if section <= len(well.casings):
-                limit = round(well.casings[-section, 2] / well.deltaz)
 
         for i in range(xi):
             if i == 0:  # Inside Drill String

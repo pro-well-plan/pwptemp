@@ -68,8 +68,8 @@ def temp_time(n, well, log=False):
             profile(self, tft, tt, ta, tc, tr, sr)
 
         def behavior(self):
-            temp_behavior_production = temp_behavior(self)
-            return temp_behavior_production
+            temp_behavior_drilling = temp_behavior(self)
+            return temp_behavior_drilling
 
         def plot_multi(self, tft=True, ta=False, tr=False, tc=False, tfm=False, tsr=False):
             plot_multitime(self, tft, ta, tr, tc, tfm, tsr)

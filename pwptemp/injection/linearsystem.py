@@ -62,90 +62,79 @@ def temp_calc(well, initcond, heatcoeff):
 
             if i == 0:  # Inside Tubing
                 if j == 0:
-                    C.append(c1t + c1e + c1z)
+                    C.append(c1t + c1e)
                     E.append(-c1e)
-                    S.append(-c1z)
+                    S.append(0)
                     B.append(c1t * initcond.tfto[j]    # Center(t=0)
                              + c1   # Heat Source
-                             + c1e * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
-                             + c1z * (initcond.tfto[j + 1] - initcond.tfto[j]))      # N/S(t=0)
+                             + c1e * (initcond.tto[j] - initcond.tfto[j]))     # East(t=0)
 
-                if 0 < j < well.zstep - 2:
-                    N.append(0)
-                    W.append(0)
-                    C.append(c1t + c1e + c1z)
-                    E.append(-c1e)
-                    S.append(-c1z)
-                    B.append(c1t * initcond.tfto[j]    # Center(t=0)
-                             + c1       # Heat Source
-                             + c1e * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
-                             + c1z * (initcond.tfto[j + 1] - initcond.tfto[j]))       # N/S(t=0)
-
-                if j == well.zstep - 2:
+                if j == 1:
                     N.append(0)
                     W.append(0)
                     C.append(c1t + c1e + c1z)
                     E.append(-c1e)
                     S.append(0)
-                    B.append(c1t * initcond.tfto[j]  # Center(t=0)
-                             + c1  # Heat Source
-                             + c1e * (initcond.tto[j] - initcond.tfto[j])  # East(t=0)
-                             + c1z * (initcond.tfto[j + 1] - initcond.tfto[j])  # N/S(t=0)
-                             + c1z * initcond.tfto[-1])
+                    B.append(c1t * initcond.tfto[j]    # Center(t=0)
+                             + c1       # Heat Source
+                             + c1e * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
+                             + c1z * (initcond.tfto[j - 1] - initcond.tfto[j])
+                             + c1z * well.tin)       # N/S(t=0)
+
+                if 1 < j < well.zstep - 1:
+                    N.append(-c1z)
+                    W.append(0)
+                    C.append(c1t + c1e + c1z)
+                    E.append(-c1e)
+                    S.append(0)
+                    B.append(c1t * initcond.tfto[j]    # Center(t=0)
+                             + c1       # Heat Source
+                             + c1e * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
+                             + c1z * (initcond.tfto[j - 1] - initcond.tfto[j]))       # N/S(t=0)
 
                 if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
-                    N.append(0)
+                    N.append(-c1z)
                     W.append(0)
-                    C.append(cbt + cbe)
-                    E.append(0)
+                    C.append(cbt + cbe + c1z)
+                    E.append(-cbe)
                     B.append(cbt * initcond.tfto[j]    # Center(t=0)
                              + cbe * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
-                             + cbe * initcond.tto[-1])
+                             + c1z * (initcond.tfto[j - 1] - initcond.tfto[j]))  # N/S(t=0)
 
             if i == 1:  # Tubing wall
 
                 if j == 0:
-                    W.append(-c2w)
+                    W.append(0)
                     C.append(c2t + c2e + c2w + c2z)
                     E.append(-c2e)
                     S.append(-c2z)
                     B.append(c2t * initcond.tto[j]
                              + c2e * (initcond.tao[j] - initcond.tto[j])
                              + c2w * (initcond.tfto[j] - initcond.tto[j])
-                             + c2z * (initcond.tto[j + 1] - initcond.tto[j]))
+                             + c2z * (initcond.tto[j + 1] - initcond.tto[j])
+                             + c2w * well.tin)
 
                 if 0 < j < well.zstep - 1:
                     N.append(-c2z)
                     W.append(-c2w)
                     C.append(c2t + c2e + c2w + 2 * c2z)
                     E.append(-c2e)
-                    if j < well.zstep - 3:
-                        S.append(-c2z)
-                        B.append(c2t * initcond.tto[j]
-                                 + c2e * (initcond.tao[j] - initcond.tto[j])
-                                 + c2w * (initcond.tfto[j] - initcond.tto[j])
-                                 + c2z * (initcond.tto[j + 1] - initcond.tto[j])
-                                 + c2z * (initcond.tto[j - 1] - initcond.tto[j]))
-                    else:
-                        S.append(0)
-                        B.append(c2t * initcond.tto[j]
+                    S.append(-c2z)
+                    B.append(c2t * initcond.tto[j]
                              + c2e * (initcond.tao[j] - initcond.tto[j])
                              + c2w * (initcond.tfto[j] - initcond.tto[j])
                              + c2z * (initcond.tto[j + 1] - initcond.tto[j])
-                             + c2z * (initcond.tto[j - 1] - initcond.tto[j])
-                             + c2z * initcond.tfto[-1])
+                             + c2z * (initcond.tto[j - 1] - initcond.tto[j]))
 
                 if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
                     N.append(-c2z)
-                    W.append(0)
+                    W.append(-c2w)
                     C.append(c2t + c2e + c2w + c2z)
-                    E.append(0)
+                    E.append(-c2e)
                     B.append(c2t * initcond.tto[j]
-                                 + c2e * (initcond.tao[j] - initcond.tto[j])
-                                 + c2w * initcond.tfto[j]
-                                 + c2e * initcond.tao[j]
-                                 + c2w * (initcond.tfto[j] - initcond.tto[j])
-                                 + c2z * (initcond.tto[j - 1] - initcond.tto[j]))
+                             + c2e * (initcond.tao[j] - initcond.tto[j])
+                             + c2w * (initcond.tfto[j] - initcond.tto[j])
+                             + c2z * (initcond.tto[j - 1] - initcond.tto[j]))
 
             if i == 2:  # Annular
 
@@ -164,33 +153,22 @@ def temp_calc(well, initcond, heatcoeff):
                     W.append(-c3w)
                     C.append(c3t + c3e + c3w + 2 * c3z)
                     E.append(-c3e)
-                    if j < well.zstep - 3:
-                        S.append(-c3z)
-                        B.append(c3t * initcond.tao[j]
-                                 + c3e * (initcond.tco[j] - initcond.tao[j])
-                                 + c3w * (initcond.tto[j] - initcond.tao[j])
-                                 + c3z * (initcond.tao[j + 1] - initcond.tao[j])
-                                 + c3z * (initcond.tao[j - 1] - initcond.tao[j]))
-                    else:
-                        S.append(0)
-                        B.append(c3t * initcond.tao[j]
-                                 + c3e * (initcond.tco[j] - initcond.tao[j])
-                                 + c3w * (initcond.tto[j] - initcond.tao[j])
-                                 + c3z * (initcond.tao[j + 1] - initcond.tao[j])
-                                 + c3z * (initcond.tao[j - 1] - initcond.tao[j])
-                                 + c3z * initcond.tfto[-1])
+                    S.append(-c3z)
+                    B.append(c3t * initcond.tao[j]
+                             + c3e * (initcond.tco[j] - initcond.tao[j])
+                             + c3w * (initcond.tto[j] - initcond.tao[j])
+                             + c3z * (initcond.tao[j + 1] - initcond.tao[j])
+                             + c3z * (initcond.tao[j - 1] - initcond.tao[j]))
 
                 if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
                     N.append(-c3z)
-                    W.append(0)
-                    C.append(c3t + c3e + c3w + c3z)
-                    E.append(0)
+                    W.append(-c3w)
+                    C.append(c3t + c3e + c3w + c3z)     # Note that c1t = c3t since it's the same fluid
+                    E.append(-c3e)
                     B.append(c3t * initcond.tao[j]
-                                 + c3e * (initcond.tao[j] - initcond.tto[j])
-                                 + c3w * (initcond.tfto[j] - initcond.tto[j])
-                                 + c3e * initcond.tco[j]
-                                 + c3w * initcond.tto[j]
-                                 + c3z * (initcond.tto[j - 1] - initcond.tto[j]))
+                             + c3e * (initcond.tao[j] - initcond.tto[j])
+                             + c3w * (initcond.tfto[j] - initcond.tto[j])
+                             + c3z * (initcond.tto[j - 1] - initcond.tto[j]))
 
             if i == 3:  # Casing
 
@@ -204,7 +182,7 @@ def temp_calc(well, initcond, heatcoeff):
                              + c4w * (initcond.tao[j] - initcond.tco[j])  # West(t=0)
                              + c4z * (initcond.tco[j + 1] - initcond.tco[j]))   # N/S(t=0)
 
-                if 0 < j < well.zstep - 2:
+                if 0 < j < well.zstep - 1:
                     N.append(-c4z)
                     W.append(-c4w)
                     C.append(c4t + c4e + c4w + 2 * c4z)
@@ -215,71 +193,44 @@ def temp_calc(well, initcond, heatcoeff):
                              + c4w * (initcond.tao[j] - initcond.tco[j])      # West(t=0)
                              + c4z * (initcond.tco[j + 1] - 2 * initcond.tco[j] + initcond.tco[j - 1])) # N/S(t=0)
 
-                if j == well.zstep - 2:
-                    N.append(-c4z)
-                    W.append(-c4w)
-                    C.append(c4t + c4e + c4w + 2 * c4z)
-                    E.append(- c4e)
-                    S.append(0)
-                    B.append(c4t * initcond.tco[j]  # Center(t=0)
-                             + c4e * (initcond.tsro[j] - initcond.tco[j])  # East(t=0)
-                             + c4w * (initcond.tao[j] - initcond.tco[j])  # West(t=0)
-                             + c4z * (initcond.tco[j + 1] - 2 * initcond.tco[j] + initcond.tco[j - 1])  # N/S(t=0)
-                             + c4z * initcond.tfto[-1])
-
                 if j == well.zstep - 1:
                     N.append(-c4z)
-                    W.append(0)
+                    W.append(-c4w)
                     C.append(c4t + c4e + c4w + c4z)
-                    E.append(0)
+                    E.append(-c4e)
                     B.append(c4t * initcond.tco[j]    # Center(t=0)
                              + c4e * (initcond.tsro[j] - initcond.tco[j])     # East(t=0)
                              + c4w * (initcond.tao[j] - initcond.tco[j])      # West(t=0)
-                             + c4z * (initcond.tco[j - 1] - initcond.tco[j])       # N/S(t=0)
-                             + c4z * initcond.tfto[-1]
-                             + c4w * initcond.tfto[-1])
+                             + c4z * (initcond.tco[j - 1] - initcond.tco[j]))       # N/S(t=0))
 
             if i == 4:  # Surrounding Space
 
                 if j == 0:
                     W.append(-c5w)
                     C.append(c5w + c5z + c5e + c5t)
-                    E.append(-c5e)
+                    E.append(0)
                     S.append(-c5z)
                     B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
-                             + c5t * initcond.tsro[j])
+                             + c5e * initcond.tsro[j])
 
-                if 0 < j < well.zstep - 2:
+                if 0 < j < well.zstep - 1:
                     N.append(-c5z)
                     W.append(-c5w)
                     C.append(c5w + c5e + 2 * c5z + c5t)
-                    E.append(-c5e)
+                    E.append(0)
                     S.append(-c5z)
                     B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
-                             + c5t * initcond.tsro[j])
-
-                if j == well.zstep - 2:
-                    N.append(-c5z)
-                    W.append(-c5w)
-                    C.append(c5w + c5e + 2 * c5z + c5t)
-                    E.append(-c5e)
-                    S.append(0)
-                    B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
-                             + c5z * (initcond.tsro[j + 1] - initcond.tsro[j])
-                             + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
-                             + c5t * initcond.tsro[j]
-                             + c5z * initcond.tfto[-1])
+                             + c5e * initcond.tsro[j])
 
                 if j == well.zstep - 1:
                     N.append(-c5z)
-                    W.append(0)
+                    W.append(-c5w)
                     C.append(c5w + c5e + c5z + c5t)
                     B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
-                             + c5z * initcond.tsro[j]
                              + c5t * initcond.tsro[j])
 
     #LINEARSYSTEM
@@ -307,30 +258,12 @@ def temp_calc(well, initcond, heatcoeff):
     Temp = linalg.solve(A, B)
 
     for x in range(well.zstep):
-        if x < well.zstep - 1:
-            Tft.append(Temp[5 * x])
-        if x == well.zstep - 1:
-            Tft.append(initcond.tfto[-1])
-    for x in range(well.zstep):
-        if x < well.zstep - 1:
-            Tt.append(Temp[5 * x + 1])
-        if x == well.zstep - 1:
-            Tt.append(initcond.tto[-1])
-    for x in range(well.zstep):
-        if x < well.zstep - 1:
-            Ta.append(Temp[5 * x + 2])
-        if x == well.zstep - 1:
-            Ta.append(initcond.tao[-1])
-    for x in range(well.zstep):
-        if x < well.zstep - 1:
-            tc.append(Temp[5 * x + 3])
-        if x == well.zstep - 1:
-            tc.append(initcond.tco[-1])
-    for x in range(well.zstep):
-        if x < well.zstep - 1:
-            Tsr.append(Temp[5 * x + 4])
-        if x == well.zstep - 1:
-            Tsr.append(initcond.tsro[-1])
+        Tft.append(Temp[5 * x])
+        Tt.append(Temp[5 * x + 1])
+        Ta.append(Temp[5 * x + 2])
+        tc.append(Temp[5 * x + 3])
+        Tsr.append(Temp[5 * x + 4])
+
 
     t3 = tc.copy()
 
