@@ -40,7 +40,7 @@ def define_coef(coefficients, zstep):
 def temp_calc(well, initcond, heatcoeff):
     from numpy import zeros, linalg
 
-    Tft = []
+    Tft = [well.tin]
     Tt = []
     Ta = []
     tc = []
@@ -61,16 +61,9 @@ def temp_calc(well, initcond, heatcoeff):
         for i in range(xi):
 
             if i == 0:  # Inside Tubing
-                if j == 0:
-                    C.append(c1t + c1e)
-                    E.append(-c1e)
-                    S.append(0)
-                    B.append(c1t * initcond.tfto[j]    # Center(t=0)
-                             + c1   # Heat Source
-                             + c1e * (initcond.tto[j] - initcond.tfto[j]))     # East(t=0)
+
 
                 if j == 1:
-                    N.append(0)
                     W.append(0)
                     C.append(c1t + c1e + c1z)
                     E.append(-c1e)
@@ -104,7 +97,6 @@ def temp_calc(well, initcond, heatcoeff):
             if i == 1:  # Tubing wall
 
                 if j == 0:
-                    W.append(0)
                     C.append(c2t + c2e + c2w + c2z)
                     E.append(-c2e)
                     S.append(-c2z)
@@ -235,10 +227,10 @@ def temp_calc(well, initcond, heatcoeff):
 
     #LINEARSYSTEM
     # Creating pentadiagonal matrix
-    A = zeros((xi * well.zstep - 0, xi * well.zstep - 0))
+    A = zeros((xi * well.zstep - 1, xi * well.zstep - 1))
 
     # Filling up Pentadiagonal Matrix A
-    lenC = xi * well.zstep - 0
+    lenC = xi * well.zstep - 1
     lenN = lenC - xi
     lenW = lenC - 1
     lenE = lenC - 1
@@ -258,11 +250,12 @@ def temp_calc(well, initcond, heatcoeff):
     Temp = linalg.solve(A, B)
 
     for x in range(well.zstep):
-        Tft.append(Temp[5 * x])
-        Tt.append(Temp[5 * x + 1])
-        Ta.append(Temp[5 * x + 2])
-        tc.append(Temp[5 * x + 3])
-        Tsr.append(Temp[5 * x + 4])
+        Tt.append(Temp[5 * x])
+        if x < well.zstep-1:
+            Tft.append(Temp[5 * x + 4])
+        Ta.append(Temp[5 * x + 1])
+        tc.append(Temp[5 * x + 2])
+        Tsr.append(Temp[5 * x + 3])
 
 
     t3 = tc.copy()
