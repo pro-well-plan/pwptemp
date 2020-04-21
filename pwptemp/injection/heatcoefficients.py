@@ -4,7 +4,7 @@ import math
 def heat_coef(well, deltat, tt, t3):
     sections = [well.wd]
     if len(well.casings) > 0 and well.casings[0, 2] > 0:
-        for i in range(len(well.casings)):
+        for i in range(len(well.casings))[::-1]:
             sections.append(well.casings[i, 2])
 
     vb = well.q / (math.pi * well.r3 ** 2)
@@ -39,12 +39,12 @@ def heat_coef(well, deltat, tt, t3):
 
     in_section = 1
     section_checkpoint = sections[0]
-
+    print(sections)
     for x in range(well.zstep):
-        if x*well.deltaz > section_checkpoint:
+        if x*well.deltaz >= section_checkpoint and in_section < len(sections)+1:
             in_section += 1
-            if len(sections) > 1:
-                section_checkpoint = sections[in_section]
+            if section_checkpoint != sections[-1]:
+                section_checkpoint = sections[in_section-1]
 
         gr_t = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
         gr_c = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
@@ -102,12 +102,13 @@ def heat_coef(well, deltat, tt, t3):
             # thickness
             tcsr = 0
             tcem = 0
-            for i in range(len(well.casings) - x):
+            for i in range(len(well.casings) - in_section):
                 tcsr += (well.casings[i + 1, 0] - well.casings[i + 1, 1]) / 2
                 tcem += (well.casings[i + 1, 1] - well.casings[i, 0]) / 2
-            if x > 1:
-                tcem += (well.casings[len(well.casings)-x+1, 1] - well.casings[len(well.casings)-x, 0]) / 2
-            if x == 1:
+
+                tcem += (well.casings[len(well.casings)-in_section+1, 1] -
+                         well.casings[len(well.casings)-in_section, 0]) / 2
+            if in_section == 2:
                 tcem += (well.dsro - well.casings[-1, 0])
             xcsr = tcsr / (well.r5 - well.r4)  # fraction of surrounding space that is casing
             xcem = tcem / (well.r5 - well.r4)  # fraction of surrounding space that is cement
@@ -133,7 +134,7 @@ def heat_coef(well, deltat, tt, t3):
             rho4 = well.rhoc  # Density of the casing
             rho5 = rhosr  # Density of the surrounding space
 
-        if in_section == len(sections):
+        if in_section == len(sections)+1:
             lambda4 = well.lambdafm
             lambda45 = well.lambdafm
             lambda5 = well.lambdafm
