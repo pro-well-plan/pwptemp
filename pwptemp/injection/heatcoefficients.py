@@ -39,7 +39,7 @@ def heat_coef(well, deltat, tt, t3):
 
     in_section = 1
     section_checkpoint = sections[0]
-    print(sections)
+
     for x in range(well.zstep):
         if x*well.deltaz >= section_checkpoint and in_section < len(sections)+1:
             in_section += 1

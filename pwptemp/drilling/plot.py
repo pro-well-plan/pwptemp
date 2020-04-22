@@ -16,21 +16,22 @@ def behavior(Behavior):
     plt.show()
 
 
-def profile(temp_distribution, tdsi=True, ta=True, sr=False):
+def profile(temp_distribution, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False):
 
     # Plotting Temperature PROFILE
     md = temp_distribution.md
     riser = temp_distribution.riser
     csg = temp_distribution.csgs_reach
     if tdsi:
-        plt.plot(temp_distribution.tdsi, md, c='r', label='Fluid in Drill String')  # Temp. inside Drillpipe vs Depth
+        plt.plot(temp_distribution.tdsi, md, c='r', label='Simulated - DP')  # Temp. inside Drillpipe vs Depth
     if ta:
-        plt.plot(temp_distribution.ta, md, 'b', label='Fluid in Annulus')
-    if riser > 0:
+        plt.plot(temp_distribution.ta, md, 'b', label='Simulated - Ann')
+    if riser > 0 and tr:
         plt.plot(temp_distribution.tr, md, 'g', label='Riser')  # Temp. due to gradient vs Depth
-    if csg > 0:
+    if csg > 0 and tcsg:
         plt.plot(temp_distribution.tcsg, md, 'c', label='Casing')  # Temp. due to gradient vs Depth
-    plt.plot(temp_distribution.tfm, md, color='k', label='Formation')  # Temp. due to gradient vs Depth
+    if tfm:
+        plt.plot(temp_distribution.tfm, md, color='k', label='Formation')  # Temp. due to gradient vs Depth
     if sr:
         # Temp. due to gradient vs Depth
         plt.plot(temp_distribution.tsr, md, c='0.6', ls='-', marker='', label='Surrounding Space')

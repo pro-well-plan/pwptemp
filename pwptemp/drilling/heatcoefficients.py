@@ -59,7 +59,7 @@ def heat_coef(well, deltat):
             in_section += 1
             if section_checkpoint != sections[-1]:
                 section_checkpoint = sections[in_section - 1]
-        print(in_section)
+
         # heat coefficients fluid inside drill pipe
 
         qp = 2 * math.pi * (well.rpm / 60) * well.torque[x] + 0.2 * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) *

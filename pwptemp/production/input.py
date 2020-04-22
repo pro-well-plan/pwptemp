@@ -43,7 +43,7 @@ def set_well(temp_dict, depths):
             self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
             self.wd = temp_dict["wd"]  # Water Depth, m
             self.dsr = self.casings[0, 0]  # Surrounding Space Inner Diameter, m
-            self.dsro = self.casings[-1, 0] + 0.03  # Surrounding Space Outer Diameter, m
+            self.dsro = sorted([self.dro + 0.03, self.casings[-1, 0] + 0.03])[-1]  # Surrounding Space Outer Diameter, m
             self.dfm = temp_dict["dfm"]  # Undisturbed Formation Diameter, m
 
             # RADIUS (CALCULATED)
