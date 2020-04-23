@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 def heat_coef(well, deltat, tt, t3):
@@ -50,7 +51,9 @@ def heat_coef(well, deltat, tt, t3):
         gr_c = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
         ra_t = gr_t * well.pr
         ra_c = gr_c * well.pr
-        c = 0.049
+        inc = [0, 30, 45, 60, 90]
+        c_base = [0.069, 0.065, 0.059, 0.057, 0.049]
+        c = np.interp(well.inclination[x], inc, c_base, right=0.049)
         nu_a_t = c * (ra_t ** (1/3)) * (well.pr ** 0.074)
         nu_a_c = c * (ra_c ** (1/3)) * (well.pr ** 0.074)
         h2 = well.lambdaf * nu_a_t / (well.r2 * math.log(well.r3/well.r2))

@@ -23,9 +23,9 @@ def profile(temp_distribution, tdsi=True, ta=True, tr=False, tcsg=False, tfm=Tru
     riser = temp_distribution.riser
     csg = temp_distribution.csgs_reach
     if tdsi:
-        plt.plot(temp_distribution.tdsi, md, c='r', label='Simulated - DP')  # Temp. inside Drillpipe vs Depth
+        plt.plot(temp_distribution.tdsi, md, c='r', label='Fluid in Drill String')  # Temp. inside Drillpipe vs Depth
     if ta:
-        plt.plot(temp_distribution.ta, md, 'b', label='Simulated - Ann')
+        plt.plot(temp_distribution.ta, md, 'b', label='Fluid in Annulus')
     if riser > 0 and tr:
         plt.plot(temp_distribution.tr, md, 'g', label='Riser')  # Temp. due to gradient vs Depth
     if csg > 0 and tcsg:

@@ -30,6 +30,12 @@ def set_well(temp_dict, depths):
             self.tvd = depths.tvd
             self.deltaz = depths.deltaz
             self.zstep = depths.zstep
+            self.sections = depths.sections
+            self.north = depths.north
+            self.east = depths.east
+            self.inclination = depths.inclination
+            self.dogleg = depths.dogleg
+            self.azimuth = depths.azimuth
 
             # TUBULAR
             self.casings = temp_dict["casings"]  # casings array
@@ -126,7 +132,8 @@ def set_well(temp_dict, depths):
                 self.rhof_a = calc_density(self, ic, self.rhof_initial, section='annular')
             self.re_p = [x * self.vp * 2 * self.r1 / self.visc for x in self.rhof]  # Reynolds number inside tubing
             self.f_p = [1.63 / log(6.9 / x) ** 2 for x in self.re_p]  # Friction factor inside tubing
-            self.nu_dpi = [0.027 * (x ** (4 / 5)) * (self.pr ** (1 / 3)) * (1 ** 0.14) for x in self.re_p]
+            self.nu_dpi = [(x/8)*(y-1000)*self.pr/(1+(12.7*(x/8)**0.5)*(self.pr**(2/3)-1)) for x, y in zip(self.f_p,
+                           self.re_p)]
             # convective heat transfer coefficients, W/(m^2*°C)
             self.h1 = [self.lambdaf * x / self.dti for x in self.nu_dpi]  # Tubing inner wall
             return self

@@ -21,9 +21,9 @@ def heat_coef(well, deltat):
 
         # 3. heat coefficients fluid inside annular
 
-    qa = (0.085 * (2 * 0.3832 * well.md[-1] / ((well.r3 - well.r2) * (127.094 * 10 ** 6))) * \
-         ((2 * (0.7 + 1) * well.q) / (0.7 * math.pi * (well.r3 + well.r2) *
-            (well.r3 - well.r2) ** 2)) ** 0.7) * (1 + (3/2) * well.dp_e**2)
+    qa = (0.085 * (2 * well.k * well.md[-1] / ((well.r3 - well.r2) * (127.094 * 10 ** 6))) * \
+         ((2 * (well.n + 1) * well.q) / (well.n * math.pi * (well.r3 + well.r2) *
+            (well.r3 - well.r2) ** 2)) ** well.n) * (1 + (3/2) * well.dp_e**2)**0.5
 
     c1z = []
     c1e = []
