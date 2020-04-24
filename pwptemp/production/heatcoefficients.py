@@ -155,8 +155,8 @@ def heat_coef(well, deltat, tt, t3):
 
         # surrounding space
         c5z.append((lambda5 / (well.deltaz ** 2)) / 2)
-        c5w.append((2 * lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.r5 / well.r4))) / 2)
-        c5e.append((2 * lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.rfm / well.r5))) / 2)
+        c5w.append((lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.r5 / well.r4))) / 2)
+        c5e.append((lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.rfm / well.r5))) / 2)
         c5t.append(rho5 * c5 / deltat)
 
     hc_1 = [c1z, c1e, c1, c1t]
