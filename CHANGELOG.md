@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased] - 2020-04-24
+### Added
+- Injection module
+- Viscosity model for Drilling module
+- Effects of the well inclination on the heat transfer
+### Fixed
+- Linearsystem for injection module
+- Casings integration
+- Heat transfer coefficients
+
 ## [v0.1.6] - 2020-04-04
 ### Added
 - Attribute plot_multi() for temp_time() function in production module
