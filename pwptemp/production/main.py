@@ -1,4 +1,7 @@
-def temp_time(n, well, log=False):
+import numpy as np
+
+
+def temp_time(n, well, log=False, units='metric'):
     """
     Function to calculate the well temperature distribution during certain production time (n)
     :param n: production time, hours
@@ -39,9 +42,28 @@ def temp_time(n, well, log=False):
         hc_new = heat_coef(well, deltat, ic.tto, ic.tco)
         temp = temp_calc(well, ic, hc_new)
 
+        if units == 'english':
+            temp.tft_output = [(i/(5/9)+32) for i in temp.tft]
+            temp.tt_output = [(i/(5/9)+32) for i in temp.tt]
+            temp.ta_output = [(i/(5/9)+32) for i in temp.ta]
+            temp.tc_output = [(i/(5/9)+32) for i in temp.tc if type(i) == np.float64]
+            temp.tr_output = [(i/(5/9)+32) for i in temp.tr if type(i) == np.float64]
+            temp.tsr_output = [(i/(5/9)+32) for i in temp.tsr]
+            temp.md_output = [i*3.28 for i in well.md]
+
         if log:
             temp_log.append(temp)
             time_log.append((x + 60) / 60)
+
+    if units == 'english':
+        temp.tft = temp.tft_output
+        temp.tt = temp.tt_output
+        temp.ta = temp.ta_output
+        temp.tc = temp.tc_output
+        temp.tr = temp.tr_output
+        temp.sr = temp.tsr_output
+        temp.md = temp.md_output
+        tfm = [(i / (5 / 9) + 32) for i in tfm]
 
     class TempDist(object):
         def __init__(self):
@@ -65,7 +87,7 @@ def temp_time(n, well, log=False):
             return well
 
         def plot(self, tft=True, tt=False, ta=True, tc=False, tr=False, sr=False):
-            profile(self, tft, tt, ta, tc, tr, sr)
+            profile(self, tft, tt, ta, tc, tr, sr, units)
 
         def behavior(self):
             temp_behavior_production = temp_behavior(self)
@@ -108,7 +130,7 @@ def plot_multitime(temp_dist, tft=True, ta=False, tr=False, tc=False, tfm=False,
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
-         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False):
+         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, units='metric'):
     """
     Main function to calculate the well temperature distribution during production operation. This function allows to
     set the wellpath and different parameters involved.
@@ -143,6 +165,6 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length)
     well = set_well(tdata, depths)
-    temp_distribution = temp_time(n, well, log)
+    temp_distribution = temp_time(n, well, log, units)
 
     return temp_distribution
