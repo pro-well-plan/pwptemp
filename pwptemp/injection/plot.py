@@ -27,8 +27,10 @@ def profile(temp_distribution, tft=True, tt=False, ta=True, tc=False, tr=False, 
     plt.ylabel('Depth, m')
     title = 'Temperature Profile at %1.1f hours' % temp_distribution.time
     plt.title(title)
+    plt.ylim(0, md[-1])  # bottom and top limits
     plt.ylim(plt.ylim()[::-1])  # reversing y axis
     plt.legend()  # applying the legend
+    plt.grid()
     plt.show()
 
 
