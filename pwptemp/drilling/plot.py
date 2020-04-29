@@ -16,7 +16,7 @@ def behavior(Behavior):
     plt.show()
 
 
-def profile(temp_distribution, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False):
+def profile(temp_distribution, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False, units='metric'):
 
     # Plotting Temperature PROFILE
     md = temp_distribution.md
@@ -35,8 +35,12 @@ def profile(temp_distribution, tdsi=True, ta=True, tr=False, tcsg=False, tfm=Tru
     if sr:
         # Temp. due to gradient vs Depth
         plt.plot(temp_distribution.tsr, md, c='0.6', ls='-', marker='', label='Surrounding Space')
-    plt.xlabel('Temperature, °C')
-    plt.ylabel('Depth, m')
+    if units == 'metric':
+        plt.xlabel('Temperature, °C')
+        plt.ylabel('Depth, m')
+    else:
+        plt.xlabel('Temperature, °F')
+        plt.ylabel('Depth, ft')
     title = 'Temperature Profile at %1.1f hours' % temp_distribution.time
     plt.title(title)
     plt.ylim(0, md[-1])     # bottom and top limits

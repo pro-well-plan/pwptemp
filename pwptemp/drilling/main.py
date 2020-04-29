@@ -1,4 +1,4 @@
-def temp_time(n, well, log=False):
+def temp_time(n, well, log=False, units='metric'):
     """
     Function to calculate the well temperature distribution during drilling at a certain circulation time n.
     :param n: circulation time, hours
@@ -11,12 +11,14 @@ def temp_time(n, well, log=False):
     from .linearsystem import temp_calc
     from .plot import profile
     from math import log
+    import numpy as np
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
     deltat = 60
     tstep = int(tcirc / deltat)
     ic = init_cond(well)
+    tfm = ic.tfm
     well = well.define_density(ic, cond=0)
 
     hc = heat_coef(well, deltat)
@@ -34,9 +36,28 @@ def temp_time(n, well, log=False):
         hc_new = heat_coef(well, deltat)
         temp = temp_calc(well, ic, hc_new)
 
+        if units == 'english':
+            temp.tdsi_output = [(i/(5/9)+32) for i in temp.tdsi]
+            temp.tds_output = [(i/(5/9)+32) for i in temp.tds]
+            temp.ta_output = [(i/(5/9)+32) for i in temp.ta]
+            temp.tcsg_output = [(i/(5/9)+32) for i in temp.tcsg if type(i) == np.float64]
+            temp.tr_output = [(i/(5/9)+32) for i in temp.tr if type(i) == np.float64]
+            temp.tsr_output = [(i/(5/9)+32) for i in temp.tsr]
+            temp.md_output = [i*3.28 for i in well.md]
+
         if log:
             temp_log.append(temp)
             time_log.append((x+60)/60)
+
+    if units == 'english':
+        temp.tdsi = temp.tdsi_output
+        temp.tds = temp.tds_output
+        temp.ta = temp.ta_output
+        temp.tcsg = temp.tcsg_output
+        temp.tr = temp.tr_output
+        temp.sr = temp.tsr_output
+        temp.md = temp.md_output
+        tfm = [(i / (5 / 9) + 32) for i in tfm]
 
     class TempDist(object):
         def __init__(self):
@@ -47,7 +68,7 @@ def temp_time(n, well, log=False):
             self.tcsg = temp.tcsg
             self.toh = temp.toh
             self.tsr = temp.tsr
-            self.tfm = ic.tfm
+            self.tfm = tfm
             self.time = time
             self.md = well.md
             self.riser = well.riser
@@ -58,7 +79,7 @@ def temp_time(n, well, log=False):
                 self.time_log = time_log[::60]
 
         def plot(self, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False):
-            profile(self, tdsi, ta, tr, tcsg, tfm, sr)
+            profile(self, tdsi, ta, tr, tcsg, tfm, sr, units)
 
         def well(self):
             return well
@@ -110,7 +131,7 @@ def plot_multitime(temp_dist, tdsi=True, ta=False, tr=False, tcsg=False, tfm=Fal
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
-         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, visc_eq=True):
+         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, visc_eq=True, units='metric'):
     """
     Main function to calculate the well temperature distribution during drilling operation. This function allows to
     set the wellpath and different parameters involved.
@@ -149,7 +170,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length)
     well = set_well(tdata, depths, visc_eq)
-    temp_distribution = temp_time(n, well, log)
+    temp_distribution = temp_time(n, well, log, units)
 
     return temp_distribution
 
