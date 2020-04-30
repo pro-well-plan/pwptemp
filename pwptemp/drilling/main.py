@@ -10,7 +10,7 @@ def temp_time(n, well, log=False, units='metric'):
     from .heatcoefficients import heat_coef
     from .linearsystem import temp_calc
     from .plot import profile
-    from math import log
+    from math import log, nan
     import numpy as np
     # Simulation main parameters
     time = n  # circulating time, h
@@ -23,10 +23,19 @@ def temp_time(n, well, log=False, units='metric'):
 
     hc = heat_coef(well, deltat)
     temp = temp_calc(well, ic, hc)
+    temp.tdsi = temp.tds = temp.ta = temp.t3 = temp.tsr = tfm
+    for x in range(len(tfm)):
+        if temp.tcsg[x] != nan:
+            temp.tcsg[x] = tfm[x]
+        if temp.tr[x] != nan:
+            temp.tr[x] = tfm[x]
+        if temp.toh[x] != nan:
+            temp.toh[x] = tfm[x]
+
     temp_log = [temp]
     time_log = [deltat/60]
 
-    for x in range(1, tstep):
+    for x in range(tstep):
         well = well.define_density(ic, cond=1)
         ic.tdsio = temp.tdsi
         ic.tdso = temp.tds
@@ -77,6 +86,7 @@ def temp_time(n, well, log=False, units='metric'):
             if log:
                 self.temp_log = temp_log[::60]
                 self.time_log = time_log[::60]
+                print(len(temp_log))
 
         def plot(self, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False):
             profile(self, tdsi, ta, tr, tcsg, tfm, sr, units)
