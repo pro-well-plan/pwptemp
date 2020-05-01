@@ -1,1 +1,1 @@
-from .main import temp
+from .main import temp, input_info

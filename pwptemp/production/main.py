@@ -177,3 +177,8 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     temp_distribution = temp_time(n, well, log, units)
 
     return temp_distribution
+
+
+def input_info(about='all'):
+    from .input import info
+    info(about)

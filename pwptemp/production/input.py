@@ -1,7 +1,7 @@
 def data(casings=[], d_openhole=0.216):
     from numpy import asarray
     dict = {'ts': 15.0, 'wd': 100.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
-            'q': 300, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
+            'q': 2000, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0,
             'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhof_a': 1.2, 'rhot': 7.6, 'rhoc': 7.8, 'rhor': 7.8,
             'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'visc': 3,
@@ -18,6 +18,84 @@ def data(casings=[], d_openhole=0.216):
         dict['casings'] = asarray(dict['casings'])
 
     return dict
+
+
+def info(about='all'):
+    print("Use the ID of a parameter to change the default value (e.g. tdict['tin']=30 to change the fluid inlet "
+          "temperature from the default value to 30° Celsius)")
+    print('Notice that the information is provided as follows:' + '\n' +
+          'parameter ID: general description, units' + '\n')
+
+    tubular_parameters = 'VALUES RELATED TO TUBULAR SIZES' + '\n' + \
+                         'ddi: drill string inner diameter, in' + '\n' + \
+                         'ddo: drill string outer diameter, in' + '\n' + \
+                         'dri: riser inner diameter, in' + '\n' + \
+                         'dro: riser outer diameter, in' + '\n'
+
+    conditions_parameters = 'PARAMETERS RELATED TO SIMULATION CONDITIONS' + '\n' + \
+                            'ts: surface temperature, °C' + '\n' + \
+                            'wd: water depth, m' + '\n' + \
+                            'dfm: undisturbed formation diameter, m' + '\n'
+
+    heatcoeff_parameters = 'PARAMETERS RELATED TO HEAT COEFFICIENTS' + '\n' + \
+                           'lambdal: fluid - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdac: casing - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdacem: cement - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdad: drill pipe - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdafm: formation - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdar: riser - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdaw: water - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'cl: fluid - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cc: casing - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'ccem: cement - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cd: drill pipe - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cr: riser - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cw: water - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cfm: formation - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'gt: geothermal gradient, °C/m' + '\n' + \
+                           'wtg: seawater thermal gradient, °C/m' + '\n'
+
+    densities_parameters = 'PARAMETERS RELATED TO DENSITIES' + '\n' + \
+                           'rhof: fluid density, sg' + '\n' + \
+                           'rhod: drill pipe density, sg' + '\n' + \
+                           'rhoc: casing density, sg' + '\n' + \
+                           'rhor: riser density, sg' + '\n' + \
+                           'rhofm: formation density, sg' + '\n' + \
+                           'rhow: seawater density, sg' + '\n' + \
+                           'rhocem: cement density, sg' + '\n' + \
+                           'beta: isothermal bulk modulus, Pa' + '\n' + \
+                           'alpha: expansion coefficient, 1/°C' + '\n'
+
+    viscosity_parameters = 'PARAMETERS RELATED TO MUD VISCOSITY' + '\n' + \
+                           'thao_o: yield stress, Pa' + '\n' + \
+                           'n: flow behavior index, dimensionless' + '\n' + \
+                           'k: consistency index, Pa*s^n' + '\n' + \
+                           'visc: fluid viscosity, cp' + '\n'
+
+    operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
+                             'q: flow rate, m^3/d' + '\n'
+
+    if about == 'casings':
+        print(tubular_parameters)
+
+    if about == 'conditions':
+        print(conditions_parameters)
+
+    if about == 'heatcoeff':
+        print(heatcoeff_parameters)
+
+    if about == 'densities':
+        print(densities_parameters)
+
+    if about == 'operational':
+        print(operational_parameters)
+
+    if about == 'viscosity':
+        print(viscosity_parameters)
+
+    if about == 'all':
+        print(tubular_parameters + '\n' + conditions_parameters + '\n' + heatcoeff_parameters + '\n' +
+              densities_parameters + '\n' + viscosity_parameters + '\n' + operational_parameters)
 
 
 def set_well(temp_dict, depths):
@@ -74,7 +152,7 @@ def set_well(temp_dict, depths):
             self.visc = temp_dict["visc"] / 1000  # Fluid viscosity [Pas]
 
             # OPERATIONAL
-            self.q = temp_dict["q"] * 0.06  # Flow rate, m^3/h
+            self.q = temp_dict["q"] * 0.04167  # Flow rate, m^3/h
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the tubing
 
             # HEAT COEFFICIENTS

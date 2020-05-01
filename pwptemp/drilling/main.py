@@ -86,7 +86,6 @@ def temp_time(n, well, log=False, units='metric'):
             if log:
                 self.temp_log = temp_log[::60]
                 self.time_log = time_log[::60]
-                print(len(temp_log))
 
         def plot(self, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False):
             profile(self, tdsi, ta, tr, tcsg, tfm, sr, units)
