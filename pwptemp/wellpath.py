@@ -1,4 +1,4 @@
-def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0):
+def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0, units='metric'):
     from numpy import arange
     from math import radians, sin, cos, degrees, acos
 
@@ -296,35 +296,31 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
             self.dogleg = dogleg
             self.azimuth = azimuth
             self.sections = sections
+            if units == 'english':
+                self.md = [i * 3.28 for i in md]
+                self.tvd = [i * 3.28 for i in tvd]
+                self.deltaz = grid_length * 3.28
+                self.north = [i * 3.28 for i in north]
+                self.east = [i * 3.28 for i in east]
 
         def plot(self, azim=45, elev=20):
-            import matplotlib.pyplot as plt
-            from mpl_toolkits.mplot3d import Axes3D
-            fig = plt.figure()
-            ax = Axes3D(fig)
-            ax.view_init(azim=azim, elev=elev)
-            # Plotting well profile (TVD vs Horizontal Displacement)
-            ax.plot(xs=self.east, ys=self.north, zs=self.tvd)
-            ax.set_xlabel('East, m')
-            ax.set_ylabel('North, m')
-            ax.set_zlabel('TVD, m')
-            title = 'Well Profile'
-            ax.set_title(title)
-            ax.invert_zaxis()
-            fig.show()
+            plot_wellpath(self, azim, elev, units)
 
     return WellDepths()
 
 
-def load(data, grid_length=50):
+def load(data, grid_length=50, units='metric'):
     from numpy import interp, arange
     from math import radians, sin, cos, degrees, acos, tan
     md = [x['md'] for x in data]
     tvd = [x['tvd'] for x in data]
     inc = [x['inclination'] for x in data]
     az = [x['azimuth'] for x in data]
-
     deltaz = grid_length
+
+    if units == 'english':
+        deltaz = grid_length * 3.28
+
     md_new = list(arange(0, max(md) + deltaz, deltaz))
     tvd_new = [0]
     inc_new = [0]
@@ -400,19 +396,28 @@ def load(data, grid_length=50):
             self.sections = sections
 
         def plot(self, azim=45, elev=20):
-            import matplotlib.pyplot as plt
-            from mpl_toolkits.mplot3d import Axes3D
-            fig = plt.figure()
-            ax = Axes3D(fig)
-            ax.view_init(azim=azim, elev=elev)
-            # Plotting well profile (TVD vs Horizontal Displacement)
-            ax.plot(xs=self.east, ys=self.north, zs=self.tvd)
-            ax.set_xlabel('East, m')
-            ax.set_ylabel('North, m')
-            ax.set_zlabel('TVD, m')
-            title = 'Well Profile'
-            ax.set_title(title)
-            ax.invert_zaxis()
-            fig.show()
+            plot_wellpath(self, azim, elev, units)
 
     return WellDepths()
+
+
+def plot_wellpath(wellpath, azim=45, elev=20, units='metric'):
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d import Axes3D
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    ax.view_init(azim=azim, elev=elev)
+    # Plotting well profile (TVD vs Horizontal Displacement)
+    ax.plot(xs=wellpath.east, ys=wellpath.north, zs=wellpath.tvd)
+    if units == 'metric':
+        ax.set_xlabel('East, m')
+        ax.set_ylabel('North, m')
+        ax.set_zlabel('TVD, m')
+    else:
+        ax.set_xlabel('East, ft')
+        ax.set_ylabel('North, ft')
+        ax.set_zlabel('TVD, ft')
+    title = 'Well Profile'
+    ax.set_title(title)
+    ax.invert_zaxis()
+    fig.show()
