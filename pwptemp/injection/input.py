@@ -39,8 +39,8 @@ def info(about='all'):
           'parameter ID: general description, units' + '\n')
 
     tubular_parameters = 'VALUES RELATED TO TUBULAR SIZES' + '\n' + \
-                         'ddi: drill string inner diameter, in' + '\n' + \
-                         'ddo: drill string outer diameter, in' + '\n' + \
+                         'dti: tubing inner diameter, in' + '\n' + \
+                         'dto: tubing outer diameter, in' + '\n' + \
                          'dri: riser inner diameter, in' + '\n' + \
                          'dro: riser outer diameter, in' + '\n'
 
@@ -50,17 +50,17 @@ def info(about='all'):
                             'dfm: undisturbed formation diameter, m' + '\n'
 
     heatcoeff_parameters = 'PARAMETERS RELATED TO HEAT COEFFICIENTS' + '\n' + \
-                           'lambdal: fluid - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdaf: fluid - thermal conductivity, W/(m*°C)' + '\n' + \
                            'lambdac: casing - thermal conductivity, W/(m*°C)' + '\n' + \
                            'lambdacem: cement - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'lambdad: drill pipe - thermal conductivity, W/(m*°C)' + '\n' + \
+                           'lambdat: tubing - thermal conductivity, W/(m*°C)' + '\n' + \
                            'lambdafm: formation - thermal conductivity, W/(m*°C)' + '\n' + \
                            'lambdar: riser - thermal conductivity, W/(m*°C)' + '\n' + \
                            'lambdaw: water - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'cl: fluid - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'cf: fluid - specific heat capacity, J/(kg*°C)' + '\n' + \
                            'cc: casing - specific heat capacity, J/(kg*°C)' + '\n' + \
                            'ccem: cement - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'cd: drill pipe - specific heat capacity, J/(kg*°C)' + '\n' + \
+                           'ct: tubing - specific heat capacity, J/(kg*°C)' + '\n' + \
                            'cr: riser - specific heat capacity, J/(kg*°C)' + '\n' + \
                            'cw: water - specific heat capacity, J/(kg*°C)' + '\n' + \
                            'cfm: formation - specific heat capacity, J/(kg*°C)' + '\n' + \
@@ -69,14 +69,16 @@ def info(about='all'):
 
     densities_parameters = 'PARAMETERS RELATED TO DENSITIES' + '\n' + \
                            'rhof: fluid density, sg' + '\n' + \
-                           'rhod: drill pipe density, sg' + '\n' + \
+                           'rhot: tubing density, sg' + '\n' + \
                            'rhoc: casing density, sg' + '\n' + \
                            'rhor: riser density, sg' + '\n' + \
                            'rhofm: formation density, sg' + '\n' + \
                            'rhow: seawater density, sg' + '\n' + \
                            'rhocem: cement density, sg' + '\n' + \
-                           'beta: isothermal bulk modulus, Pa' + '\n' + \
-                           'alpha: expansion coefficient, 1/°C' + '\n'
+                           'beta: isothermal bulk modulus of injection fluid, Pa' + '\n' + \
+                           'alpha: expansion coefficient of injection fluid, 1/°C' + '\n' + \
+                           'beta_a: isothermal bulk modulus of fluid in annular, Pa' + '\n' + \
+                           'alpha_a: expansion coefficient of fluid in annular, 1/°C' + '\n'
 
     viscosity_parameters = 'PARAMETERS RELATED TO MUD VISCOSITY' + '\n' + \
                            'thao_o: yield stress, Pa' + '\n' + \

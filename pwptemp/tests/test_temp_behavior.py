@@ -1,16 +1,26 @@
 from unittest import TestCase
-from pwptemp import wellpath
-from pwptemp.drilling import input, main
+import pwptemp.drilling as ptd
+import pwptemp.production as ptp
+import pwptemp.injection as pti
 
 
 class TestMain(TestCase):
     def test_temp_behavior(self):
-        tdata = input.data()
-        depths = wellpath.get(100)
-        well = input.set_well(tdata, depths)
-        st = main.temp_time(2, well, log=True).behavior()
+        t = 2
 
-        self.assertEqual(st.finaltime, len(st.tbot), len(st.tout))
-        self.assertIsInstance(st.finaltime, int)
+        # For Drilling
+        st = ptd.temp(t, log=True).behavior()
+        self.assertEqual(len(st.tbot), len(st.tout))
+        self.assertIsInstance(st.finaltime, type(t))
         self.assertIsInstance(st.tbot, list)
+        self.assertIsInstance(st.tout, list)
+
+        # For Production
+        st = ptp.temp(t, log=True).behavior()
+        self.assertIsInstance(st.finaltime, type(t))
+        self.assertIsInstance(st.tout, list)
+
+        # For Injection
+        st = pti.temp(t, log=True).behavior()
+        self.assertIsInstance(st.finaltime, type(t))
         self.assertIsInstance(st.tout, list)
