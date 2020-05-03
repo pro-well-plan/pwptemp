@@ -145,7 +145,6 @@ def set_well(temp_dict, depths, units='metric'):
             self.dro = temp_dict["dro"] * d_conv   # Riser diameter Outer Diameter, m
 
             # CONDITIONS
-            # CONDITIONS
             if units == 'metric':
                 depth_conv = 1  # from m to m
                 self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C

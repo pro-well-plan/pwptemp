@@ -161,17 +161,17 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     """
     from .input import data, set_well
     from .. import wellpath
-    tdata = data(casings, d_openhole)
+    tdata = data(casings, d_openhole, units)
     for x in change_input:   # changing default values
         if x in tdata:
             tdata[x] = change_input[x]
         else:
             raise TypeError('%s is not a parameter' % x)
     if len(wellpath_data) == 0:
-        depths = wellpath.get(mdt, grid_length, profile, build_angle, kop, eob, sod, eod, kop2, eob2)
+        depths = wellpath.get(mdt, grid_length, profile, build_angle, kop, eob, sod, eod, kop2, eob2, units)
     else:
-        depths = wellpath.load(wellpath_data, grid_length)
-    well = set_well(tdata, depths)
+        depths = wellpath.load(wellpath_data, grid_length, units)
+    well = set_well(tdata, depths, units)
     temp_distribution = temp_time(n, well, log, units)
 
     return temp_distribution
