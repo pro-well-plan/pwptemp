@@ -1,11 +1,23 @@
-def data(casings=[], d_openhole=0.216):
+def data(casings=[], d_openhole=0.216, units='metric'):
     from numpy import asarray
-    dict = {'ts': 15.0, 'wd': 100.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
+    dict_met = {'ts': 15.0, 'wd': 100.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
             'q': 2000, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0,
-            'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhof_a': 1.2, 'rhot': 7.6, 'rhoc': 7.8, 'rhor': 7.8,
-            'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'visc': 3,
+            'cw': 4000.0, 'cfm': 800.0, 'rhof': 0.85, 'rhof_a': 1.2, 'rhot': 7.8, 'rhoc': 7.8, 'rhor': 7.8,
+            'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'visc': 15,
             'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6, 'beta_a': 44983 * 10 ** 5, 'alpha_a': 960 * 10 ** -6}
+
+    dict_eng = {'ts': 59.0, 'wd': 328.0, 'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
+                'q': 366.91, 'lambdaf': 1.098, 'lambdac': 74.909, 'lambdacem': 1.21, 'lambdat': 69.2, 'lambdafm': 3.89,
+                'lambdar': 26.8, 'lambdaw': 1.038, 'cf': 0.887, 'cc': 0.112, 'ccem': 0.478, 'ct': 0.096, 'cr': 0.1108,
+                'cw': 0.955, 'cfm': 0.19, 'rhof': 7.09, 'rhof_a': 10, 'rhot': 65.09, 'rhoc': 65.09, 'rhor': 65.09,
+                'rhofm': 18.73, 'rhow': 8.587, 'rhocem': 22.5, 'gt': 0.00403, 'wtg': -8.47*10**-4, 'visc': 15,
+                'beta': 652423, 'alpha': 5.33 * 10 ** -4, 'beta_a': 652423, 'alpha_a': 5.33 * 10 ** -4}
+
+    if units == 'metric':
+        dict = dict_met
+    else:
+        dict = dict_eng
 
     if len(casings) > 0:
         od = sorted([x['od'] * 0.0254 for x in casings])
@@ -98,7 +110,7 @@ def info(about='all'):
               densities_parameters + '\n' + viscosity_parameters + '\n' + operational_parameters)
 
 
-def set_well(temp_dict, depths):
+def set_well(temp_dict, depths, units='metric'):
     from math import pi, log
 
     class NewWell(object):
@@ -114,21 +126,37 @@ def set_well(temp_dict, depths):
             self.inclination = depths.inclination
             self.dogleg = depths.dogleg
             self.azimuth = depths.azimuth
+            if units != 'metric':
+                self.md = [i / 3.28 for i in self.md]
+                self.tvd = [i / 3.28 for i in self.tvd]
+                self.deltaz = self.deltaz / 3.28
+                self.north = [i / 3.28 for i in self.north]
+                self.east = [i / 3.28 for i in self.east]
 
             # TUBULAR
+            if units == 'metric':
+                d_conv = 0.0254   # from in to m
+            else:
+                d_conv = 0.0254   # from in to m
             self.casings = temp_dict["casings"]  # casings array
-            self.riser = round(temp_dict["wd"] / self.deltaz)  # number of grid cells for the riser
-            self.dti = temp_dict["dti"] * 0.0254  # Tubing Inner  Diameter, m
-            self.dto = temp_dict["dto"] * 0.0254   # Tubing Outer Diameter, m
-            self.dri = temp_dict["dri"] * 0.0254  # Riser diameter Inner Diameter, m
-            self.dro = temp_dict["dro"] * 0.0254   # Riser diameter Outer Diameter, m
+            self.dti = temp_dict["dti"] * d_conv  # Tubing Inner  Diameter, m
+            self.dto = temp_dict["dto"] * d_conv   # Tubing Outer Diameter, m
+            self.dri = temp_dict["dri"] * d_conv  # Riser diameter Inner Diameter, m
+            self.dro = temp_dict["dro"] * d_conv   # Riser diameter Outer Diameter, m
 
             # CONDITIONS
-            self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
-            self.wd = temp_dict["wd"]  # Water Depth, m
+            # CONDITIONS
+            if units == 'metric':
+                depth_conv = 1  # from m to m
+                self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
+            else:
+                depth_conv = 1 / 3.28  # from ft to m
+                self.ts = (temp_dict["ts"] - 32) * (5 / 9)  # Surface Temperature (RKB), from °F to °C
+            self.wd = temp_dict["wd"] * depth_conv  # Water Depth, m
+            self.riser = round(self.wd / self.deltaz)  # number of grid cells for the riser
             self.dsr = self.casings[0, 0]  # Surrounding Space Inner Diameter, m
             self.dsro = sorted([self.dro + 0.03, self.casings[-1, 0] + 0.03])[-1]  # Surrounding Space Outer Diameter, m
-            self.dfm = temp_dict["dfm"]  # Undisturbed Formation Diameter, m
+            self.dfm = temp_dict["dfm"] * d_conv  # Undisturbed Formation Diameter, m
 
             # RADIUS (CALCULATED)
             self.r1 = self.dti / 2  # Tubing Inner  Radius, m
@@ -141,47 +169,69 @@ def set_well(temp_dict, depths):
             self.rfm = self.dfm / 2  # Undisturbed Formation Radius, m
 
             # DENSITIES kg/m3
-            self.rhof = temp_dict["rhof"] * 1000  # Fluid
-            self.rhof_a = temp_dict["rhof_a"] * 1000  # Fluid
-            self.rhot = temp_dict["rhot"] * 1000  # Tubing
-            self.rhoc = temp_dict["rhoc"] * 1000  # Casing
-            self.rhor = temp_dict["rhor"] * 1000  # Riser
-            self.rhocem = temp_dict["rhocem"] * 1000  # Cement Sheath
-            self.rhofm = temp_dict["rhofm"] * 1000  # Formation
-            self.rhow = temp_dict["rhow"] * 1000  # Seawater
+            if units == 'metric':
+                dens_conv = 1000     # from sg to kg/m3
+            else:
+                dens_conv = 119.83   # from ppg to kg/m3
+            self.rhof = temp_dict["rhof"] * dens_conv  # Fluid
+            self.rhof_a = temp_dict["rhof_a"] * dens_conv  # Fluid
+            self.rhot = temp_dict["rhot"] * dens_conv  # Tubing
+            self.rhoc = temp_dict["rhoc"] * dens_conv  # Casing
+            self.rhor = temp_dict["rhor"] * dens_conv  # Riser
+            self.rhocem = temp_dict["rhocem"] * dens_conv  # Cement Sheath
+            self.rhofm = temp_dict["rhofm"] * dens_conv  # Formation
+            self.rhow = temp_dict["rhow"] * dens_conv  # Seawater
             self.visc = temp_dict["visc"] / 1000  # Fluid viscosity [Pas]
 
             # OPERATIONAL
-            self.q = temp_dict["q"] * 0.04167  # Flow rate, m^3/h
+            if units == 'metric':
+                q_conv = 0.04167     # from m^3/d to m^3/h
+            else:
+                q_conv = 0.2271   # from gpm to m^3/h
+            self.q = temp_dict["q"] * q_conv  # Flow rate, m^3/h
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the tubing
 
             # HEAT COEFFICIENTS
-            # Thermal conductivity
-            self.lambdaf = temp_dict["lambdaf"]  # Fluid
-            self.lambdac = temp_dict["lambdac"]  # Casing
-            self.lambdacem = temp_dict["lambdacem"]  # Cement
-            self.lambdat = temp_dict["lambdat"]  # Tubing wall
-            self.lambdafm = temp_dict["lambdafm"]       # Formation
-            self.lambdar = temp_dict["lambdar"]     # Riser
-            self.lambdaw = temp_dict["lambdaw"]     # Seawater
+            if units == 'metric':
+                lambda_conv = 1     # from W/(m*°C) to W/(m*°C)
+                c_conv = 1  # from J/(kg*°C) to J/(kg*°C)
+                gt_conv = 1     # from °C/m to °C/m
+                beta_conv = 1   # from Pa to Pa
+                alpha_conv = 1  # from 1/°F to 1/°C
+            else:
+                lambda_conv = 1/1.73     # from BTU/(h*ft*°F) to W/(m*°C)
+                c_conv = 4187.53  # from BTU/(lb*°F) to J/(kg*°C)
+                gt_conv = 3.28*1.8     # from °F/ft to °C/m
+                beta_conv = 6894.76  # from psi to Pa
+                alpha_conv = 1.8  # from 1/°F to 1/°C
 
-            self.beta = temp_dict["beta"]       # Fluid Thermal Expansion Coefficient
-            self.alpha = temp_dict['alpha']
-            self.beta_a = temp_dict["beta_a"]  # Fluid Thermal Expansion Coefficient
-            self.alpha_a = temp_dict['alpha_a']
-            # Heat capacity
-            self.cf = temp_dict["cf"]       # Fluid
-            self.cc = temp_dict["cc"]    # Casing
-            self.ccem = temp_dict["ccem"]     # Cement
-            self.ct = temp_dict["ct"]     # Tubing
-            self.cr = temp_dict["cr"]     # Riser
-            self.cw = temp_dict["cw"]      # Seawater
-            self.cfm = temp_dict["cfm"]       # Formation
+            # Thermal conductivity  W/(m*°C)
+            self.lambdaf = temp_dict["lambdaf"] * lambda_conv  # Fluid
+            self.lambdac = temp_dict["lambdac"] * lambda_conv   # Casing
+            self.lambdacem = temp_dict["lambdacem"] * lambda_conv   # Cement
+            self.lambdat = temp_dict["lambdat"] * lambda_conv   # Tubing wall
+            self.lambdafm = temp_dict["lambdafm"] * lambda_conv        # Formation
+            self.lambdar = temp_dict["lambdar"] * lambda_conv      # Riser
+            self.lambdaw = temp_dict["lambdaw"] * lambda_conv      # Seawater
+
+            self.beta = temp_dict["beta"] * beta_conv       # isothermal bulk modulus in tubing, Pa
+            self.alpha = temp_dict['alpha'] * alpha_conv    # Fluid Thermal Expansion Coefficient in tubing, 1/°C
+            self.beta_a = temp_dict["beta_a"] * beta_conv        # isothermal bulk modulus in annular, Pa
+            self.alpha_a = temp_dict['alpha_a'] * alpha_conv    # Fluid Thermal Expansion Coefficient in annular, 1/°C
+
+            # Specific heat capacity, J/(kg*°C)
+            self.cf = temp_dict["cf"] * c_conv       # Fluid
+            self.cc = temp_dict["cc"] * c_conv    # Casing
+            self.ccem = temp_dict["ccem"] * c_conv     # Cement
+            self.ct = temp_dict["ct"] * c_conv     # Tubing
+            self.cr = temp_dict["cr"] * c_conv     # Riser
+            self.cw = temp_dict["cw"] * c_conv      # Seawater
+            self.cfm = temp_dict["cfm"] * c_conv       # Formation
 
             self.pr = self.visc * self.cf / self.lambdaf       # Prandtl number
 
-            self.gt = temp_dict["gt"] * self.deltaz  # Geothermal gradient, °C/m
-            self.wtg = temp_dict["wtg"] * self.deltaz  # Seawater thermal gradient, °C/m
+            self.gt = temp_dict["gt"] * gt_conv * self.deltaz  # Geothermal gradient, °C/m
+            self.wtg = temp_dict["wtg"] * gt_conv * self.deltaz  # Seawater thermal gradient, °C/m
 
             # Raise Errors:
 

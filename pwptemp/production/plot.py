@@ -5,6 +5,8 @@ def profile(temp_distribution, tft=True, tt=False, ta=True, tc=False, tr=False, 
 
     # Plotting Temperature PROFILE
     md = temp_distribution.md
+    if units == 'english':
+        md = [i * 3.28 for i in md]
     riser = temp_distribution.riser
     csg = temp_distribution.csgs_reach
     if tft:

@@ -12,8 +12,8 @@ def data(casings=[], d_openhole=0.216, units='metric'):
                 'q': 300, 'lambdal': 1.098, 'lambdac': 74.909, 'lambdacem': 1.21, 'lambdad': 69.2, 'lambdafm': 3.89,
                 'lambdar': 26.8, 'lambdaw': 1.038, 'cl': 0.887, 'cc': 0.112, 'ccem': 0.478, 'cd': 0.096, 'cr': 0.1108,
                 'cw': 0.955, 'cfm': 0.19, 'rhof': 9.997, 'rhod': 65.09, 'rhoc': 65.09, 'rhor': 65.09, 'rhofm': 18.73,
-                'rhow': 8.587, 'rhocem': 22.5, 'gt': 0.013, 'wtg': -0.00274, 'rpm': 100.0, 'tbit': 6637, 'wob': 11240,
-                'rop': 99.7, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'thao_o': 1.82, 'beta': 652423,
+                'rhow': 8.587, 'rhocem': 22.5, 'gt': 0.00403, 'wtg': -8.47*10**-4, 'rpm': 100.0, 'tbit': 6637,
+                'wob': 11240, 'rop': 99.7, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'thao_o': 1.82, 'beta': 652423,
                 'alpha': 5.33 * 10 ** -4, 'k': 0.3832, 'n': 0.7, 'visc': 0}
 
     if units == 'metric':
@@ -145,27 +145,27 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
 
             # TUBULAR
             if units == 'metric':
-                conv = 0.0254   # from in to m
+                d_conv = 0.0254   # from in to m
             else:
-                conv = 0.0254   # from in to m
+                d_conv = 0.0254   # from in to m
             self.casings = temp_dict["casings"]  # casings array
-            self.riser = round(temp_dict["wd"] / self.deltaz)  # number of grid cells for the riser
-            self.ddi = temp_dict["ddi"] * conv  # Drill String Inner  Diameter, m
-            self.ddo = temp_dict["ddo"] * conv   # Drill String Outer Diameter, m
-            self.dri = temp_dict["dri"] * conv  # Riser diameter Inner Diameter, m
-            self.dro = temp_dict["dro"] * conv   # Riser diameter Outer Diameter, m
+            self.ddi = temp_dict["ddi"] * d_conv  # Drill String Inner  Diameter, m
+            self.ddo = temp_dict["ddo"] * d_conv   # Drill String Outer Diameter, m
+            self.dri = temp_dict["dri"] * d_conv  # Riser diameter Inner Diameter, m
+            self.dro = temp_dict["dro"] * d_conv   # Riser diameter Outer Diameter, m
 
             # CONDITIONS
             if units == 'metric':
-                conv = 1     # from m to m
+                depth_conv = 1     # from m to m
                 self.ts = temp_dict["ts"]  # Surface Temperature (RKB), °C
             else:
-                conv = 1/3.28   # from ft to m
+                depth_conv = 1/3.28   # from ft to m
                 self.ts = (temp_dict["ts"] - 32) * (5/9)  # Surface Temperature (RKB), from °F to °C
-            self.wd = temp_dict["wd"] * conv  # Water Depth, m
+            self.wd = temp_dict["wd"] * depth_conv  # Water Depth, m
+            self.riser = round(self.wd / self.deltaz)  # number of grid cells for the riser
             self.dsr = self.casings[0, 0]  # Surrounding Space Inner Diameter, m
             self.dsro = sorted([self.dro + 0.03, self.casings[-1, 0] + 0.03])[-1]  # Surrounding Space Outer Diameter, m
-            self.dfm = temp_dict["dfm"]  # Undisturbed Formation Diameter, m
+            self.dfm = temp_dict["dfm"] * d_conv   # Undisturbed Formation Diameter, m
 
             # RADIUS (CALCULATED)
             self.r1 = self.ddi / 2  # Drill String Inner  Radius, m
@@ -179,16 +179,16 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
 
             # DENSITIES kg/m3
             if units == 'metric':
-                conv = 1000     # from sg to kg/m3
+                dens_conv = 1000     # from sg to kg/m3
             else:
-                conv = 119.83   # from ppg to kg/m3
-            self.rhof = temp_dict["rhof"] * conv  # Fluid
-            self.rhod = temp_dict["rhod"] * conv  # Drill Pipe
-            self.rhoc = temp_dict["rhoc"] * conv  # Casing
-            self.rhor = temp_dict["rhor"] * conv  # Riser
-            self.rhocem = temp_dict["rhocem"] * conv  # Cement Sheath
-            self.rhofm = temp_dict["rhofm"] * conv  # Formation
-            self.rhow = temp_dict["rhow"] * conv  # Seawater
+                dens_conv = 119.83   # from ppg to kg/m3
+            self.rhof = temp_dict["rhof"] * dens_conv  # Fluid
+            self.rhod = temp_dict["rhod"] * dens_conv  # Drill Pipe
+            self.rhoc = temp_dict["rhoc"] * dens_conv  # Casing
+            self.rhor = temp_dict["rhor"] * dens_conv  # Riser
+            self.rhocem = temp_dict["rhocem"] * dens_conv  # Cement Sheath
+            self.rhofm = temp_dict["rhofm"] * dens_conv  # Formation
+            self.rhow = temp_dict["rhow"] * dens_conv  # Seawater
 
             # OPERATIONAL
             if units == 'metric':
@@ -253,9 +253,11 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             else:
                 lambda_conv = 1/1.73     # from BTU/(h*ft*°F) to W/(m*°C)
                 c_conv = 4187.53  # from BTU/(lb*°F) to J/(kg*°C)
-                gt_conv = 3.28/1.8     # from °F/ft to °C/m
+                gt_conv = 3.28*1.8     # from °F/ft to °C/m
                 beta_conv = 6894.76  # from psi to Pa
                 alpha_conv = 1.8  # from 1/°F to 1/°C
+
+            # Thermal conductivity  W/(m*°C)
             self.lambdal = temp_dict["lambdal"] * lambda_conv  # Fluid
             self.lambdac = temp_dict["lambdac"] * lambda_conv   # Casing
             self.lambdacem = temp_dict["lambdacem"] * lambda_conv   # Cement
@@ -263,8 +265,11 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             self.lambdafm = temp_dict["lambdafm"] * lambda_conv        # Formation
             self.lambdar = temp_dict["lambdar"] * lambda_conv      # Riser
             self.lambdaw = temp_dict["lambdaw"] * lambda_conv      # Seawater
+
             self.beta = temp_dict["beta"] * beta_conv  # isothermal bulk modulus, Pa
             self.alpha = temp_dict['alpha'] * alpha_conv     # Fluid Thermal Expansion Coefficient, 1/°C
+
+            # Specific heat capacity, J/(kg*°C)
             self.cl = temp_dict["cl"] * c_conv       # Fluid
             self.cc = temp_dict["cc"] * c_conv     # Casing
             self.ccem = temp_dict["ccem"] * c_conv      # Cement
@@ -272,9 +277,11 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             self.cr = temp_dict["cr"] * c_conv      # Riser
             self.cw = temp_dict["cw"] * c_conv       # Seawater
             self.cfm = temp_dict["cfm"] * c_conv        # Formation
+
             self.pr_p = self.visc_p * self.cl / self.lambdal       # Prandtl number
             self.pr_a = self.visc_a * self.cl / self.lambdal  # Prandtl number
-            self.gt = temp_dict["gt"] * gt_conv * self.deltaz  # Geothermal gradient, from °C/m to °C/cell
+
+            self.gt = temp_dict["gt"] * self.deltaz * gt_conv  # Geothermal gradient, from °C/m to °C/cell
             self.wtg = temp_dict["wtg"] * gt_conv * self.deltaz  # Seawater thermal gradient, from °C/m to °C/cell
 
 

@@ -166,7 +166,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     from .input import data, set_well
     from .. import wellpath
 
-    tdata = data(casings, d_openhole)
+    tdata = data(casings, d_openhole, units)
 
     for x in change_input:   # changing default values
         if x in tdata:
