@@ -17,7 +17,7 @@ def temp_time(n, well, log=False, units='metric'):
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
-    deltat = 60
+    deltat = 300
     tstep = int(tcirc / deltat)
     ic = init_cond(well)
     tfm = ic.tfm

@@ -62,7 +62,6 @@ def temp_calc(well, initcond, heatcoeff):
 
             if i == 0:  # Inside Tubing
 
-
                 if j == 1:
                     W.append(0)
                     C.append(c1t + c1e + c1z)
@@ -88,10 +87,10 @@ def temp_calc(well, initcond, heatcoeff):
                 if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
                     N.append(-c1z)
                     W.append(0)
-                    C.append(cbt + cbe + c1z)
-                    E.append(-cbe)
+                    C.append(cbt + c1z)
+                    E.append(0)
                     B.append(cbt * initcond.tfto[j]    # Center(t=0)
-                             + cbe * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
+                             #+ cbe * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
                              + c1z * (initcond.tfto[j - 1] - initcond.tfto[j]))  # N/S(t=0)
 
             if i == 1:  # Tubing wall
@@ -120,12 +119,12 @@ def temp_calc(well, initcond, heatcoeff):
 
                 if j == well.zstep - 1:
                     N.append(-c2z)
-                    W.append(-c2w)
-                    C.append(c2t + c2e + c2w + c2z)
-                    E.append(-c2e)
+                    W.append(0)
+                    C.append(c2t + c2z)
+                    E.append(0)
                     B.append(c2t * initcond.tto[j]
-                             + c2e * (initcond.tao[j] - initcond.tto[j])
-                             + c2w * (initcond.tfto[j] - initcond.tto[j])
+                             #+ c2e * (initcond.tao[j] - initcond.tto[j])
+                             #+ c2w * (initcond.tfto[j] - initcond.tto[j])
                              + c2z * (initcond.tto[j - 1] - initcond.tto[j]))
 
             if i == 2:  # Annular
@@ -154,13 +153,13 @@ def temp_calc(well, initcond, heatcoeff):
 
                 if j == well.zstep - 1:
                     N.append(-c3z)
-                    W.append(-c3w)
-                    C.append(c3t + c3e + c3w + c3z)
+                    W.append(0)
+                    C.append(c3t + c3e + c3z)
                     E.append(-c3e)
                     B.append(c3t * initcond.tao[j]
-                             + c3e * (initcond.tao[j] - initcond.tto[j])
-                             + c3w * (initcond.tfto[j] - initcond.tto[j])
-                             + c3z * (initcond.tto[j - 1] - initcond.tto[j]))
+                             + c3e * (initcond.tco[j] - initcond.tao[j])
+                             #+ c3w * (initcond.tto[j] - initcond.tao[j])
+                             + c3z * (initcond.tao[j - 1] - initcond.tao[j]))
 
             if i == 3:  # Casing
 
@@ -223,7 +222,8 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c5w + c5e + c5z + c5t)
                     B.append(c5w * (initcond.tco[j] - initcond.tsro[j])
                              + c5z * (initcond.tsro[j - 1] - initcond.tsro[j])
-                             + c5t * initcond.tsro[j])
+                             + c5t * initcond.tsro[j]
+                             + c5e * initcond.tsro[j])
 
     #LINEARSYSTEM
     # Creating pentadiagonal matrix
@@ -253,7 +253,9 @@ def temp_calc(well, initcond, heatcoeff):
         Tt.append(Temp[5 * x])
         if x < well.zstep-1:
             Tft.append(Temp[5 * x + 4])
-        Ta.append(Temp[5 * x + 1])
+            Ta.append(Temp[5 * x + 1])
+        if x == well.zstep - 1:
+            Ta.append(Tft[-1])
         tc.append(Temp[5 * x + 2])
         Tsr.append(Temp[5 * x + 3])
 

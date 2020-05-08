@@ -47,8 +47,9 @@ def heat_coef(well, deltat, tt, t3):
             if section_checkpoint != sections[-1]:
                 section_checkpoint = sections[in_section-1]
 
-        gr_t = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
-        gr_c = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.deltaz ** 3) / (well.visc ** 2)
+        gr_t = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.dti ** 3) / (well.visc ** 2)
+        gr_c = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (((well.r3 - well.r2) * 2) ** 3) / (
+                    well.visc ** 2)
         ra_t = gr_t * well.pr
         ra_c = gr_c * well.pr
         inc = [0, 30, 45, 60, 90]
@@ -120,7 +121,7 @@ def heat_coef(well, deltat, tt, t3):
             # thermal conductivity
             lambdasr = well.lambdac * xcsr + well.lambdacem * xcem + well.lambdafm * xfm
             lambdacsr = (well.lambdac * (well.r4 - well.r3) + lambdasr * (well.r5 - well.r4)) / (well.r5 - well.r3)
-            lambdasrfm = (well.lambdac * (well.r5 - well.r4) + lambdasr *   (well.rfm - well.r5)) / (well.rfm - well.r4)
+            lambdasrfm = (well.lambdac * (well.r5 - well.r4) + lambdasr * (well.rfm - well.r5)) / (well.rfm - well.r4)
 
             # Specific Heat Capacity
             csr = (well.cc * tcsr + well.ccem * tcem) / (well.r5 - well.r4)
