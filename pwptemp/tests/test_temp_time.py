@@ -19,8 +19,8 @@ class TestMain(TestCase):
         self.assertIsInstance(td.tsr, list)
         self.assertIsInstance(td.tfm, list)
 
-    def test_temp_time_production(self):
-        from pwptemp.production import input, main
+    def test_temp_time_injection(self):
+        from pwptemp.injection import input, main
         tdata = input.data()
         depths = wellpath.get(1000)
         well = input.set_well(tdata, depths)
