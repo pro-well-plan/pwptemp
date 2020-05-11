@@ -89,6 +89,8 @@ def plot_torque_drag(well, plot='torque'):
         plt.plot(well.torque, well.md, c='r', label='Torque')
         plt.xlabel('Torque, kNm')
         plt.ylabel('Depth, m')
+        plt.ylim(0, well.md[-1])  # bottom and top limits
+        plt.xlim(0, well.torque[0]+0.5)  # bottom and top limits
         plt.ylim(plt.ylim()[::-1])  # reversing y axis
         plt.legend()  # applying the legend
         plt.show()
@@ -96,6 +98,8 @@ def plot_torque_drag(well, plot='torque'):
         plt.plot(well.drag, well.md, c='b', label='Drag')
         plt.xlabel('Drag Force, kN')
         plt.ylabel('Depth, m')
+        plt.ylim(0, well.md[-1])  # bottom and top limits
+        plt.xlim(0, well.drag[0]+10)  # bottom and top limits
         plt.ylim(plt.ylim()[::-1])  # reversing y axis
         plt.legend()  # applying the legend
         plt.show()
