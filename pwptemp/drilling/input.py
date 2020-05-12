@@ -319,9 +319,26 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             self.re_p = [x * self.vp * 2 * self.r1 / self.visc_p for x in self.rhof]  # Reynolds number inside drill pipe
             self.re_a = [x * self.va * 2 * (self.r3 - self.r2) / self.visc_a for x in
                          self.rhof]  # Reynolds number - annular
-            self.f_p = [1.63 / log(6.9 / x) ** 2 for x in self.re_p]  # Friction factor inside drill pipe
-            self.nu_dpi = [0.027 * (x ** (4 / 5)) * (self.pr_p ** (1 / 3)) * (1 ** 0.14) for x in self.re_p]
-            self.nu_dpo = [0.027 * (x ** (4 / 5)) * (self.pr_a ** (1 / 3)) * (1 ** 0.14) for x in self.re_a]
+            self.f_p = []  # Friction factor inside drill pipe
+            self.nu_dpi = []
+            self.nu_dpo = []
+            for x in range(len(self.md)):
+                if self.re_p[x] <= 2300:
+                    self.f_p.append(64 / self.re_p[x])
+                    self.nu_dpi.append(4.36)
+                    self.nu_dpo.append(4.36)
+
+                if 2300 < self.re_p[x] < 10000:
+                    self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
+                    self.nu_dpi.append((self.f_p[x] / 8) * (self.re_p[x] - 1000) * self.pr_p /
+                                       (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_p ** (2 / 3) - 1)))
+                    self.nu_dpo.append((self.f_p[x] / 8) * (self.re_a[x] - 1000) * self.pr_a /
+                                       (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_a ** (2 / 3) - 1)))
+                if self.re_p[x] >= 10000:
+                    self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
+                    self.nu_dpi.append(0.027 * (self.re_p[x] ** (4 / 5)) * (self.pr_p ** (1 / 3)) * (1 ** 0.14))
+                    self.nu_dpo.append(0.027 * (self.re_a[x] ** (4 / 5)) * (self.pr_a ** (1 / 3)) * (1 ** 0.14))
+
             self.h1 = [self.lambdal * x / self.ddi for x in self.nu_dpi]  # Drill Pipe inner wall
             self.h2 = [self.lambdal * x / self.ddo for x in self.nu_dpo]  # Drill Pipe outer wall
             self.nu_a = [1.86 * ((x * self.pr_a) ** (1 / 3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) ** (1 / 3))
@@ -332,3 +349,23 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             return self
 
     return NewWell()
+
+
+'''
+    for x in range(len(self.md)):
+        if self.re_p[x] <= 2300:
+            self.f_p.append(64 / self.re_p[x])
+            self.nu_dpi.append(4.36)
+            self.nu_dpo.append(4.36)
+
+        if 2300 < self.re_p[x] < 10000:
+            self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
+            self.nu_dpi.append((self.f_p[x] / 8) * (self.re_p[x] - 1000) * self.pr_p /
+                               (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_p ** (2 / 3) - 1)))
+            self.nu_dpo.append((self.f_p[x] / 8) * (self.re_a[x] - 1000) * self.pr_a /
+                               (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_a ** (2 / 3) - 1)))
+        if self.re_p[x] >= 10000:
+            self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
+            self.nu_dpi.append(0.027 * (self.re_p[x] ** (4 / 5)) * (self.pr_p ** (1 / 3)) * (1 ** 0.14))
+            self.nu_dpo.append(0.027 * (self.re_a[x] ** (4 / 5)) * (self.pr_a ** (1 / 3)) * (1 ** 0.14))
+'''

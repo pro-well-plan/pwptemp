@@ -90,7 +90,6 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(cbt + c1z)
                     E.append(0)
                     B.append(cbt * initcond.tfto[j]    # Center(t=0)
-                             #+ cbe * (initcond.tto[j] - initcond.tfto[j])     # East(t=0)
                              + c1z * (initcond.tfto[j - 1] - initcond.tfto[j]))  # N/S(t=0)
 
             if i == 1:  # Tubing wall
@@ -123,8 +122,6 @@ def temp_calc(well, initcond, heatcoeff):
                     C.append(c2t + c2z)
                     E.append(0)
                     B.append(c2t * initcond.tto[j]
-                             #+ c2e * (initcond.tao[j] - initcond.tto[j])
-                             #+ c2w * (initcond.tfto[j] - initcond.tto[j])
                              + c2z * (initcond.tto[j - 1] - initcond.tto[j]))
 
             if i == 2:  # Annular
@@ -158,7 +155,6 @@ def temp_calc(well, initcond, heatcoeff):
                     E.append(-c3e)
                     B.append(c3t * initcond.tao[j]
                              + c3e * (initcond.tco[j] - initcond.tao[j])
-                             #+ c3w * (initcond.tto[j] - initcond.tao[j])
                              + c3z * (initcond.tao[j - 1] - initcond.tao[j]))
 
             if i == 3:  # Casing

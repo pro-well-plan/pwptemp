@@ -21,7 +21,6 @@ def calc_torque_drag(well):
     for x in reversed(range(1, well.zstep)):
         delta_azi = radians(well.azimuth[x] - well.azimuth[x-1])
         delta_inc = radians(well.inclination[x] - well.inclination[x-1])
-        print(well.inclination[x],x)
         inc_avg = radians((well.inclination[x] + well.inclination[x-1]) / 2)
 
         fn = ((force[-1] * delta_azi * sin(inc_avg))**2 + (force[-1] * delta_inc + w[x] * sin(inc_avg))**2) ** 0.5

@@ -263,9 +263,17 @@ def set_well(temp_dict, depths, units='metric'):
                 self.rhof = calc_density(self, ic, self.rhof_initial)
                 self.rhof_a = calc_density(self, ic, self.rhof_initial, section='annular')
             self.re_p = [x * self.vp * 2 * self.r1 / self.visc for x in self.rhof]  # Reynolds number inside tubing
-            self.f_p = [1.63 / log(6.9 / x) ** 2 for x in self.re_p]  # Friction factor inside tubing
-            self.nu_dpi = [(x/8)*(y-1000)*self.pr/(1+(12.7*(x/8)**0.5)*(self.pr**(2/3)-1)) for x, y in zip(self.f_p,
-                           self.re_p)]
+            self.f_p = []  # Friction factor inside tubing
+            self.nu_dpi = []
+            for x in range(len(self.md)):
+                if self.re_p[x] < 2300:
+                    self.f_p.append(64 / self.re_p[x])
+                    self.nu_dpi.append(4.36)
+                else:
+                    self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
+                    self.nu_dpi.append(
+                        (self.f_p[x] / 8) * (self.re_p[x] - 1000) * self.pr / (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) *
+                                                                               (self.pr ** (2 / 3) - 1)))
             # convective heat transfer coefficients, W/(m^2*°C)
             self.h1 = [self.lambdaf * x / self.dti for x in self.nu_dpi]  # Tubing inner wall
             return self
