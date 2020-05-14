@@ -280,7 +280,7 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
     for x in range(1, len(md)):
         dogleg.append(acos(
             cos(radians(inc[x])) * cos(radians(inc[x - 1]))
-            + sin(radians(inc[x])) * sin(radians(inc[x - 1])) * cos(radians(azimuth[x] - azimuth[x - 1]))
+            - sin(radians(inc[x])) * sin(radians(inc[x - 1])) * (1 - cos(radians(azimuth[x] - azimuth[x - 1])))
         ))
     dogleg = [degrees(x) for x in dogleg]
 
@@ -335,7 +335,7 @@ def load(data, grid_length=50, units='metric'):
     for x in range(1, len(md_new)):
         dogleg.append(acos(
             cos(radians(inc_new[x])) * cos(radians(inc_new[x - 1]))
-            + sin(radians(inc_new[x])) * sin(radians(inc_new[x - 1])) * cos(radians(az_new[x] - az_new[x - 1]))
+            - sin(radians(inc_new[x])) * sin(radians(inc_new[x - 1])) * (1 - cos(radians(az_new[x] - az_new[x - 1])))
         ))
 
     if 'north' and 'east' in data:

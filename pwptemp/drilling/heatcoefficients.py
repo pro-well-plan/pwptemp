@@ -62,8 +62,8 @@ def heat_coef(well, deltat):
 
         # heat coefficients fluid inside drill pipe
 
-        qp = 2 * math.pi * (well.rpm / 60) * well.torque[x] + 0.2 * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) *
-                                                                    (well.md[-1] / (well.ddi * 127.094 * 10 ** 6)))
+        qp = 2 * math.pi * (well.rpm / 60) * well.torque[1][x] \
+            + 0.2 * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) * (well.md[-1] / (well.ddi * 127.094 * 10 ** 6)))
 
         # fluid inside drill string
         c1z.append(((well.rhof[x] * well.cl * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)

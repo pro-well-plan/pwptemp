@@ -284,7 +284,6 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             self.gt = temp_dict["gt"] * self.deltaz * gt_conv  # Geothermal gradient, from °C/m to °C/cell
             self.wtg = temp_dict["wtg"] * gt_conv * self.deltaz  # Seawater thermal gradient, from °C/m to °C/cell
 
-
             # Raise Errors:
             if self.casings[-1, 0] > self.dsro:
                 raise ValueError('Last casing outer diameter must be smaller than the surrounding space diameter.')
@@ -349,23 +348,3 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             return self
 
     return NewWell()
-
-
-'''
-    for x in range(len(self.md)):
-        if self.re_p[x] <= 2300:
-            self.f_p.append(64 / self.re_p[x])
-            self.nu_dpi.append(4.36)
-            self.nu_dpo.append(4.36)
-
-        if 2300 < self.re_p[x] < 10000:
-            self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
-            self.nu_dpi.append((self.f_p[x] / 8) * (self.re_p[x] - 1000) * self.pr_p /
-                               (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_p ** (2 / 3) - 1)))
-            self.nu_dpo.append((self.f_p[x] / 8) * (self.re_a[x] - 1000) * self.pr_a /
-                               (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_a ** (2 / 3) - 1)))
-        if self.re_p[x] >= 10000:
-            self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
-            self.nu_dpi.append(0.027 * (self.re_p[x] ** (4 / 5)) * (self.pr_p ** (1 / 3)) * (1 ** 0.14))
-            self.nu_dpo.append(0.027 * (self.re_a[x] ** (4 / 5)) * (self.pr_a ** (1 / 3)) * (1 ** 0.14))
-'''

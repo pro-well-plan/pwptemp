@@ -86,21 +86,27 @@ def profile_multitime(temp_dist, values, times, tdsi=True, ta=False, tr=False, t
 
 def plot_torque_drag(well, plot='torque'):
     if plot == 'torque' or plot == 'both':
-        plt.plot(well.torque, well.md, c='r', label='Torque')
+        plt.plot(well.torque[0], well.md, label='Lowering')
+        plt.plot(well.torque[1], well.md, label='Rotating')
+        plt.plot(well.torque[2], well.md, label='Hoisting')
         plt.xlabel('Torque, kNm')
         plt.ylabel('Depth, m')
         plt.ylim(0, well.md[-1])  # bottom and top limits
-        plt.xlim(0, well.torque[0]+0.5)  # bottom and top limits
+        plt.xlim(0, well.torque[2][0]+0.5)  # bottom and top limits
         plt.ylim(plt.ylim()[::-1])  # reversing y axis
         plt.legend()  # applying the legend
+        plt.grid()
         plt.show()
     if plot == 'drag' or plot == 'both':
-        plt.plot(well.drag, well.md, c='b', label='Drag')
+        plt.plot(well.drag[0], well.md, label='Lowering')
+        plt.plot(well.drag[1], well.md, label='Rotating')
+        plt.plot(well.drag[2], well.md, label='Hoisting')
         plt.xlabel('Drag Force, kN')
         plt.ylabel('Depth, m')
         plt.ylim(0, well.md[-1])  # bottom and top limits
-        plt.xlim(0, well.drag[0]+10)  # bottom and top limits
+        plt.xlim(0, well.drag[2][0]+10)  # bottom and top limits
         plt.ylim(plt.ylim()[::-1])  # reversing y axis
         plt.legend()  # applying the legend
+        plt.grid()
         plt.show()
 
