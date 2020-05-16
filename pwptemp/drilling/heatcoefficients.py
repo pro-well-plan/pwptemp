@@ -10,8 +10,8 @@ def heat_coef(well, deltat):
         # 1. heat coefficients at bottom
 
     J = 4.1868    # Joule's constant  [Nm/cal]
-    qbit = (1/J)*(1-well.bit_n)*(well.wob*well.rop+2*math.pi*(well.rpm / 60)*well.tbit) \
-           + (well.rhof[-1]/(2*9.81)) * 0.7 * (well.q/(0.95*well.an))**2
+    qbit = (1/J)*(1-well.bit_n)*(well.wob*(well.rop/3600)+2*math.pi*(well.rpm / 60)*well.tbit) \
+        + 0.7 * (well.q/3600) * (well.rhof[-1]/(2*9.81)) * ((well.q/3600)/(0.95*well.an))**2
 
     vbit = well.q / well.an
     cbz = ((well.rhof[-1] * well.cl * vbit) / well.deltaz) / 2  # Vertical component (North-South)
@@ -63,7 +63,8 @@ def heat_coef(well, deltat):
         # heat coefficients fluid inside drill pipe
 
         qp = 2 * math.pi * (well.rpm / 60) * well.torque[1][x] \
-            + 0.2 * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) * (well.md[-1] / (well.ddi * 127.094 * 10 ** 6)))
+            + 0.2 * well.q * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) * (well.md[-1] /
+                                                                                 (well.ddi * 127.094 * 10 ** 6)))
 
         # fluid inside drill string
         c1z.append(((well.rhof[x] * well.cl * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)

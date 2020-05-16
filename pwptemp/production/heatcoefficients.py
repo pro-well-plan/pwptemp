@@ -63,7 +63,8 @@ def heat_coef(well, deltat, tt, t3):
         lambdal_eq = well.lambdaf * nu_a_t
 
         # fluid inside tubing
-        qp = 0.2 * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) * (well.md[-1] / (well.dti * 127.094 * 10 ** 6)))
+        qp = 0.2 * well.q * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) *
+                                 (well.md[-1] / (well.dti * 127.094 * 10 ** 6)))
 
         c1z.append(((well.rhof[x] * well.cf * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)
         c1e.append((2 * well.h1[x] / well.r1) / 2)  # East component
