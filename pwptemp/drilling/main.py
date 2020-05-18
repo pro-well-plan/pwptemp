@@ -15,7 +15,7 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
-    deltat = 60 * n
+    deltat = 60 * time
     tstep = int(tcirc / deltat)
     ic = init_cond(well)
     tfm = ic.tfm
@@ -37,7 +37,7 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
                 temp.toh[x] = tfm[x]
 
     temp_log = [temp]
-    time_log = [deltat/60]
+    time_log = [time]
 
     for x in range(tstep):
         if tstep > 1:
@@ -61,7 +61,7 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
 
         if log:
             temp_log.append(temp)
-            time_log.append((x+60)/60)
+            time_log.append(time_log[-1] + time)
 
     if units == 'english':
         temp.tdsi = temp.tdsi_output
@@ -89,8 +89,8 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
             self.csgs_reach = temp.csgs_reach
             self.deltat = deltat
             if log:
-                self.temp_log = temp_log[::60]
-                self.time_log = time_log[::60]
+                self.temp_log = temp_log
+                self.time_log = time_log
 
         def plot(self, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False):
             profile(self, tdsi, ta, tr, tcsg, tfm, sr, units)
@@ -111,7 +111,6 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
 def temp_behavior(temp_dist):
 
     ta = [x.ta for x in temp_dist.temp_log]
-
     tbot = []
     tout = []
 

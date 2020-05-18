@@ -2,12 +2,25 @@ import matplotlib.pyplot as plt
 
 
 def behavior(Behavior):
+    """
+    Plotting Tbottom and Tout through time
+    """
 
-    # Plotting Tbottom and Tout through time
-    plt.plot(range(Behavior.finaltime), Behavior.tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
-    plt.plot(range(Behavior.finaltime), Behavior.tout, 'r', label='Outlet (Annular)')  # Temp. inside Annulus vs Time
+    import numpy as np
+
+    time = int(3600/60) + 1
+    time = [(x*Behavior.finaltime)/60 for x in range(time)]
+
+    tbot_smooth = np.polyfit(time, Behavior.tbot, 10)
+    tbot = np.poly1d(tbot_smooth)(time)
+
+    tout_smooth = np.polyfit(time, Behavior.tout, 10)
+    tout = np.poly1d(tout_smooth)(time)
+
+    plt.plot(time, tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
+    plt.plot(time, tout, 'r', label='Outlet (Annular)')  # Temp. inside Annulus vs Time
     plt.axhline(y=Behavior.tfm[-1], color='k', label='Formation')  # Formation Temp. vs Time
-    plt.xlim(0, Behavior.finaltime - 1)
+    plt.xlim(0, Behavior.finaltime)
     plt.xlabel('Time, h')
     plt.ylabel('Temperature, °C')
     title = 'Temperature behavior (%1.1f hours)' % Behavior.finaltime
