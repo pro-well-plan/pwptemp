@@ -1,9 +1,11 @@
-def temp_time(n, well, log=False, units='metric'):
+def temp_time(n, well, log=True, units='metric', time_delta=None):
     """
     Function to calculate the well temperature distribution during certain production time (n)
     :param n: production time, hours
     :param well: a well object created with the function set_well() from input.py
     :param log: save distributions between initial time and circulation time n (each 1 hour)
+    :param units: system of units ('metric' or 'english')
+    :param time_delta: duration of each time step (seconds)
     :return: a well temperature distribution object
     """
     from .initcond import init_cond
@@ -15,7 +17,9 @@ def temp_time(n, well, log=False, units='metric'):
     # Simulation main parameters
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
-    deltat = 300
+    deltat = 60 * time
+    if type(time_delta) == int:
+        deltat = time_delta
     tstep = int(tcirc / deltat)
     ic = init_cond(well)
     tfm = ic.tfm
@@ -35,10 +39,15 @@ def temp_time(n, well, log=False, units='metric'):
         if temp.toh[x] != nan:
             temp.toh[x] = tfm[x]
 
-    temp_log = [temp]
-    time_log = [deltat / 60]
+    temp_initial = temp
+    temp_initial.tft = ic.tfm
+    temp_initial.tt = ic.tfm
+    temp_initial.ta = ic.tfm
 
-    for x in range(tstep):
+    temp_log = [temp_initial, temp]
+    time_log = [0, deltat / 3600]
+
+    for x in range(tstep-1):
         well = well.define_density(ic, cond=1)
 
         ic.tfto = temp.tft
@@ -60,7 +69,7 @@ def temp_time(n, well, log=False, units='metric'):
 
         if log:
             temp_log.append(temp)
-            time_log.append((x + 60) / 60)
+            time_log.append(time_log[-1] + time_log[1])
 
     if units == 'english':
         temp.tft = temp.tft_output
@@ -87,8 +96,8 @@ def temp_time(n, well, log=False, units='metric'):
             self.deltat = deltat
             self.csgs_reach = temp.csgs_reach
             if log:
-                self.temp_log = temp_log[::60]
-                self.time_log = time_log[::60]
+                self.temp_log = temp_log
+                self.time_log = time_log
 
         def well(self):
             return well
@@ -108,18 +117,19 @@ def temp_time(n, well, log=False, units='metric'):
 
 def temp_behavior(temp_dist):
 
-    ta = [x.ta for x in temp_dist.temp_log]
+    tft = [x.tft for x in temp_dist.temp_log]
 
-    tout = []
+    tbot = []
 
-    for n in range(len(ta)):
-        tout.append(ta[n][0])
+    for n in range(len(tft)):
+        tbot.append(tft[n][-1])
 
     class Behavior(object):
         def __init__(self):
             self.finaltime = temp_dist.time
-            self.tout = tout
+            self.tbot = tbot
             self.tfm = temp_dist.tfm
+            self.time = temp_dist.time_log
 
         def plot(self):
             from .plot import behavior
@@ -137,7 +147,7 @@ def plot_multitime(temp_dist, tft=True, ta=False, tr=False, tc=False, tfm=False,
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
-         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, units='metric'):
+         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, units='metric', time_delta=None):
     """
     Main function to calculate the well temperature distribution during production operation. This function allows to
     set the wellpath and different parameters involved.
@@ -157,6 +167,8 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     :param eob2: end of build 2, m
     :param change_input: dictionary with parameters to set.
     :param log: save distributions between initial time and circulation time n (each 1 hour)
+    :param units: system of units ('metric' or 'english')
+    :param time_delta: duration of each time step (seconds)
     :return: a well temperature distribution object
     """
     from .input import data, set_well
@@ -172,7 +184,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length, units)
     well = set_well(tdata, depths, units)
-    temp_distribution = temp_time(n, well, log, units)
+    temp_distribution = temp_time(n, well, log, units, time_delta)
 
     return temp_distribution
 

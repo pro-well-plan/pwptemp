@@ -49,7 +49,7 @@ def temp_time(n, well, log=True, units='metric', time_delta=None):
     temp_log = [temp_initial, temp]
     time_log = [0, deltat / 3600]
 
-    for x in range(tstep):
+    for x in range(tstep-1):
         well = well.define_density(ic, cond=1)
 
         ic.tfto = temp.tft

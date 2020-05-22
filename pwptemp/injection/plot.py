@@ -42,10 +42,17 @@ def profile(temp_distribution, tft=True, tt=False, ta=True, tc=False, tr=False, 
 
 def behavior(Behavior):
 
+    from numpy import polyfit, poly1d
+
     # Plotting Tbottom and Tout through time
-    plt.plot(range(Behavior.finaltime), Behavior.tout, 'r', label='Outlet (Tubing)')  # Temp. outlet vs Time
+    time = Behavior.time
+
+    tbot_smooth = polyfit(time, Behavior.tbot, 14)
+    tbot = poly1d(tbot_smooth)(time)
+
+    plt.plot(time, tbot, 'r', label='Bottom (Tubing)')  # Temp. outlet vs Time
     plt.axhline(y=Behavior.tfm[-1], color='k', label='Formation')  # Formation Temp. vs Time
-    plt.xlim(0, Behavior.finaltime - 1)
+    plt.xlim(0, Behavior.finaltime)
     plt.xlabel('Time, h')
     plt.ylabel('Temperature, °C')
     title = 'Temperature behavior (%1.1f hours)' % Behavior.finaltime
