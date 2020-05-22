@@ -1,9 +1,12 @@
-def temp_time(n, well, log=False, units='metric', density_constant=False):
+def temp_time(n, well, log=True, units='metric', density_constant=False, time_delta=None):
     """
     Function to calculate the well temperature distribution during drilling at a certain circulation time n.
     :param n: circulation time, hours
     :param well: a well object created from the function set_well()
     :param log: save distributions between initial time and circulation time n (each 1 hour)
+    :param units: system of units ('metric' or 'english')
+    :param density_constant: keep the fluid density as a constant
+    :param time_delta: duration of each time step (seconds)
     :return: a temperature distribution object
     """
     from .initcond import init_cond
@@ -16,6 +19,8 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
     deltat = 60 * time
+    if type(time_delta) == int:
+        deltat = time_delta
     tstep = int(tcirc / deltat)
     ic = init_cond(well)
     tfm = ic.tfm
@@ -36,10 +41,15 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
             if temp.toh[x] != nan:
                 temp.toh[x] = tfm[x]
 
-    temp_log = [temp]
-    time_log = [time]
+    temp_initial = temp
+    temp_initial.tdsi = ic.tfm
+    temp_initial.tds = ic.tfm
+    temp_initial.ta = ic.tfm
 
-    for x in range(tstep):
+    temp_log = [temp_initial, temp]
+    time_log = [0, deltat / 3600]
+
+    for x in range(tstep-1):
         if tstep > 1:
             well = well.define_density(ic, cond=1)
             ic.tdsio = temp.tdsi
@@ -61,7 +71,7 @@ def temp_time(n, well, log=False, units='metric', density_constant=False):
 
         if log:
             temp_log.append(temp)
-            time_log.append(time_log[-1] + time)
+            time_log.append(time_log[-1] + time_log[1])
 
     if units == 'english':
         temp.tdsi = temp.tdsi_output
@@ -124,6 +134,7 @@ def temp_behavior(temp_dist):
             self.tbot = tbot
             self.tout = tout
             self.tfm = temp_dist.tfm
+            self.time = temp_dist.time_log
 
         def plot(self):
             from .plot import behavior
@@ -145,7 +156,7 @@ def plot_multitime(temp_dist, tdsi=True, ta=False, tr=False, tcsg=False, tfm=Fal
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
          eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, visc_eq=True, units='metric',
-         density_constant=False):
+         density_constant=False, time_delta=None):
     """
     Main function to calculate the well temperature distribution during drilling operation. This function allows to
     set the wellpath and different parameters involved.
@@ -166,6 +177,9 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     :param change_input: dictionary with parameters to set.
     :param log: save distributions between initial time and circulation time n (each 1 hour)
     :param visc_eq: boolean to use the same viscosity in the pipe and annular
+    :param units: system of units ('metric' or 'english')
+    :param density_constant: keep the fluid density as a constant
+    :param time_delta: duration of each time step (seconds)
     :return: a well temperature distribution object
     """
     from .input import data, set_well
@@ -184,7 +198,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length, units)
     well = set_well(tdata, depths, visc_eq, units)
-    temp_distribution = temp_time(n, well, log, units, density_constant)
+    temp_distribution = temp_time(n, well, log, units, density_constant, time_delta)
 
     return temp_distribution
 

@@ -6,17 +6,15 @@ def behavior(Behavior):
     Plotting Tbottom and Tout through time
     """
 
-    import numpy as np
+    from numpy import polyfit, poly1d
 
-    time = int(3600/60) + 1
-    time = [(x*Behavior.finaltime)/60 for x in range(time)]
+    time = Behavior.time
 
-    tbot_smooth = np.polyfit(time, Behavior.tbot, 10)
-    tbot = np.poly1d(tbot_smooth)(time)
+    tbot_smooth = polyfit(time, Behavior.tbot, 14)
+    tbot = poly1d(tbot_smooth)(time)
 
-    tout_smooth = np.polyfit(time, Behavior.tout, 10)
-    tout = np.poly1d(tout_smooth)(time)
-
+    tout_smooth = polyfit(time, Behavior.tout, 14)
+    tout = poly1d(tout_smooth)(time)
     plt.plot(time, tbot, 'b', label='Bottom')  # Temp. inside Annulus vs Time
     plt.plot(time, tout, 'r', label='Outlet (Annular)')  # Temp. inside Annulus vs Time
     plt.axhline(y=Behavior.tfm[-1], color='k', label='Formation')  # Formation Temp. vs Time
