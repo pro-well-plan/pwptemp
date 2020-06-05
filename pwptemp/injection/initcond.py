@@ -1,4 +1,10 @@
 def init_cond(well):
+    """
+        Generates the temperature profiles at time 0, before starting the operation.
+        :param well: a well object created from the function set_well()
+        :return: object with initial temperature profiles
+    """
+
     # Initial Conditions
     Tfto = [well.ts]   # Temperature of the fluid inside the tubing at RKB
     Tto = [well.ts]    # Temperature of the tubing at RKB, t=0
@@ -15,6 +21,7 @@ def init_cond(well):
             Tg = well.gt      # Geothermal Gradient below the Riser section
 
         deltaT = Tsro[j - 1] + Tg*(well.tvd[j]-well.tvd[j-1])/well.deltaz
+
         # Generating the Temperature Profile at t=0
         Tfto.append(deltaT)
         Tto.append(deltaT)
