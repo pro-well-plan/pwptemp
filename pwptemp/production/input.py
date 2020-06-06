@@ -1,5 +1,14 @@
 def data(casings=[], d_openhole=0.216, units='metric'):
+    """
+        Parameters involved within the operation calculations
+        :param casings: list of dictionaries with casings characteristics (od, id and depth)
+        :param d_openhole: diameter of open hole section, m
+        :param units: system of units ('metric' or 'english')
+        :return: a dictionary with default values for the required parameters
+    """
+
     from numpy import asarray
+
     dict_met = {'ts': 15.0, 'wd': 100.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
             'q': 2000, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
             'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0,
@@ -33,6 +42,12 @@ def data(casings=[], d_openhole=0.216, units='metric'):
 
 
 def info(about='all'):
+    """
+        Retrieves information about the parameters (description and units)
+        :param about: type of parameters
+        :return: description and units of parameters
+    """
+
     print("Use the ID of a parameter to change the default value (e.g. tdict['tin']=30 to change the fluid inlet "
           "temperature from the default value to 30° Celsius)")
     print('Notice that the information is provided as follows:' + '\n' +
@@ -45,49 +60,49 @@ def info(about='all'):
                          'dro: riser outer diameter, in' + '\n'
 
     conditions_parameters = 'PARAMETERS RELATED TO SIMULATION CONDITIONS' + '\n' + \
-                            'ts: surface temperature, °C' + '\n' + \
-                            'wd: water depth, m' + '\n' + \
-                            'dfm: undisturbed formation diameter, m' + '\n'
+                            'ts: surface temperature, °C or °F' + '\n' + \
+                            'wd: water depth, m or ft' + '\n' + \
+                            'dfm: undisturbed formation diameter, m or ft' + '\n'
 
     heatcoeff_parameters = 'PARAMETERS RELATED TO HEAT COEFFICIENTS' + '\n' + \
-                           'lambdaf: fluid - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'lambdac: casing - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'lambdacem: cement - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'lambdat: tubing - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'lambdafm: formation - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'lambdar: riser - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'lambdaw: water - thermal conductivity, W/(m*°C)' + '\n' + \
-                           'cf: fluid - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'cc: casing - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'ccem: cement - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'ct: tubing - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'cr: riser - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'cw: water - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'cfm: formation - specific heat capacity, J/(kg*°C)' + '\n' + \
-                           'gt: geothermal gradient, °C/m' + '\n' + \
-                           'wtg: seawater thermal gradient, °C/m' + '\n'
+                           'lambdaf: fluid - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdac: casing - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdacem: cement - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdat: tubing - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdafm: formation - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdar: riser - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdaw: water - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'cf: fluid - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'cc: casing - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'ccem: cement - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'ct: tubing - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'cr: riser - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'cw: water - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'cfm: formation - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'gt: geothermal gradient, °C/m or °F/ft' + '\n' + \
+                           'wtg: seawater thermal gradient, °C/m or °F/ft' + '\n'
 
     densities_parameters = 'PARAMETERS RELATED TO DENSITIES' + '\n' + \
-                           'rhof: fluid density, sg' + '\n' + \
-                           'rhot: tubing density, sg' + '\n' + \
-                           'rhoc: casing density, sg' + '\n' + \
-                           'rhor: riser density, sg' + '\n' + \
-                           'rhofm: formation density, sg' + '\n' + \
-                           'rhow: seawater density, sg' + '\n' + \
-                           'rhocem: cement density, sg' + '\n' + \
+                           'rhof: fluid density, sg or ppg' + '\n' + \
+                           'rhot: tubing density, sg or ppg' + '\n' + \
+                           'rhoc: casing density, sg or ppg' + '\n' + \
+                           'rhor: riser density, sg or ppg' + '\n' + \
+                           'rhofm: formation density, sg or ppg' + '\n' + \
+                           'rhow: seawater density, sg or ppg' + '\n' + \
+                           'rhocem: cement density, sg or ppg' + '\n' + \
                            'beta: isothermal bulk modulus of production fluid, Pa' + '\n' + \
                            'alpha: expansion coefficient of production fluid, 1/°C' + '\n' + \
                            'beta_a: isothermal bulk modulus of fluid in annular, Pa' + '\n' + \
-                           'alpha_a: expansion coefficient of fluid in annular, 1/°C' + '\n'
+                           'alpha_a: expansion coefficient of fluid in annular, 1/°C or 1/°F' + '\n'
 
     viscosity_parameters = 'PARAMETERS RELATED TO MUD VISCOSITY' + '\n' + \
-                           'thao_o: yield stress, Pa' + '\n' + \
+                           'thao_o: yield stress, Pa or psi' + '\n' + \
                            'n: flow behavior index, dimensionless' + '\n' + \
-                           'k: consistency index, Pa*s^n' + '\n' + \
+                           'k: consistency index, Pa*s^n or psi*s^n' + '\n' + \
                            'visc: fluid viscosity, cp' + '\n'
 
     operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
-                             'q: flow rate, m^3/d' + '\n'
+                             'q: flow rate, m^3/day or bbl/day' + '\n'
 
     if about == 'casings':
         print(tubular_parameters)
@@ -113,7 +128,21 @@ def info(about='all'):
 
 
 def set_well(temp_dict, depths, units='metric'):
+    """
+            Define properly the parameters and respective values within an object well.
+            :param temp_dict: dictionary with inputs and default values.
+            :param depths: wellpath object
+            :param units: system of units ('metric' or 'english')
+            :return: a well object with conditions and parameters defined
+    """
+
     from math import pi, log
+
+    def wellpath():
+        """
+        :return: wellpath object
+        """
+        return depths
 
     class NewWell(object):
         def __init__(self):
@@ -186,9 +215,9 @@ def set_well(temp_dict, depths, units='metric'):
 
             # OPERATIONAL
             if units == 'metric':
-                q_conv = 0.04167     # from m^3/d to m^3/h
+                q_conv = 0.04167     # from m^3/day to m^3/h
             else:
-                q_conv = 0.2271   # from gpm to m^3/h
+                q_conv = 0.0066244706   # from bbl/day to m^3/h
             self.q = temp_dict["q"] * q_conv  # Flow rate, m^3/h
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the tubing
 
@@ -252,7 +281,15 @@ def set_well(temp_dict, depths, units='metric'):
                 raise ValueError('Surrounding space diameter must be smaller than the undisturbed formation diameter.')
 
         def define_density(self, ic, cond=0):
+            """
+            Calculate the density profile
+            :param ic: current temperature distribution
+            :param cond: '0' to calculate the initial profile
+            :return: density profile and derived calculations
+            """
+
             from .fluid import initial_density, calc_density
+
             if cond == 0:
                 self.rhof, self.rhof_initial = initial_density(self, ic)
                 self.rhof_a, self.rhof_a_initial = initial_density(self, ic, section='annular')

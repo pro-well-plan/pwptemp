@@ -147,6 +147,12 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
 
     from math import pi, log
 
+    def wellpath():
+        """
+        :return: wellpath object
+        """
+        return depths
+
     class NewWell(object):
         def __init__(self):
             # DEPTH
@@ -333,12 +339,6 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             from .plot import plot_torque_drag
             plot_torque_drag(self, plot)
 
-        def wellpath(self):
-            """
-            :return: wellpath object
-            """
-            return depths
-
         def define_density(self, ic, cond=0):
             """
             Calculate the density profile
@@ -349,6 +349,7 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
 
             from .fluid import initial_density, calc_density
             from .torque_drag import calc_torque_drag
+
             if cond == 0:
                 self.rhof, self.rhof_initial = initial_density(self, ic)
             else:
