@@ -5,6 +5,7 @@ def initial_density(well, initcond):
     :param initcond: a initial conditions object with the formation temperature profile
     :return: the density profile and the initial density at surface conditions
     """
+
     rhof_initial = well.rhof
     pressure = [well.rhof * 9.81 * i for i in well.tvd]
     rhof = [well.rhof * (1 + (x - 10 ** 5) / well.beta - well.alpha * (y - well.ts)) for x, y in
@@ -24,6 +25,7 @@ def calc_density(well, initcond, rhof_initial):
     :param rhof_initial: initial density at surface conditions
     :return: density profile
     """
+
     pressure_h = [x * 9.81 * y for x, y in zip(well.rhof, well.tvd)]
     pressure_f = [x * (well.md[-1] / well.ddi) * (1/2) * y * well.vp **2 for x, y in zip(well.f_p, well.rhof)]
     pressure = [x + y for x, y in zip(pressure_h, pressure_f)]
