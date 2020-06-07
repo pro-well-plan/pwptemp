@@ -1,5 +1,13 @@
 def heat_coef(well, deltat):
+    """
+    Calculate heat transfer coefficients for each cell.
+    :param well: a well object created from the function set_well()
+    :param deltat: duration of each time step (seconds)
+    :return: list with distribution of heat transfer coefficients
+    """
+
     import math
+
     sections = [well.wd]
     if len(well.casings) > 0 and well.casings[0, 2] > 0:
         for i in range(len(well.casings))[::-1]:
@@ -7,7 +15,7 @@ def heat_coef(well, deltat):
 
     # HEAT SOURCE TERMS
 
-        # 1. heat coefficients at bottom
+        # heat coefficients at bottom
 
     J = 4.1868    # Joule's constant  [Nm/cal]
     qbit = (1/J)*(1-well.bit_n)*(well.wob*(well.rop/3600)+2*math.pi*(well.rpm / 60)*well.tbit) \
@@ -19,33 +27,40 @@ def heat_coef(well, deltat):
     cb = qbit / well.an  # Heat source term
     cbt = well.rhof[-1] * well.cl / deltat  # Time component
 
-        # 3. heat coefficients fluid inside annular
+        # heat coefficients fluid inside annular
 
     qa = (0.085 * (2 * well.k * well.md[-1] / ((well.r3 - well.r2) * (127.094 * 10 ** 6))) *
          ((2 * (well.n + 1) * well.q) / (well.n * math.pi * (well.r3 + well.r2) *
             (well.r3 - well.r2) ** 2)) ** well.n) * (1 + (3/2) * well.dp_e**2)**0.5
 
+    # Creating empty lists
+
+    # Section 1: Fluid in Drill Pipe
     c1z = []
     c1e = []
     c1 = []
     c1t = []
 
+    # Section 2: Drill Pipe Wall
     c2z = []
     c2e = []
     c2w = []
     c2t = []
 
+    # Section 3: Fluid in Annulus
     c3z = []
     c3e = []
     c3w = []
     c3 = []
     c3t = []
 
+    # Section 4: First casing
     c4z = []
     c4e = []
     c4w = []
     c4t = []
 
+    # Section 5: Surrounding Space
     c5z = []
     c5e = []
     c5w = []
@@ -89,8 +104,10 @@ def heat_coef(well, deltat):
             lambda4 = well.lambdar  # Thermal conductivity of the casing (riser in this section)
             lambda5 = well.lambdaw  # Thermal conductivity of the surrounding space (seawater)
             lambda45 = (lambda4 * (well.r4r - well.r3r) + lambda5 * (well.r5 - well.r4r)) / (
-                    well.r5 - well.r3r)  # Comprehensive Thermal conductivity of the casing (riser) and surrounding space (seawater)
-            lambda56 = well.lambdaw  # Comprehensive Thermal conductivity of the surrounding space (seawater) and formation (seawater)
+                    well.r5 - well.r3r)  # Comprehensive Thermal conductivity of the casing (riser) and
+                                         # surrounding space (seawater)
+            lambda56 = well.lambdaw  # Comprehensive Thermal conductivity of the surrounding space (seawater) and
+                                     # formation (seawater)
             c4 = well.cr  # Specific Heat Capacity of the casing (riser)
             c5 = well.cw  # Specific Heat Capacity of the surrounding space (seawater)
             rho4 = well.rhor  # Density of the casing (riser)

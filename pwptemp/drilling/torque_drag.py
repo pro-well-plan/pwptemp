@@ -1,6 +1,3 @@
-from math import pi, sin, cos, radians
-
-
 def calc_torque_drag(well):
     """
     Function to generate the torque and drag profiles. Model Source: SPE-11380-PA
@@ -9,6 +6,8 @@ def calc_torque_drag(well):
     segment), wob (weight on bit), tbit (torque on bit), azimuth (for each segment) and inclination (for each segment).
     :return: two lists, drag force and torque
     """
+
+    from math import pi, sin, cos, radians
 
     fric = 0.24     # sliding friction coefficient between DP-wellbore
     unit_pipe_weight = well.rhod * 9.81 * pi * (well.r2 ** 2 - well.r1 ** 2)

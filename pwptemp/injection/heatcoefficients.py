@@ -1,38 +1,53 @@
-import math
-import numpy as np
-
-
 def heat_coef(well, deltat, tt, t3):
+    """
+    Calculate heat transfer coefficients for each cell.
+    :param t3: current temperature profile at section 3 (first casing)
+    :param tt: current temperature profile at tubing wall
+    :param well: a well object created from the function set_well()
+    :param deltat: duration of each time step (seconds)
+    :return: list with distribution of heat transfer coefficients
+    """
+
+    from math import pi, log
+    from numpy import interp
+
     sections = [well.wd]
     if len(well.casings) > 0 and well.casings[0, 2] > 0:
         for i in range(len(well.casings))[::-1]:
             sections.append(well.casings[i, 2])
 
-    vb = well.q / (math.pi * well.r3 ** 2)
+    vb = well.q / (pi * well.r3 ** 2)
     cbz = ((well.rhof[-1] * well.cf * vb) / well.deltaz) / 2  # Vertical component (North-South)
     cbe = (2 * well.h1[-1] / well.r3) / 2  # East component
     cbt = well.rhof[-1] * well.cf / deltat  # Time component
 
+    # Creating empty lists
+
+    # Section 1: Fluid in Tubing
     c1z = []
     c1e = []
     c1 = []
     c1t = []
 
+    # Section 2: Tubing Wall
     c2z = []
     c2e = []
     c2w = []
     c2t = []
 
+    # Section 3: Fluid in Annulus
     c3z = []
     c3e = []
     c3w = []
     c3t = []
 
+    # Section 4: First casing
     c4z = []
     c4e = []
     c4w = []
     c4t = []
 
+    # Section 5: Surrounding Space
     c5z = []
     c5e = []
     c5w = []
@@ -54,11 +69,11 @@ def heat_coef(well, deltat, tt, t3):
         ra_c = gr_c * well.pr
         inc = [0, 30, 45, 60, 90]
         c_base = [0.069, 0.065, 0.059, 0.057, 0.049]
-        c = np.interp(well.inclination[x], inc, c_base, right=0.049)
+        c = interp(well.inclination[x], inc, c_base, right=0.049)
         nu_a_t = c * (ra_t ** (1/3)) * (well.pr ** 0.074)
         nu_a_c = c * (ra_c ** (1/3)) * (well.pr ** 0.074)
-        h2 = well.lambdaf * nu_a_t / (well.r2 * math.log(well.r3/well.r2))
-        h3 = well.lambdaf * nu_a_c / (well.r2 * math.log(well.r3/well.r2))
+        h2 = well.lambdaf * nu_a_t / (well.r2 * log(well.r3/well.r2))
+        h3 = well.lambdaf * nu_a_c / (well.r2 * log(well.r3/well.r2))
         h3r = h3
         lambdal_eq = well.lambdaf * nu_a_t
 
@@ -68,7 +83,7 @@ def heat_coef(well, deltat, tt, t3):
 
         c1z.append(((well.rhof[x] * well.cf * well.vp) / well.deltaz) / 2)  # Vertical component (North-South)
         c1e.append((2 * well.h1[x] / well.r1) / 2)  # East component
-        c1.append(qp / (math.pi * (well.r1 ** 2)))  # Heat source term
+        c1.append(qp / (pi * (well.r1 ** 2)))  # Heat source term
         c1t.append(well.rhof[x] * well.cf / deltat)  # Time component
 
         # tubing wall
@@ -81,8 +96,10 @@ def heat_coef(well, deltat, tt, t3):
             lambda4 = well.lambdar  # Thermal conductivity of the casing (riser in this section)
             lambda5 = well.lambdaw  # Thermal conductivity of the surrounding space (seawater)
             lambda45 = (lambda4 * (well.r4r - well.r3r) + lambda5 * (well.r5 - well.r4r)) / (
-                    well.r5 - well.r3r)  # Comprehensive Thermal conductivity of the casing (riser) and surrounding space (seawater)
-            lambda56 = well.lambdaw  # Comprehensive Thermal conductivity of the surrounding space (seawater) and formation (seawater)
+                    well.r5 - well.r3r)  # Comprehensive Thermal conductivity of the casing (riser) and
+                                         # surrounding space (seawater)
+            lambda56 = well.lambdaw  # Comprehensive Thermal conductivity of the surrounding space (seawater) and
+                                     # formation (seawater)
             c4 = well.cr  # Specific Heat Capacity of the casing (riser)
             c5 = well.cw  # Specific Heat Capacity of the surrounding space (seawater)
             rho4 = well.rhor  # Density of the casing (riser)
@@ -157,8 +174,8 @@ def heat_coef(well, deltat, tt, t3):
 
         # surrounding space
         c5z.append((lambda5 / (well.deltaz ** 2)) / 2)
-        c5w.append((lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.r5 / well.r4))) / 2)
-        c5e.append((lambda56 / (well.r5 * (well.r5 - well.r4) * math.log(well.rfm / well.r5))) / 2)
+        c5w.append((lambda56 / (well.r5 * (well.r5 - well.r4) * log(well.r5 / well.r4))) / 2)
+        c5e.append((lambda56 / (well.r5 * (well.r5 - well.r4) * log(well.rfm / well.r5))) / 2)
         c5t.append(rho5 * c5 / deltat)
 
     hc_1 = [c1z, c1e, c1, c1t]
