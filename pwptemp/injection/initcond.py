@@ -1,8 +1,8 @@
 def init_cond(well):
     """
-        Generates the temperature profiles at time 0, before starting the operation.
-        :param well: a well object created from the function set_well()
-        :return: object with initial temperature profiles
+    Generates the temperature profiles at time 0, before starting the operation.
+    :param well: a well object created from the function set_well()
+    :return: object with initial temperature profiles
     """
 
     # Initial Conditions

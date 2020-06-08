@@ -1,10 +1,10 @@
 def data(casings=[], d_openhole=0.216, units='metric'):
     """
-        Parameters involved within the operation calculations
-        :param casings: list of dictionaries with casings characteristics (od, id and depth)
-        :param d_openhole: diameter of open hole section, m
-        :param units: system of units ('metric' or 'english')
-        :return: a dictionary with default values for the required parameters
+    Parameters involved within the operation calculations
+    :param casings: list of dictionaries with casings characteristics (od, id and depth)
+    :param d_openhole: diameter of open hole section, m
+    :param units: system of units ('metric' or 'english')
+    :return: a dictionary with default values for the required parameters
     """
 
     from numpy import asarray
@@ -43,9 +43,9 @@ def data(casings=[], d_openhole=0.216, units='metric'):
 
 def info(about='all'):
     """
-        Retrieves information about the parameters (description and units)
-        :param about: type of parameters
-        :return: description and units of parameters
+    Retrieves information about the parameters (description and units)
+    :param about: type of parameters
+    :return: description and units of parameters
     """
 
     print("Use the ID of a parameter to change the default value (e.g. tdict['tin']=30 to change the fluid inlet "
@@ -130,11 +130,11 @@ def info(about='all'):
 
 def set_well(temp_dict, depths, units='metric'):
     """
-        Define properly the parameters and respective values within an object well.
-        :param temp_dict: dictionary with inputs and default values.
-        :param depths: wellpath object
-        :param units: system of units ('metric' or 'english')
-        :return: a well object with conditions and parameters defined
+    Define properly the parameters and respective values within an object well.
+    :param temp_dict: dictionary with inputs and default values.
+    :param depths: wellpath object
+    :param units: system of units ('metric' or 'english')
+    :return: a well object with conditions and parameters defined
     """
 
     from math import pi, log

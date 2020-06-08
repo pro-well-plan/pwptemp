@@ -1,4 +1,11 @@
 def define_coef(coefficients, zstep):
+    """
+    Retrieves respective heat transfer coefficients for certain depth point.
+    :param coefficients: list with distribution of heat transfer coefficients
+    :param zstep: depth step
+    :return: values of heat coefficients for each section at the same depth
+    """
+
     hc_1 = coefficients[0]
     c1z = hc_1[0][zstep]
     c1e = hc_1[1][zstep]
@@ -40,6 +47,14 @@ def define_coef(coefficients, zstep):
 
 
 def temp_calc(well, initcond, heatcoeff):
+    """
+    Build the penta-diagonal matrix and solve it to get the well temperature distribution.
+    :param well: a well object created from the function set_well()
+    :param initcond: object with initial temperature profiles
+    :param heatcoeff: list with distribution of heat transfer coefficients
+    :return: object with final well temperature distribution
+    """
+
     from numpy import zeros, linalg
 
     Tdsi = [well.tin]
