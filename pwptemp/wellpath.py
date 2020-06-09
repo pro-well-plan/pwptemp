@@ -1,4 +1,21 @@
 def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eod=0, kop2=0, eob2=0, units='metric'):
+    """
+    Generate a wellpath.
+    :param mdt: target depth, m or ft
+    :param grid_length: cell's length, m or ft
+    :param profile: 'V' for vertical, 'J' for J-type, 'S' for S-type, 'H1' for Horizontal single curve and 'H2' for
+                                                                                            Horizontal double curve
+    :param build_angle: building angle, °
+    :param kop: kick-off point, m or ft
+    :param eob: end of build, m or ft
+    :param sod: start of drop, m or ft
+    :param eod: end of drop, m or ft
+    :param kop2: kick-off point 2, m or ft
+    :param eob2: end of build 2, m or ft
+    :param units: 'metric' or 'english'
+    :return: a wellpath object with 3D position
+    """
+
     from numpy import arange
     from math import radians, sin, cos, degrees, acos
 
@@ -310,6 +327,14 @@ def get(mdt, grid_length=50, profile='V', build_angle=1, kop=0, eob=0, sod=0, eo
 
 
 def load(data, grid_length=50, units='metric'):
+    """
+    Load an existing wellpath.
+    :param data: dictionary containing wellpath data (md, tvd, inclination and azimuth)
+    :param grid_length: cell's length, m or ft
+    :param units: 'metric' or 'english'
+    :return: a wellpath object with 3D position
+    """
+
     from numpy import interp, arange
     from math import radians, sin, cos, degrees, acos, tan
     md = [x['md'] for x in data]
@@ -402,6 +427,15 @@ def load(data, grid_length=50, units='metric'):
 
 
 def plot_wellpath(wellpath, azim=45, elev=20, units='metric'):
+    """
+    Plot a 3D Wellpath.
+    :param wellpath: a wellpath object with 3D position, 
+    :param azim: set horizontal view.
+    :param elev: set vertical view.
+    :param units: 'metric' or 'english'
+    :return: 3D Plot
+    """
+
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
     fig = plt.figure()

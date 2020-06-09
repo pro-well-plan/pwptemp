@@ -108,7 +108,7 @@ def temp_calc(well, initcond, heatcoeff):
                              + c1z * (initcond.tfto[j + 1] - initcond.tfto[j])  # N/S(t=0)
                              + c1z * initcond.tfto[-1])
 
-                if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
+                if j == well.zstep - 1:
                     N.append(0)
                     W.append(0)
                     C.append(cbt + cbe)
@@ -150,7 +150,7 @@ def temp_calc(well, initcond, heatcoeff):
                              + c2z * (initcond.tto[j - 1] - initcond.tto[j])
                              + c2z * initcond.tfto[-1])
 
-                if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
+                if j == well.zstep - 1:
                     N.append(-c2z)
                     W.append(0)
                     C.append(c2t + c2e + c2w + c2z)
@@ -195,7 +195,7 @@ def temp_calc(well, initcond, heatcoeff):
                                  + c3z * (initcond.tao[j - 1] - initcond.tao[j])
                                  + c3z * initcond.tfto[-1])
 
-                if j == well.zstep - 1:     # Cell where fluid flows out of the tubing and then go to annular
+                if j == well.zstep - 1:
                     N.append(-c3z)
                     W.append(0)
                     C.append(c3t + c3e + c3w + c3z)
