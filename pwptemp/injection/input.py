@@ -139,12 +139,6 @@ def set_well(temp_dict, depths, units='metric'):
 
     from math import pi, log
 
-    def wellpath():
-        """
-        :return: wellpath object
-        """
-        return depths
-
     class NewWell(object):
         def __init__(self):
             # DEPTH
@@ -282,6 +276,12 @@ def set_well(temp_dict, depths, units='metric'):
 
             if self.dsro > self.dfm:
                 raise ValueError('Surrounding space diameter must be smaller than the undisturbed formation diameter.')
+
+        def wellpath(self):
+            """
+            :return: wellpath object
+            """
+            return depths
 
         def define_density(self, ic, cond=0):
             """

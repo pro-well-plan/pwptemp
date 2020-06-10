@@ -147,12 +147,6 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
 
     from math import pi, log
 
-    def wellpath():
-        """
-        :return: wellpath object
-        """
-        return depths
-
     class NewWell(object):
         def __init__(self):
             # DEPTH
@@ -329,6 +323,12 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
 
             if self.dsro > self.dfm:
                 raise ValueError('Surrounding space diameter must be smaller than the undisturbed formation diameter.')
+
+        def wellpath(self):
+            """
+            :return: wellpath object
+            """
+            return depths
 
         def plot_torque_drag(self, plot='torque'):
             """
