@@ -72,8 +72,8 @@ def heat_coef(well, deltat, tt, t3):
         c = interp(well.inclination[x], inc, c_base, right=0.049)
         nu_a_t = c * (ra_t ** (1/3)) * (well.pr ** 0.074)
         nu_a_c = c * (ra_c ** (1/3)) * (well.pr ** 0.074)
-        h2 = well.lambdaf * nu_a_t / (well.r2 * log(well.r3/well.r2))
-        h3 = well.lambdaf * nu_a_c / (well.r2 * log(well.r3/well.r2))
+        h2 = well.lambdaf_a * nu_a_t / (well.r2 * log(well.r3/well.r2))
+        h3 = well.lambdaf_a * nu_a_c / (well.r2 * log(well.r3/well.r2))
         h3r = h3
         lambdal_eq = well.lambdaf_a * nu_a_t
 
