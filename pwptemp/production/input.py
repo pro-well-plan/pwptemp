@@ -10,18 +10,20 @@ def data(casings=[], d_openhole=0.216, units='metric'):
     from numpy import asarray
 
     dict_met = {'ts': 15.0, 'wd': 100.0,  'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
-            'q': 2000, 'lambdaf': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0, 'lambdafm': 2.249,
-            'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cc': 469.0, 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0,
-            'cw': 4000.0, 'cfm': 800.0, 'rhof': 0.85, 'rhof_a': 1.2, 'rhot': 7.8, 'rhoc': 7.8, 'rhor': 7.8,
-            'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'visc': 15,
-            'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6, 'beta_a': 44983 * 10 ** 5, 'alpha_a': 960 * 10 ** -6}
+                'q': 2000, 'lambdaf': 0.635, 'lambdaf_a': 0.635, 'lambdac': 43.3, 'lambdacem': 0.7, 'lambdat': 40.0,
+                'lambdafm': 2.249, 'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cf_a': 3713.0, 'cc': 469.0,
+                'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0, 'cw': 4000.0, 'cfm': 800.0, 'rhof': 0.85, 'rhof_a': 1.2,
+                'rhot': 7.8, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238,
+                'wtg': -0.005, 'visc': 15, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6, 'beta_a': 44983 * 10 ** 5,
+                'alpha_a': 960 * 10 ** -6}
 
     dict_eng = {'ts': 59.0, 'wd': 328.0, 'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
-                'q': 366.91, 'lambdaf': 1.098, 'lambdac': 74.909, 'lambdacem': 1.21, 'lambdat': 69.2, 'lambdafm': 3.89,
-                'lambdar': 26.8, 'lambdaw': 1.038, 'cf': 0.887, 'cc': 0.112, 'ccem': 0.478, 'ct': 0.096, 'cr': 0.1108,
-                'cw': 0.955, 'cfm': 0.19, 'rhof': 7.09, 'rhof_a': 10, 'rhot': 65.09, 'rhoc': 65.09, 'rhor': 65.09,
-                'rhofm': 18.73, 'rhow': 8.587, 'rhocem': 22.5, 'gt': 0.00403, 'wtg': -8.47*10**-4, 'visc': 15,
-                'beta': 652423, 'alpha': 5.33 * 10 ** -4, 'beta_a': 652423, 'alpha_a': 5.33 * 10 ** -4}
+                'q': 366.91, 'lambdaf': 1.098, 'lambdaf_a': 1.098, 'lambdac': 74.909, 'lambdacem': 1.21,
+                'lambdat': 69.2, 'lambdafm': 3.89, 'lambdar': 26.8, 'lambdaw': 1.038, 'cf': 0.887, 'cf_a': 0.887,
+                'cc': 0.112, 'ccem': 0.478, 'ct': 0.096, 'cr': 0.1108, 'cw': 0.955, 'cfm': 0.19, 'rhof': 7.09,
+                'rhof_a': 10, 'rhot': 65.09, 'rhoc': 65.09, 'rhor': 65.09, 'rhofm': 18.73, 'rhow': 8.587,
+                'rhocem': 22.5, 'gt': 0.00403, 'wtg': -8.47*10**-4, 'visc': 15, 'beta': 652423,
+                'alpha': 5.33 * 10 ** -4, 'beta_a': 652423, 'alpha_a': 5.33 * 10 ** -4}
 
     if units == 'metric':
         dict = dict_met
@@ -65,14 +67,16 @@ def info(about='all'):
                             'dfm: undisturbed formation diameter, m or ft' + '\n'
 
     heatcoeff_parameters = 'PARAMETERS RELATED TO HEAT COEFFICIENTS' + '\n' + \
-                           'lambdaf: fluid - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdaf: production fluid - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
+                           'lambdaf_a: annular fluid - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
                            'lambdac: casing - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
                            'lambdacem: cement - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
                            'lambdat: tubing - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
                            'lambdafm: formation - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
                            'lambdar: riser - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
                            'lambdaw: water - thermal conductivity, W/(m*°C) or BTU/(h*ft*°F)' + '\n' + \
-                           'cf: fluid - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'cf: production fluid - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
+                           'cf_a: annular fluid - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
                            'cc: casing - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
                            'ccem: cement - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
                            'ct: tubing - specific heat capacity, J/(kg*°C) or BTU/(lb*°F)' + '\n' + \
@@ -83,7 +87,8 @@ def info(about='all'):
                            'wtg: seawater thermal gradient, °C/m or °F/ft' + '\n'
 
     densities_parameters = 'PARAMETERS RELATED TO DENSITIES' + '\n' + \
-                           'rhof: fluid density, sg or ppg' + '\n' + \
+                           'rhof: production fluid density, sg or ppg' + '\n' + \
+                           'rhof_a: annular fluid density, sg or ppg' + '\n' + \
                            'rhot: tubing density, sg or ppg' + '\n' + \
                            'rhoc: casing density, sg or ppg' + '\n' + \
                            'rhor: riser density, sg or ppg' + '\n' + \
@@ -230,7 +235,8 @@ def set_well(temp_dict, depths, units='metric'):
                 alpha_conv = 1.8  # from 1/°F to 1/°C
 
             # Thermal conductivity  W/(m*°C)
-            self.lambdaf = temp_dict["lambdaf"] * lambda_conv  # Fluid
+            self.lambdaf = temp_dict["lambdaf"] * lambda_conv  # Production Fluid
+            self.lambdaf_a = temp_dict["lambdaf_a"] * lambda_conv  # Annular Fluid
             self.lambdac = temp_dict["lambdac"] * lambda_conv   # Casing
             self.lambdacem = temp_dict["lambdacem"] * lambda_conv   # Cement
             self.lambdat = temp_dict["lambdat"] * lambda_conv   # Tubing wall
@@ -244,7 +250,8 @@ def set_well(temp_dict, depths, units='metric'):
             self.alpha_a = temp_dict['alpha_a'] * alpha_conv    # Fluid Thermal Expansion Coefficient in annular, 1/°C
 
             # Specific heat capacity, J/(kg*°C)
-            self.cf = temp_dict["cf"] * c_conv       # Fluid
+            self.cf = temp_dict["cf"] * c_conv       # Production Fluid
+            self.cf_a = temp_dict["cf"] * c_conv  # Annular Fluid
             self.cc = temp_dict["cc"] * c_conv    # Casing
             self.ccem = temp_dict["ccem"] * c_conv     # Cement
             self.ct = temp_dict["ct"] * c_conv     # Tubing

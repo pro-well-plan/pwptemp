@@ -75,7 +75,7 @@ def heat_coef(well, deltat, tt, t3):
         h2 = well.lambdaf * nu_a_t / (well.r2 * log(well.r3/well.r2))
         h3 = well.lambdaf * nu_a_c / (well.r2 * log(well.r3/well.r2))
         h3r = h3
-        lambdal_eq = well.lambdaf * nu_a_t
+        lambdal_eq = well.lambdaf_a * nu_a_t
 
         # fluid inside tubing
         qp = 0.2 * well.q * 2 * (well.f_p[x] * well.rhof[x] * (well.vp ** 2) *
@@ -109,14 +109,14 @@ def heat_coef(well, deltat, tt, t3):
             c3z.append((lambdal_eq / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
             c3e.append((2 * well.r3 * h3 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # East component
             c3w.append((2 * well.r2 * h2 / ((well.r3 ** 2) - (well.r2 ** 2))) / 2)  # West component
-            c3t.append(well.rhof_a[x] * well.cf / deltat)  # Time component
+            c3t.append(well.rhof_a[x] * well.cf_a / deltat)  # Time component
 
         else:
             # fluid inside annular
             c3z.append((lambdal_eq / (well.deltaz ** 2)) / 2)  # Vertical component (North-South)
             c3e.append((2 * well.r3 * h3r / ((well.r3r ** 2) - (well.r2 ** 2))) / 2)  # East component
             c3w.append((2 * well.r2 * h2 / ((well.r3r ** 2) - (well.r2 ** 2))) / 2)  # West component
-            c3t.append(well.rhof_a[x] * well.cf / deltat)  # Time component
+            c3t.append(well.rhof_a[x] * well.cf_a / deltat)  # Time component
 
         if 1 < in_section < len(sections):
 
