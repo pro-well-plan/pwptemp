@@ -1,4 +1,4 @@
-def temp_time(n, well, log=True, units='metric', density_constant=False, time_delta=None):
+def temp_time(n, well, log=True, units='metric', density_constant=False, time_delta=None, fric=0.24):
     """
     Function to calculate the well temperature distribution during drilling at a certain circulation time n.
     :param n: circulation time, hours
@@ -7,6 +7,7 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
     :param units: system of units ('metric' or 'english')
     :param density_constant: keep the fluid density as a constant
     :param time_delta: duration of each time step (seconds)
+    :param fric: sliding friction coefficient between DP-wellbore.
     :return: a temperature distribution object
     """
     from .initcond import init_cond
@@ -24,7 +25,7 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
     tstep = int(tcirc / deltat)
     ic = init_cond(well)
     tfm = ic.tfm
-    well = well.define_density(ic, cond=0)
+    well = well.define_density(ic, cond=0, fric=fric)
     if density_constant:
         deltat = tcirc
         tstep = 1
@@ -51,7 +52,7 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
 
     for x in range(tstep-1):
         if tstep > 1:
-            well = well.define_density(ic, cond=1)
+            well = well.define_density(ic, cond=1, fric=fric)
             ic.tdsio = temp.tdsi
             ic.tdso = temp.tds
             ic.tao = temp.ta
@@ -156,7 +157,7 @@ def plot_multitime(temp_dist, tdsi=True, ta=False, tr=False, tcsg=False, tfm=Fal
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
          eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, visc_eq=True, units='metric',
-         density_constant=False, time_delta=None):
+         density_constant=False, time_delta=None, fric=0.24):
     """
     Main function to calculate the well temperature distribution during drilling operation. This function allows to
     set the wellpath and different parameters involved.
@@ -180,6 +181,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     :param units: system of units ('metric' or 'english')
     :param density_constant: keep the fluid density as a constant
     :param time_delta: duration of each time step (seconds)
+    :param fric: sliding friction coefficient between DP-wellbore.
     :return: a well temperature distribution object
     """
     from .input import data, set_well
@@ -198,7 +200,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length, units)
     well = set_well(tdata, depths, visc_eq, units)
-    temp_distribution = temp_time(n, well, log, units, density_constant, time_delta)
+    temp_distribution = temp_time(n, well, log, units, density_constant, time_delta, fric)
 
     return temp_distribution
 

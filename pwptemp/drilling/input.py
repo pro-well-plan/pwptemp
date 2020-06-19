@@ -339,11 +339,12 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             from .plot import plot_torque_drag
             plot_torque_drag(self, plot)
 
-        def define_density(self, ic, cond=0):
+        def define_density(self, ic, cond=0, fric=0.24):
             """
             Calculate the density profile
             :param ic: current temperature distribution
             :param cond: '0' to calculate the initial profile
+            :param fric: sliding friction coefficient between DP-wellbore.
             :return: density profile and derived calculations
             """
 
@@ -354,7 +355,7 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
                 self.rhof, self.rhof_initial = initial_density(self, ic)
             else:
                 self.rhof = calc_density(self, ic, self.rhof_initial)
-            self.drag, self.torque = calc_torque_drag(self)  # Torque/Forces, kN*m / kN
+            self.drag, self.torque = calc_torque_drag(self, fric)  # Torque/Forces, kN*m / kN
             self.re_p = [x * self.vp * 2 * self.r1 / self.visc_p for x in self.rhof]  # Reynolds number inside drill pipe
             self.re_a = [x * self.va * 2 * (self.r3 - self.r2) / self.visc_a for x in
                          self.rhof]  # Reynolds number - annular

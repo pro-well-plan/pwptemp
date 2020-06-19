@@ -1,15 +1,15 @@
-def calc_torque_drag(well):
+def calc_torque_drag(well, fric=0.24):
     """
     Function to generate the torque and drag profiles. Model Source: SPE-11380-PA
     :param well: a well object with rhod (drill string density), r1 (inner diameter of drill string), r2 (outer diameter
     of drill string), r3 (diameter of the first casing layer or borehole), rhof (fluid density), deltaz (length per pipe
     segment), wob (weight on bit), tbit (torque on bit), azimuth (for each segment) and inclination (for each segment).
+    :param fric: sliding friction coefficient between DP-wellbore.
     :return: two lists, drag force and torque
     """
 
     from math import pi, sin, cos, radians
 
-    fric = 0.24     # sliding friction coefficient between DP-wellbore
     unit_pipe_weight = well.rhod * 9.81 * pi * (well.r2 ** 2 - well.r1 ** 2)
     area_a = pi * ((well.r3 ** 2) - (well.r2 ** 2))
     area_ds = pi * (well.r1 ** 2)

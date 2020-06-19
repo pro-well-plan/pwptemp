@@ -23,4 +23,4 @@ class TestMain(TestCase):
         # For Injection
         st = pti.temp(t, log=True).behavior()
         self.assertIsInstance(st.finaltime, type(t))
-        self.assertIsInstance(st.tout, list)
+        self.assertIsInstance(st.tbot, list)
