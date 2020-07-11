@@ -9,6 +9,7 @@ class TestLinearSystem(TestCase):
         depths = wellpath.get(3000, 50)
         well = input.set_well(tdata, depths)
         ic = initcond.init_cond(well)
+        well = well.define_viscosity(ic)
         well = well.define_density(ic, cond=0)
         hc = heatcoefficients.heat_coef(well, 1)
         tdist = linearsystem.temp_calc(well, ic, hc)

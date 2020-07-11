@@ -15,7 +15,7 @@ def data(casings=[], d_openhole=0.216, units='metric'):
             'cw': 4000.0, 'cfm': 800.0, 'rhof': 1.198, 'rhod': 7.8, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245,
             'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238, 'wtg': -0.005, 'rpm': 100.0, 'tbit': 9, 'wob': 50, 'rop': 30.4,
             'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'thao_o': 1.82, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6,
-            'k': 0.3832, 'n': 0.7, 'visc': 0}
+            'k': 0.3832, 'n': 0.7}
 
     dict_eng = {'tin': 68.0, 'ts': 59.0, 'wd': 328.0, 'ddi': 4.0, 'ddo': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
                 'q': 300, 'lambdal': 1.098, 'lambdac': 74.909, 'lambdacem': 1.21, 'lambdad': 69.2, 'lambdafm': 3.89,
@@ -23,7 +23,7 @@ def data(casings=[], d_openhole=0.216, units='metric'):
                 'cw': 0.955, 'cfm': 0.19, 'rhof': 9.997, 'rhod': 65.09, 'rhoc': 65.09, 'rhor': 65.09, 'rhofm': 18.73,
                 'rhow': 8.587, 'rhocem': 22.5, 'gt': 0.00403, 'wtg': -8.47*10**-4, 'rpm': 100.0, 'tbit': 6637,
                 'wob': 11240, 'rop': 99.7, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0, 'thao_o': 1.82, 'beta': 652423,
-                'alpha': 5.33 * 10 ** -4, 'k': 0.3832, 'n': 0.7, 'visc': 0}
+                'alpha': 5.33 * 10 ** -4, 'k': 0.3832, 'n': 0.7}
 
     if units == 'metric':
         dict = dict_met
@@ -98,8 +98,7 @@ def info(about='all'):
     viscosity_parameters = 'PARAMETERS RELATED TO MUD VISCOSITY' + '\n' + \
                            'thao_o: yield stress, Pa or psi' + '\n' + \
                            'n: flow behavior index, dimensionless' + '\n' + \
-                           'k: consistency index, Pa*s^n or psi*s^n' + '\n' + \
-                           'visc: fluid viscosity, cp' + '\n'
+                           'k: consistency index, Pa*s^n or psi*s^n' + '\n'
 
     operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
                              'tin: fluid inlet temperature, °C or °F' + '\n' + \
@@ -245,28 +244,6 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             self.k = temp_dict["k"]
             self.n = temp_dict["n"]
 
-            if temp_dict["visc"] == 0:
-                n = self.n
-                thao_w = ((self.q / (pi * n * (self.r3 - self.r2) ** 2 * (1 / (2 * (2 * n + 1) * self.k ** (1 / n))) *
-                          (self.r3 + self.r2))) + (self.thao_o * (2 * n + 1) / (n + 1)) ** (1 / n)) ** n
-                shear_rate = ((thao_w - self.thao_o) / self.k) ** (1/n)
-                self.visc_a = (self.thao_o / shear_rate) + self.k * shear_rate ** (n - 1)  # Fluid viscosity [Pas]
-
-                if visc_eq:
-                    self.visc_p = self.visc_a
-                else:
-                    from sympy import symbols, solve
-                    x = symbols('x')
-                    expr = self.q - (pi * n * self.r1 ** 3 * (1 / (3 * n + 1)) * (x / self.k) ** (1 / n) * (1 -
-                            (3 * n + 1) * (self.thao_o) / (n * (2 * n + 1) * x)))
-                    sol = solve(expr)
-                    thao_w_p = sol[0]
-                    shear_rate_p = ((thao_w_p - self.thao_o) / self.k) ** (1 / n)
-                    self.visc_p = float((self.thao_o / shear_rate_p) + self.k * shear_rate_p ** (n - 1))
-
-            else:
-                self.visc_p = self.visc_a = temp_dict["visc"] / 1000
-
             # HEAT COEFFICIENTS
             if units == 'metric':
                 lambda_conv = 1     # from W/(m*°C) to W/(m*°C)
@@ -301,9 +278,6 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             self.cr = temp_dict["cr"] * c_conv      # Riser
             self.cw = temp_dict["cw"] * c_conv       # Seawater
             self.cfm = temp_dict["cfm"] * c_conv        # Formation
-
-            self.pr_p = self.visc_p * self.cl / self.lambdal       # Prandtl number
-            self.pr_a = self.visc_a * self.cl / self.lambdal  # Prandtl number
 
             self.gt = temp_dict["gt"] * self.deltaz * gt_conv  # Geothermal gradient, from °C/m to °C/cell
             self.wtg = temp_dict["wtg"] * gt_conv * self.deltaz  # Seawater thermal gradient, from °C/m to °C/cell
@@ -356,9 +330,10 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             else:
                 self.rhof = calc_density(self, ic, self.rhof_initial)
             self.drag, self.torque = calc_torque_drag(self, fric)  # Torque/Forces, kN*m / kN
-            self.re_p = [x * self.vp * 2 * self.r1 / self.visc_p for x in self.rhof]  # Reynolds number inside drill pipe
-            self.re_a = [x * self.va * 2 * (self.r3 - self.r2) / self.visc_a for x in
-                         self.rhof]  # Reynolds number - annular
+            # Reynolds number inside drill pipe
+            self.re_p = [x * self.vp * 2 * self.r1 / y for x, y in zip(self.rhof, self.visc_p)]
+            # Reynolds number - annular
+            self.re_a = [x * self.va * 2 * (self.r3 - self.r2) / y for x, y in zip(self.rhof, self.visc_a)]
             self.f_p = []  # Friction factor inside drill pipe
             self.nu_dpi = []
             self.nu_dpo = []
@@ -370,22 +345,43 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
 
                 if 2300 < self.re_p[x] < 10000:
                     self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
-                    self.nu_dpi.append((self.f_p[x] / 8) * (self.re_p[x] - 1000) * self.pr_p /
-                                       (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_p ** (2 / 3) - 1)))
-                    self.nu_dpo.append((self.f_p[x] / 8) * (self.re_a[x] - 1000) * self.pr_a /
-                                       (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_a ** (2 / 3) - 1)))
+                    self.nu_dpi.append((self.f_p[x] / 8) * (self.re_p[x] - 1000) * self.pr_p[x] /
+                                       (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_p[x] ** (2 / 3) - 1)))
+                    self.nu_dpo.append((self.f_p[x] / 8) * (self.re_a[x] - 1000) * self.pr_a[x] /
+                                       (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) * (self.pr_a[x] ** (2 / 3) - 1)))
                 if self.re_p[x] >= 10000:
                     self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
-                    self.nu_dpi.append(0.027 * (self.re_p[x] ** (4 / 5)) * (self.pr_p ** (1 / 3)) * (1 ** 0.14))
-                    self.nu_dpo.append(0.027 * (self.re_a[x] ** (4 / 5)) * (self.pr_a ** (1 / 3)) * (1 ** 0.14))
+                    self.nu_dpi.append(0.027 * (self.re_p[x] ** (4 / 5)) * (self.pr_p[x] ** (1 / 3)) * (1 ** 0.14))
+                    self.nu_dpo.append(0.027 * (self.re_a[x] ** (4 / 5)) * (self.pr_a[x] ** (1 / 3)) * (1 ** 0.14))
 
             self.h1 = [self.lambdal * x / self.ddi for x in self.nu_dpi]  # Drill Pipe inner wall
             self.h2 = [self.lambdal * x / self.ddo for x in self.nu_dpo]  # Drill Pipe outer wall
-            self.nu_a = [1.86 * ((x * self.pr_a) ** (1 / 3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) ** (1 / 3))
-                         * (1 ** (1 / 4)) for x in self.re_a]
+            self.nu_a = [1.86 * ((x * y) ** (1 / 3)) * ((2 * (self.r3 - self.r2) / self.md[-1]) ** (1 / 3))
+                         * (1 ** (1 / 4)) for x, y in zip(self.re_a, self.pr_a)]
             # convective heat transfer coefficients, W/(m^2*°C)
             self.h3 = [self.lambdal * x / (2 * self.r3) for x in self.nu_a]  # Casing inner wall
             self.h3r = [self.lambdal * x / (2 * self.r3r) for x in self.nu_a]  # Riser inner wall
+
+            return self
+
+        def define_viscosity(self, ic, a=-3.2 * 10 ** -3, b=5.8 * 10 ** -5):
+            """
+            Calculate the viscosity profile
+            :param ic: current temperature distribution
+            :param a: constant (specific for the fluid)
+            :param b: constant (specific for the fluid)
+            :return: viscosity profile and derived calculations
+            """
+
+            from .fluid import calc_vicosity
+
+            self.visc_p, self.visc_a = calc_vicosity(self,
+                                                     visc_eq,
+                                                     ic,
+                                                     a, b)
+
+            self.pr_p = [x * self.cl / self.lambdal for x in self.visc_p]  # Prandtl number - inside pipe
+            self.pr_a = [x * self.cl / self.lambdal for x in self.visc_a]  # Prandtl number - annulus
 
             return self
 

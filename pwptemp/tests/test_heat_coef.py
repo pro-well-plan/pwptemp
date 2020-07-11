@@ -8,6 +8,7 @@ class TestHC(TestCase):
         depths = wellpath.get(100, 50)
         well = input.set_well(input.data(), depths)
         ic = initcond.init_cond(well)
+        well = well.define_viscosity(ic)
         well = well.define_density(ic)
         hc = heatcoefficients.heat_coef(well, 1)
         self.assertEqual(len(hc), 9)

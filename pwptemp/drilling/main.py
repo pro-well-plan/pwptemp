@@ -1,4 +1,4 @@
-def temp_time(n, well, log=True, units='metric', density_constant=False, time_delta=None, fric=0.24):
+def temp_time(n, well, log=True, units='metric', density_constant=False, time_delta=None, fric=0.24, visc_eq=True):
     """
     Function to calculate the well temperature distribution during drilling at a certain circulation time n.
     :param n: circulation time, hours
@@ -25,6 +25,7 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
     tstep = int(tcirc / deltat)
     ic = init_cond(well)
     tfm = ic.tfm
+    well = well.define_viscosity(ic)
     well = well.define_density(ic, cond=0, fric=fric)
     if density_constant:
         deltat = tcirc
@@ -52,6 +53,7 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
 
     for x in range(tstep-1):
         if tstep > 1:
+            well = well.define_viscosity(ic)
             well = well.define_density(ic, cond=1, fric=fric)
             ic.tdsio = temp.tdsi
             ic.tdso = temp.tds
@@ -200,7 +202,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length, units)
     well = set_well(tdata, depths, visc_eq, units)
-    temp_distribution = temp_time(n, well, log, units, density_constant, time_delta, fric)
+    temp_distribution = temp_time(n, well, log, units, density_constant, time_delta, fric, visc_eq)
 
     return temp_distribution
 
