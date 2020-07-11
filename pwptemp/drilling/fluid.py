@@ -37,14 +37,14 @@ def calc_density(well, initcond, rhof_initial):
 
 def calc_vicosity(well, visc_eq, initcond, a=-3.2 * 10 ** -3, b=5.8 * 10 ** -5):
     """
-        Function to calculate the viscosity profile (Huang et al., 2020)
-        :param well: a well object created from the function set_well()
-        :param visc_eq: boolean to use the same viscosity in the pipe and annular
-        :param initcond: a initial conditions object with the formation temperature profile
-        :param a: constant (specific for the fluid)
-        :param b: constant (specific for the fluid)
-        :return: viscosity profile
-        """
+    Function to calculate the viscosity profile (Huang et al., 2020)
+    :param well: a well object created from the function set_well()
+    :param visc_eq: boolean to use the same viscosity in the pipe and annular
+    :param initcond: a initial conditions object with the formation temperature profile
+    :param a: constant (specific for the fluid)
+    :param b: constant (specific for the fluid)
+    :return: viscosity profile
+    """
 
     from math import pi, exp
 

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def temp_time(n, well, log=True, units='metric', time_delta=None):
+def temp_time(n, well, log=True, units='metric', time_delta=900):
     """
     Function to calculate the well temperature distribution during certain production time (n)
     :param n: production time, hours
@@ -28,6 +28,7 @@ def temp_time(n, well, log=True, units='metric', time_delta=None):
     tt = ic.tto
     t3 = ic.tco
 
+    well = well.define_viscosity(ic)
     well = well.define_density(ic, cond=0)
 
     hc = heat_coef(well, deltat, tt, t3)
@@ -50,6 +51,7 @@ def temp_time(n, well, log=True, units='metric', time_delta=None):
     time_log = [0, deltat / 3600]
 
     for x in range(tstep-1):
+        well = well.define_viscosity(ic)
         well = well.define_density(ic, cond=1)
 
         ic.tfto = temp.tft
@@ -149,7 +151,7 @@ def plot_multitime(temp_dist, tft=True, ta=False, tr=False, tc=False, tfm=False,
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,
-         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, units='metric', time_delta=None):
+         eob=0, sod=0, eod=0, kop2=0, eob2=0, change_input={}, log=False, units='metric', time_delta=900):
     """
     Main function to calculate the well temperature distribution during production operation. This function allows to
     set the wellpath and different parameters involved.

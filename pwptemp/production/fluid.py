@@ -66,3 +66,28 @@ def calc_density(well, initcond, rhof_initial, section='tubing'):
             zip(pressure, temp)]
 
     return rhof
+
+
+def calc_vicosity(api, initcond):
+    """
+    Function to calculate the viscosity profile (Glaso, 1980)
+    :param api: API gravity of the produced hydrocarbon
+    :param initcond: a initial conditions object with the formation temperature profile
+    :return: viscosity profile
+    """
+
+    from math import log10
+
+    visc_t, visc_a = [], []
+    step = 0
+    for x, y in zip(initcond.tfto, initcond.tao):
+        step += 1
+        x = (x * 1.8) + 32
+        c = 3.141 * (10 ** 10) * (x ** (-3.444))
+        d = (10.313 * log10(x)) - 36.447
+        visc_t.append((c * log10(api) ** d)/1000)
+        c = 3.141 * (10 ** 10) * (y ** (-3.444))
+        d = (10.313 * log10(y)) - 36.447
+        visc_a.append((c * log10(api) ** d)/1000)
+
+    return visc_t, visc_a

@@ -14,7 +14,7 @@ def data(casings=[], d_openhole=0.216, units='metric'):
                 'lambdafm': 2.249, 'lambdar': 15.49, 'lambdaw': 0.6, 'cf': 3713.0, 'cf_a': 3713.0, 'cc': 469.0,
                 'ccem': 2000.0, 'ct': 400.0, 'cr': 464.0, 'cw': 4000.0, 'cfm': 800.0, 'rhof': 0.85, 'rhof_a': 1.2,
                 'rhot': 7.8, 'rhoc': 7.8, 'rhor': 7.8, 'rhofm': 2.245, 'rhow': 1.029, 'rhocem': 2.7, 'gt': 0.0238,
-                'wtg': -0.005, 'visc': 15, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6, 'beta_a': 44983 * 10 ** 5,
+                'wtg': -0.005, 'api': 30, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6, 'beta_a': 44983 * 10 ** 5,
                 'alpha_a': 960 * 10 ** -6}
 
     dict_eng = {'ts': 59.0, 'wd': 328.0, 'dti': 4.0, 'dto': 4.5, 'dri': 17.716, 'dro': 21.0, 'dfm': 80.0,
@@ -22,7 +22,7 @@ def data(casings=[], d_openhole=0.216, units='metric'):
                 'lambdat': 69.2, 'lambdafm': 3.89, 'lambdar': 26.8, 'lambdaw': 1.038, 'cf': 0.887, 'cf_a': 0.887,
                 'cc': 0.112, 'ccem': 0.478, 'ct': 0.096, 'cr': 0.1108, 'cw': 0.955, 'cfm': 0.19, 'rhof': 7.09,
                 'rhof_a': 10, 'rhot': 65.09, 'rhoc': 65.09, 'rhor': 65.09, 'rhofm': 18.73, 'rhow': 8.587,
-                'rhocem': 22.5, 'gt': 0.00403, 'wtg': -8.47*10**-4, 'visc': 15, 'beta': 652423,
+                'rhocem': 22.5, 'gt': 0.00403, 'wtg': -8.47*10**-4, 'api': 30, 'beta': 652423,
                 'alpha': 5.33 * 10 ** -4, 'beta_a': 652423, 'alpha_a': 5.33 * 10 ** -4}
 
     if units == 'metric':
@@ -100,11 +100,6 @@ def info(about='all'):
                            'beta_a: isothermal bulk modulus of fluid in annular, Pa' + '\n' + \
                            'alpha_a: expansion coefficient of fluid in annular, 1/°C or 1/°F' + '\n'
 
-    viscosity_parameters = 'PARAMETERS RELATED TO MUD VISCOSITY' + '\n' + \
-                           'thao_o: yield stress, Pa or psi' + '\n' + \
-                           'n: flow behavior index, dimensionless' + '\n' + \
-                           'k: consistency index, Pa*s^n or psi*s^n' + '\n' + \
-                           'visc: fluid viscosity, cp' + '\n'
 
     operational_parameters = 'PARAMETERS RELATED TO THE OPERATION' + '\n' + \
                              'q: flow rate, m^3/day or bbl/day' + '\n'
@@ -124,12 +119,9 @@ def info(about='all'):
     if about == 'operational':
         print(operational_parameters)
 
-    if about == 'viscosity':
-        print(viscosity_parameters)
-
     if about == 'all':
         print(tubular_parameters + '\n' + conditions_parameters + '\n' + heatcoeff_parameters + '\n' +
-              densities_parameters + '\n' + viscosity_parameters + '\n' + operational_parameters)
+              densities_parameters + '\n' + operational_parameters)
 
 
 def set_well(temp_dict, depths, units='metric'):
@@ -210,7 +202,6 @@ def set_well(temp_dict, depths, units='metric'):
             self.rhocem = temp_dict["rhocem"] * dens_conv  # Cement Sheath
             self.rhofm = temp_dict["rhofm"] * dens_conv  # Formation
             self.rhow = temp_dict["rhow"] * dens_conv  # Seawater
-            self.visc = temp_dict["visc"] / 1000  # Fluid viscosity [Pas]
 
             # OPERATIONAL
             if units == 'metric':
@@ -259,8 +250,6 @@ def set_well(temp_dict, depths, units='metric'):
             self.cw = temp_dict["cw"] * c_conv      # Seawater
             self.cfm = temp_dict["cfm"] * c_conv       # Formation
 
-            self.pr = self.visc * self.cf / self.lambdaf       # Prandtl number
-
             self.gt = temp_dict["gt"] * gt_conv * self.deltaz  # Geothermal gradient, °C/m
             self.wtg = temp_dict["wtg"] * gt_conv * self.deltaz  # Seawater thermal gradient, °C/m
 
@@ -303,7 +292,8 @@ def set_well(temp_dict, depths, units='metric'):
             else:
                 self.rhof = calc_density(self, ic, self.rhof_initial)
                 self.rhof_a = calc_density(self, ic, self.rhof_initial, section='annular')
-            self.re_p = [x * self.vp * 2 * self.r1 / self.visc for x in self.rhof]  # Reynolds number inside tubing
+            # Reynolds number inside tubing
+            self.re_p = [x * self.vp * 2 * self.r1 / y for x, y in zip(self.rhof, self.visc_t)]
             self.f_p = []  # Friction factor inside tubing
             self.nu_dpi = []
             for x in range(len(self.md)):
@@ -313,10 +303,28 @@ def set_well(temp_dict, depths, units='metric'):
                 else:
                     self.f_p.append(1.63 / log(6.9 / self.re_p[x]) ** 2)
                     self.nu_dpi.append(
-                        (self.f_p[x] / 8) * (self.re_p[x] - 1000) * self.pr / (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) *
-                                                                               (self.pr ** (2 / 3) - 1)))
+                        (self.f_p[x] / 8) * (self.re_p[x] - 1000) *
+                        self.pr_t[x] / (1 + (12.7 * (self.f_p[x] / 8) ** 0.5) *
+                        (self.pr_t[x] ** (2 / 3) - 1)))
             # convective heat transfer coefficients, W/(m^2*°C)
             self.h1 = [self.lambdaf * x / self.dti for x in self.nu_dpi]  # Tubing inner wall
+
+            return self
+
+        def define_viscosity(self, ic):
+            """
+            Calculate the viscosity profile
+            :param ic: current temperature distribution
+            :return: viscosity profile and derived calculations
+            """
+
+            from .fluid import calc_vicosity
+            self.api = temp_dict["api"]
+            self.visc_t, self.visc_a = calc_vicosity(self.api, ic)
+
+            self.pr_t = [x * self.cf / self.lambdaf for x in self.visc_t]  # Prandtl number - inside tubing
+            self.pr_a = [x * self.cf / self.lambdaf for x in self.visc_a]  # Prandtl number - annulus
+
             return self
 
     return NewWell()
