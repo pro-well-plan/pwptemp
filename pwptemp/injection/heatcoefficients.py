@@ -62,16 +62,16 @@ def heat_coef(well, deltat, tt, t3):
             if section_checkpoint != sections[-1]:
                 section_checkpoint = sections[in_section-1]
 
-        gr_t = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.dti ** 3) / (well.visc ** 2)
+        gr_t = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (well.dti ** 3) / (well.visc_a[x] ** 2)
         gr_c = 9.81 * well.alpha * abs((tt[x] - t3[x])) * (well.rhof[x] ** 2) * (((well.r3 - well.r2) * 2) ** 3) / (
-                    well.visc ** 2)
-        ra_t = gr_t * well.pr
-        ra_c = gr_c * well.pr
+                    well.visc_a[x] ** 2)
+        ra_t = gr_t * well.pr_a[x]
+        ra_c = gr_c * well.pr_a[x]
         inc = [0, 30, 45, 60, 90]
         c_base = [0.069, 0.065, 0.059, 0.057, 0.049]
         c = interp(well.inclination[x], inc, c_base, right=0.049)
-        nu_a_t = c * (ra_t ** (1/3)) * (well.pr ** 0.074)
-        nu_a_c = c * (ra_c ** (1/3)) * (well.pr ** 0.074)
+        nu_a_t = c * (ra_t ** (1/3)) * (well.pr_a[x] ** 0.074)
+        nu_a_c = c * (ra_c ** (1/3)) * (well.pr_a[x] ** 0.074)
         h2 = well.lambdaf_a * nu_a_t / (well.r2 * log(well.r3/well.r2))
         h3 = well.lambdaf_a * nu_a_c / (well.r2 * log(well.r3/well.r2))
         h3r = h3

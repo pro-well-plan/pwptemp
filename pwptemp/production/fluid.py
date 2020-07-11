@@ -79,10 +79,9 @@ def calc_vicosity(api, initcond):
     from math import log10
 
     visc_t, visc_a = [], []
-    step = 0
     for x, y in zip(initcond.tfto, initcond.tao):
-        step += 1
-        x = (x * 1.8) + 32
+        x = (x * 1.8) + 32      # converting °C to °F
+        y = (y * 1.8) + 32      # converting °C to °F
         c = 3.141 * (10 ** 10) * (x ** (-3.444))
         d = (10.313 * log10(x)) - 36.447
         visc_t.append((c * log10(api) ** d)/1000)

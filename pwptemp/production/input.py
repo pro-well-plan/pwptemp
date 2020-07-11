@@ -95,6 +95,7 @@ def info(about='all'):
                            'rhofm: formation density, sg or ppg' + '\n' + \
                            'rhow: seawater density, sg or ppg' + '\n' + \
                            'rhocem: cement density, sg or ppg' + '\n' + \
+                           'api: api gravity, °API' + '\n' + \
                            'beta: isothermal bulk modulus of production fluid, Pa' + '\n' + \
                            'alpha: expansion coefficient of production fluid, 1/°C' + '\n' + \
                            'beta_a: isothermal bulk modulus of fluid in annular, Pa' + '\n' + \
