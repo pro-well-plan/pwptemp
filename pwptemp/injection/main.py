@@ -11,7 +11,7 @@ def temp_time(n, well, log=True, units='metric', time_delta=900):
     from .initcond import init_cond
     from .heatcoefficients import heat_coef
     from .linearsystem import temp_calc
-    from .plot import profile
+    from ..plot import profile
     from math import log, nan
     import numpy as np
     # Simulation main parameters
@@ -104,15 +104,12 @@ def temp_time(n, well, log=True, units='metric', time_delta=900):
         def well(self):
             return well
 
-        def plot(self, tft=True, tt=False, ta=True, tc=False, tr=False, sr=False):
-            profile(self, tft, tt, ta, tc, tr, sr, units)
+        def plot(self):
+            return profile(self, units, operation='injection')
 
         def behavior(self):
             temp_behavior_injection = temp_behavior(self)
             return temp_behavior_injection
-
-        def plot_multi(self, tft=True, ta=False, tr=False, tc=False, tfm=False, tsr=False):
-            plot_multitime(self, tft, ta, tr, tc, tfm, tsr)
 
     return TempDist()
 
@@ -134,18 +131,10 @@ def temp_behavior(temp_dist):
             self.time = temp_dist.time_log
 
         def plot(self):
-            from .plot import behavior
-            behavior(self)
+            from ..plot import behavior
+            return behavior(self, operation='injection')
 
     return Behavior()
-
-
-def plot_multitime(temp_dist, tft=True, ta=False, tr=False, tc=False, tfm=False, tsr=False):
-    from .plot import profile_multitime
-
-    values = temp_dist.temp_log
-    times = [x for x in temp_dist.time_log]
-    profile_multitime(temp_dist, values, times, tft=tft, ta=ta, tr=tr, tc=tc, tfm=tfm, tsr=tsr)
 
 
 def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_length=50, profile='V', build_angle=1, kop=0,

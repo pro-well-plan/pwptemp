@@ -39,6 +39,7 @@ class TestLinearSystem(TestCase):
         ic = initcond.init_cond(well)
         tt = ic.tto
         tc = ic.tco
+        well = well.define_viscosity(ic)
         well = well.define_density(ic, cond=0)
         hc = heatcoefficients.heat_coef(well, 1, tt, tc)
         tdist = linearsystem.temp_calc(well, ic, hc)

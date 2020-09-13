@@ -1,4 +1,4 @@
-def temp_time(n, well, log=True, units='metric', density_constant=False, time_delta=None, fric=0.24, visc_eq=True):
+def temp_time(n, well, log=True, units='metric', density_constant=False, time_delta=None, fric=0.24):
     """
     Function to calculate the well temperature distribution during drilling at a certain circulation time n.
     :param n: circulation time, hours
@@ -13,7 +13,7 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
     from .initcond import init_cond
     from .heatcoefficients import heat_coef
     from .linearsystem import temp_calc
-    from .plot import profile
+    from ..plot import profile
     from math import log, nan
     import numpy as np
     # Simulation main parameters
@@ -105,8 +105,8 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
                 self.temp_log = temp_log
                 self.time_log = time_log
 
-        def plot(self, tdsi=True, ta=True, tr=False, tcsg=False, tfm=True, sr=False):
-            profile(self, tdsi, ta, tr, tcsg, tfm, sr, units)
+        def plot(self):
+            return profile(self, units, operation='drilling')
 
         def well(self):
             return well
@@ -114,9 +114,6 @@ def temp_time(n, well, log=True, units='metric', density_constant=False, time_de
         def behavior(self):
             temp_behavior_drilling = temp_behavior(self)
             return temp_behavior_drilling
-
-        def plot_multi(self, tdsi=True, ta=False, tr=False, tcsg=False, tfm=False, tsr=False):
-            plot_multitime(self, tdsi, ta, tr, tcsg, tfm, tsr)
 
     return TempDist()
 
@@ -140,19 +137,10 @@ def temp_behavior(temp_dist):
             self.time = temp_dist.time_log
 
         def plot(self):
-            from .plot import behavior
-            behavior(self)
+            from ..plot import behavior
+            return behavior(self, operation='drilling')
 
     return Behavior()
-
-
-def plot_multitime(temp_dist, tdsi=True, ta=False, tr=False, tcsg=False, tfm=False, tsr=False):
-    from .plot import profile_multitime
-
-    values = temp_dist.temp_log
-    times = [x for x in temp_dist.time_log]
-    profile_multitime(temp_dist, values, times, tdsi=tdsi, ta=ta, tr=tr, tcsg=tcsg, tfm=tfm, tsr=tsr)
-
 
 # BUILDING GENERAL FUNCTIONS FOR DRILLING MODULE
 
@@ -202,7 +190,7 @@ def temp(n, mdt=3000, casings=[], wellpath_data=[], d_openhole=0.216, grid_lengt
     else:
         depths = wellpath.load(wellpath_data, grid_length, units)
     well = set_well(tdata, depths, visc_eq, units)
-    temp_distribution = temp_time(n, well, log, units, density_constant, time_delta, fric, visc_eq)
+    temp_distribution = temp_time(n, well, log, units, density_constant, time_delta, fric)
 
     return temp_distribution
 
