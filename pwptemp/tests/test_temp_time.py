@@ -1,13 +1,14 @@
 from unittest import TestCase
-from pwptemp import wellpath
+import well_profile as wp
+
+trajectory = wp.load('trajectory1.xlsx')
 
 
 class TestMain(TestCase):
     def test_temp_time_drilling(self):
         from pwptemp.drilling import input, main
         tdata = input.data()
-        depths = wellpath.get(1000)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         td = main.temp_time(2, well)
         self.assertEqual(len(td.tdsi), len(td.ta), len(td.tr))
         self.assertEqual(len(td.tcsg), len(td.tsr), len(td.tfm))
@@ -22,8 +23,7 @@ class TestMain(TestCase):
     def test_temp_time_injection(self):
         from pwptemp.injection import input, main
         tdata = input.data()
-        depths = wellpath.get(1000)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         td = main.temp_time(2, well)
         self.assertEqual(len(td.tft), len(td.ta), len(td.tr))
         self.assertEqual(len(td.tc), len(td.tsr), len(td.tfm))
@@ -34,4 +34,3 @@ class TestMain(TestCase):
         self.assertIsInstance(td.tc, list)
         self.assertIsInstance(td.tsr, list)
         self.assertIsInstance(td.tfm, list)
-

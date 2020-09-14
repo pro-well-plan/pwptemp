@@ -1,5 +1,7 @@
 from unittest import TestCase
-from pwptemp import wellpath
+import well_profile as wp
+
+trajectory = wp.load('trajectory1.xlsx')
 
 
 class TestSetWell(TestCase):
@@ -8,8 +10,7 @@ class TestSetWell(TestCase):
         from pwptemp.drilling import input
         casings = [{'od': 9.5, 'id': 8.5, 'depth': 25.0}, {'od': 20.0, 'id': 18.0, 'depth': 10.0}]
         tdata = input.data(casings)
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         self.assertEqual(len(well.casings[0]), len(well.casings[1]))
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
@@ -18,8 +19,7 @@ class TestSetWell(TestCase):
 
         # without casings
         tdata = input.data()
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
         for x, value in tdata.items():
@@ -30,8 +30,7 @@ class TestSetWell(TestCase):
         # with casings
         casings = [{'od': 9.5, 'id': 8.5, 'depth': 25.0}, {'od': 20.0, 'id': 18.0, 'depth': 10.0}]
         tdata = input.data(casings)
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         self.assertEqual(len(well.casings[0]), len(well.casings[1]))
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
@@ -40,8 +39,7 @@ class TestSetWell(TestCase):
 
         # without casings
         tdata = input.data()
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
         for x, value in tdata.items():
@@ -52,8 +50,7 @@ class TestSetWell(TestCase):
         # with casings
         casings = [{'od': 9.5, 'id': 8.5, 'depth': 25.0}, {'od': 20.0, 'id': 18.0, 'depth': 10.0}]
         tdata = input.data(casings)
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         self.assertEqual(len(well.casings[0]), len(well.casings[1]))
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
@@ -62,8 +59,7 @@ class TestSetWell(TestCase):
 
         # without casings
         tdata = input.data()
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         self.assertEqual(len(well.md), well.zstep)
         del tdata['casings']
         for x, value in tdata.items():

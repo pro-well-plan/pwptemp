@@ -1,13 +1,14 @@
 from unittest import TestCase
-from pwptemp import wellpath
+import well_profile as wp
+
+trajectory = wp.load('trajectory1.xlsx')
 
 
 class TestInitCond(TestCase):
     def test_init_cond_drilling(self):
         from pwptemp.drilling import input, initcond
         tdata = input.data()
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         ic = initcond.init_cond(well)
         a = ic.tdsio
         b = ic.tdso
@@ -25,8 +26,7 @@ class TestInitCond(TestCase):
     def test_init_cond_production(self):
         from pwptemp.production import input, initcond
         tdata = input.data()
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         ic = initcond.init_cond(well)
         a = ic.tfto
         b = ic.tto
@@ -44,8 +44,7 @@ class TestInitCond(TestCase):
     def test_init_cond_injection(self):
         from pwptemp.injection import input, initcond
         tdata = input.data()
-        depths = wellpath.get(100, 10)
-        well = input.set_well(tdata, depths)
+        well = input.set_well(tdata, trajectory)
         ic = initcond.init_cond(well)
         a = ic.tfto
         b = ic.tto
@@ -59,5 +58,3 @@ class TestInitCond(TestCase):
         self.assertIsInstance(d, list)
         self.assertIsInstance(e, list)
         self.assertIsInstance(f, list)
-
-
