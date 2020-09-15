@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 setup(
     name='pwptemp',
     packages=['pwptemp', 'pwptemp.drilling', 'pwptemp.production', 'pwptemp.injection'],
-    version='0.1.9',
+    version='0.2.9',
     license='LGPL v3',
     description='Well Temperature Distribution',
     long_description=long_description,
