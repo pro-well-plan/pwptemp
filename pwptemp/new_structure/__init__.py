@@ -16,7 +16,7 @@ def create_depth_cells(trajectory):
 
 def inputs_dict(casings=None):
 
-    inputs = {'temp_inlet': 25.0, 'temp_surface': 15.0, 'water_depth': 0.0,
+    inputs = {'temp_inlet': None, 'temp_surface': 15.0, 'water_depth': 500.0,
               'pipe_id': 4.0, 'pipe_od': 4.5, 'riser_id': 17.716, 'riser_od': 21.0, 'fm_diam': 80.0,
               'q': 700, 'tc_fluid': 0.635, 'tc_csg': 43.3, 'tc_cem': 0.7, 'tc_pipe': 40.0,
               'tc_fm': 2.249, 'tc_riser': 15.49, 'tc_seawater': 0.6, 'shc_fluid': 3713.0, 'shc_csg': 469.0,
@@ -86,7 +86,10 @@ def set_well(temp_dict, trajectory):
 
             # OPERATIONAL
             self.temp_surface = temp_dict["temp_surface"]  # Surface Temperature (RKB), °C
-            self.temp_inlet = temp_dict["temp_inlet"]  # Inlet Fluid temperature, °C
+            if temp_dict["temp_inlet"] is None:
+                self.temp_inlet = self.temp_surface
+            else:
+                self.temp_inlet = temp_dict["temp_inlet"]  # Inlet Fluid temperature, °C
             self.th_grad_fm = temp_dict["th_grad_fm"]  # Geothermal gradient, from °C/m to °C/cell
             self.q = temp_dict["q"] * q_conv  # Flow rate, m^3/h
             # Fluid velocity through the annular
@@ -332,7 +335,7 @@ def calc_formation_temp(well):
 def calc_temp(n, trajectory):
     time = n  # circulating time, h
     tcirc = time * 3600  # circulating time, s
-    deltat = 600
+    deltat = tcirc / 100
     tstep = int(tcirc / deltat)
     tdata = inputs_dict()
     well = set_well(tdata, trajectory)
@@ -341,12 +344,12 @@ def calc_temp(n, trajectory):
     well = add_values(well)
     temp_list = solve_pentadiagonal_system(well)
     update_temp(well, temp_list)
-    """for x in range(tstep-1):
+    for x in range(tstep-1):
         if tstep > 1:
             add_heat_coefficients(well, deltat)
             well = add_values(well)
             temp_list = solve_pentadiagonal_system(well)
-            update_temp(well, temp_list)"""
+            update_temp(well, temp_list)
     return well
 
 
@@ -354,7 +357,7 @@ def add_heat_coefficients(well, delta_time):
     for x, y in enumerate(well.sections[0]):
         y['comp_N/S'] = ((y['rho'] * y['shc'] * well.vp) / well.depth_step) / 2
         y['comp_E'] = (2 * well.h1[x] / well.r1) / 2
-        y['comp_HeatSource'] = 0    #calc_heat_source(well, well.torque[x], y['f'], y['rho'], case='pipe')
+        y['comp_HeatSource'] = calc_heat_source(well, well.torque[x], y['f'], y['rho'], case='pipe')
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
     for x, y in enumerate(well.sections[1]):
         y['comp_N/S'] = (y['tc'] / (well.depth_step ** 2)) / 2
@@ -365,7 +368,7 @@ def add_heat_coefficients(well, delta_time):
         y['comp_N/S'] = (y['rho'] * y['shc'] * well.va / well.depth_step) / 2
         y['comp_E'] = (2 * well.annular_or * well.h3[x] / ((well.annular_or ** 2) - (well.r2 ** 2))) / 2
         y['comp_W'] = (2 * well.r2 * well.h2[x] / ((well.annular_or ** 2) - (well.r2 ** 2))) / 2
-        y['comp_HeatSource'] = 0    #calc_heat_source(well, well.torque[x], y['f'], y['rho'], case='annular')
+        y['comp_HeatSource'] = calc_heat_source(well, well.torque[x], y['f'], y['rho'], case='annular')
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
     for x, y in enumerate(well.sections[3]):
         y['comp_N/S'] = (y['tc'] / (well.depth_step ** 2)) / 2
@@ -604,8 +607,8 @@ def define_system_section4(well, sections):
 def solve_pentadiagonal_system(well):
 
     import numpy as np
-    # Creating pentadiagonal matrix
-    a = np.zeros((5 * well.cells_no, 5 * well.cells_no + 8))
+    # Creating penta-diagonal matrix
+    a = np.zeros((5 * well.cells_no, 5 * well.cells_no + 10))
 
     matrix = populate_matrix(a, well)
 
@@ -625,10 +628,10 @@ def populate_matrix(matrix, well):
     for x in range(well.cells_no):
         for y in well.sections:
             matrix[row, column_base] = y[x]['N']
-            matrix[row, column_base+3] = y[x]['W']
-            matrix[row, column_base+4] = y[x]['C']
-            matrix[row, column_base+5] = y[x]['E']
-            matrix[row, column_base+8] = y[x]['S']
+            matrix[row, column_base+4] = y[x]['W']
+            matrix[row, column_base+5] = y[x]['C']
+            matrix[row, column_base+6] = y[x]['E']
+            matrix[row, column_base+10] = y[x]['S']
             row += 1
             column_base += 1
 
@@ -645,10 +648,15 @@ def populate_matrix(matrix, well):
 def crop_matrix(matrix):
     from numpy import delete
     matrix = delete(matrix, 0, axis=0)
-    matrix = delete(matrix, range(5), axis=1)
-    matrix = delete(matrix, [-1, -2, -3, -4], axis=1)
+    matrix = delete(matrix, range(6), axis=1)
+    matrix = delete(matrix, [-1, -2, -3, -4, -5], axis=1)
     matrix = delete(matrix, [-1, -2], axis=0)
     matrix = delete(matrix, [-1, -2], axis=1)
+
+    matrix[-7, -3] = matrix[-7, -2]
+    matrix[-7, -2] = 0
+    matrix[-6, -3] = matrix[-6, -1]
+    matrix[-6, -1] = 0
 
     """import pandas as pd
     df = pd.DataFrame(matrix)
