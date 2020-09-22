@@ -39,8 +39,8 @@ def add_casings(casings, inputs):
         inputs['casings'] = [[(inputs['hole_diam'] + inputs['riser_od'] * 0.0254), inputs['hole_diam'], 0]]
         inputs['casings'] = asarray(inputs['casings'])
     else:
-        csg_od = sorted([x['od'] * 0.0254 for x in casings])
-        csg_id = sorted([x['id'] * 0.0254 for x in casings])
+        csg_od = sorted([x['od'] * 0.0254 for x in casings])        # in to m
+        csg_id = sorted([x['id'] * 0.0254 for x in casings])        # in to m
         depth = sorted([x['depth'] for x in casings], reverse=True)
         inputs['casings'] = [[csg_od[x], csg_id[x], depth[x]] for x in range(len(casings))]
         inputs['casings'] = asarray(inputs['casings'])
@@ -83,6 +83,8 @@ def set_well(temp_dict, trajectory):
             self.sr_diam = self.casings[0, 0]  # Surrounding Space Inner Diameter, m
             self.sr_ir = self.sr_diam / 2  # Surrounding Space Inner Radius m
             self.sr_or = self.sr_od / 2  # Surrounding Space Outer Radius, m
+            self.sr_thickness = self.sr_or - self.sr_ir     # Surrounding thickness, m
+            self.sr_fractions = get_fractions(self)
             self.fm_rad = self.fm_diam / 2  # Undisturbed Formation Radius, m
 
             # OPERATIONAL
@@ -172,12 +174,33 @@ def create_system(well):
 
     for x, i in zip(sections, sections_names):
         for y in range(well.cells_no):
-            x[y]['material'] = get_material(i, well.md[y])
-            x[y]['rho'] = get_density(x[y]['material']) * 1000
-            x[y]['tc'] = get_thermal_conductivity(x[y]['material'])
-            x[y]['shc'] = get_heat_capacity(x[y]['material'])
+            x[y]['material'] = get_material(i, well.md[y], first_casing_depth=well.casings[0, 2])
+            if x[y]['material'] == 'mixture':
+                pipe_fraction, cement_fraction = get_fractions_at_depth(well, y)
+                x[y]['rho'] = get_mixture_density(pipe_fraction, cement_fraction) * 1000
+                x[y]['tc'] = get_mixture_thermal_conductivity(pipe_fraction, cement_fraction)
+                x[y]['shc'] = get_mixture_heat_capacity(pipe_fraction, cement_fraction)
+
+            else:
+                x[y]['rho'] = get_density(x[y]['material']) * 1000
+                x[y]['tc'] = get_thermal_conductivity(x[y]['material'])
+                x[y]['shc'] = get_heat_capacity(x[y]['material'])
 
     return sections
+
+
+def get_fractions_at_depth(well, cell):
+
+    the_index = -1
+    casing_depths = reversed([x[2] for x in well.casings])
+    for x in casing_depths:
+        if well.md[cell] > x:
+            the_index -= 1
+
+    pipe_fraction = well.sr_fractions[the_index][0]
+    cement_fraction = well.sr_fractions[the_index][1]
+
+    return pipe_fraction, cement_fraction
 
 
 def get_density(material):
@@ -192,6 +215,16 @@ def get_density(material):
     return rho[material]
 
 
+def get_mixture_density(pipe_fraction, cement_fraction):
+
+    formation_fraction = 1 - pipe_fraction - cement_fraction
+    rho = pipe_fraction * get_density('pipe') + \
+        cement_fraction * get_density('cement') + \
+        formation_fraction * get_density('formation')
+
+    return rho
+
+
 def get_thermal_conductivity(material):
 
     tc = {'formation': 2.24,
@@ -202,6 +235,15 @@ def get_thermal_conductivity(material):
           'mixture': 2.24}
 
     return tc[material]
+
+
+def get_mixture_thermal_conductivity(pipe_fraction, cement_fraction):
+    formation_fraction = 1 - pipe_fraction - cement_fraction
+    rho = pipe_fraction * get_thermal_conductivity('pipe') + \
+        cement_fraction * get_thermal_conductivity('cement') + \
+        formation_fraction * get_thermal_conductivity('formation')
+
+    return rho
 
 
 def get_heat_capacity(material):
@@ -216,13 +258,50 @@ def get_heat_capacity(material):
     return rho[material]
 
 
-def get_material(section, md, operation='drilling', casing_depth=None):
+def get_mixture_heat_capacity(pipe_fraction, cement_fraction):
+    formation_fraction = 1 - pipe_fraction - cement_fraction
+    rho = pipe_fraction * get_heat_capacity('pipe') + \
+        cement_fraction * get_heat_capacity('cement') + \
+        formation_fraction * get_heat_capacity('formation')
 
-    if casing_depth is None:
-        casing_depth = -1
+    return rho
 
-    if md <= casing_depth:
-        section_3 = 'casing'
+
+def get_fractions(well):
+
+    fractions = []
+    for x in range(len(well.casings) - 1):
+        pipe_thickness = (well.casings[x, 0] - well.casings[x, 1]) / 2
+        pipe_fraction = pipe_thickness / well.sr_thickness
+        cement_thickness = (well.casings[x+1, 1] - well.casings[x, 0]) / 2
+        cement_fraction = cement_thickness / well.sr_thickness
+        fractions.append([pipe_fraction, cement_fraction])
+
+    last_pipe_fraction = ((well.casings[-1, 0] - well.casings[-1, 1]) / 2) / well.sr_thickness
+    last_cement_fraction = ((well.sr_or - well.casings[-1, 0]) / 2) / well.sr_thickness
+
+    fractions.append([last_pipe_fraction, last_cement_fraction])
+
+    fractions[0][0] = 0
+
+    cement = 0  # cement layer fraction for the first casing (the deepest)
+    pipe = 0
+    fractions_per_section = [[pipe, cement]]
+    for x in fractions:
+        cement += x[1]
+        pipe += x[0]
+        fractions_per_section.append([pipe, cement])
+
+    return fractions_per_section
+
+
+def get_material(section, md, operation='drilling', first_casing_depth=None):
+
+    if first_casing_depth is None:
+        first_casing_depth = -1
+
+    if md <= first_casing_depth:
+        section_3 = 'pipe'
     else:
         section_3 = 'formation'
 
@@ -336,11 +415,11 @@ def calc_formation_temp(well):
     return well.sections, temp_fm
 
 
-def calc_temp(time, trajectory):
+def calc_temp(time, trajectory, casings=None):
     tcirc = time * 3600  # circulating time, s
     time_step = tcirc / 100
     tstep = int(tcirc / time_step)
-    tdata = inputs_dict()
+    tdata = inputs_dict(casings)
     well = set_well(tdata, trajectory)
     well.delta_time = time_step
     well = calc_temperature_distribution(well, time_step)
