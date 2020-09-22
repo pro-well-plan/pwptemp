@@ -1,5 +1,6 @@
 from numpy import interp, linspace, asarray
 from math import pi, log
+from copy import deepcopy
 
 
 def create_depth_cells(trajectory):
@@ -16,7 +17,7 @@ def create_depth_cells(trajectory):
 
 def inputs_dict(casings=None):
 
-    inputs = {'temp_inlet': None, 'temp_surface': 15.0, 'water_depth': 500.0,
+    inputs = {'temp_inlet': None, 'temp_surface': 15.0, 'water_depth': 0.0,
               'pipe_id': 4.0, 'pipe_od': 4.5, 'riser_id': 17.716, 'riser_od': 21.0, 'fm_diam': 80.0,
               'q': 700, 'tc_fluid': 0.635, 'tc_csg': 43.3, 'tc_cem': 0.7, 'tc_pipe': 40.0,
               'tc_fm': 2.249, 'tc_riser': 15.49, 'tc_seawater': 0.6, 'shc_fluid': 3713.0, 'shc_csg': 469.0,
@@ -24,7 +25,7 @@ def inputs_dict(casings=None):
               'shc_seawater': 4000.0, 'shc_fm': 800.0, 'rho_fluid': 1.198, 'rho_pipe': 7.8, 'rho_csg': 7.8,
               'rho_riser': 7.8, 'rho_fm': 2.245, 'rho_seawater': 1.029, 'rho_cem': 2.7,
               'th_grad_fm': 0.0238, 'th_grad_seawater': -0.005, 'hole_diam': 0.216,
-              'rpm': 100.0, 'tbit': 9, 'wob': 50, 'rop': 30.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0,
+              'rpm': 100.0, 'tbit': 0.0, 'wob': 0.0, 'rop': 30.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0,
               'thao_o': 1.82, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6,
               'k': 0.3832, 'n': 0.7}
 
@@ -160,11 +161,12 @@ def create_system(well):
 
     section_0, section_1, section_2, section_3, section_4 = [], [], [], [], []
     for x in range(well.cells_no):
-        section_0.append({'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''})
-        section_1.append({'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''})
-        section_2.append({'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''})
-        section_3.append({'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''})
-        section_4.append({'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''})
+        initial_dict = {'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''}
+        section_0.append(deepcopy(initial_dict))
+        section_1.append(deepcopy(initial_dict))
+        section_2.append(deepcopy(initial_dict))
+        section_3.append(deepcopy(initial_dict))
+        section_4.append(deepcopy(initial_dict))
     sections = [section_0, section_1, section_2, section_3, section_4]
     sections_names = ['section_0', 'section_1', 'section_2', 'section_3', 'section_4']
 
@@ -257,7 +259,7 @@ def extra_calcs(well):
         h2.append(calc_heat_transfer_coef(x['tc'], nu_ext, well.pipe_od))
         h3.append(calc_heat_transfer_coef(x['tc'], nu_ann, well.annular_or * 2))
         h3r.append(calc_heat_transfer_coef(x['tc'], nu_ann, well.riser_ir * 2))
-        print(nu_int)
+
     return sections, h1, h2, h3, h3r
 
 
@@ -292,15 +294,17 @@ def calc_friction_factor(re):
 
 def calc_nu(well, f, re, pr, section=1):
 
-    # if section == 1:
     nu = 4.36
+    if section != 1 and re < 2300:
+        nu = 1.86 * ((re * pr) ** (1 / 3)) * \
+             ((2 * (well.annular_or - well.r2) / well.md[-1]) ** (1 / 3)) \
+             * (1 ** 0.14)
+
     if 2300 < re < 10000:
         nu = (f / 8) * (re - 1000) * pr / (1 + (12.7 * (f / 8) ** 0.5) * (pr ** (2 / 3) - 1))
 
     if re >= 10000:
         nu = 0.027 * (re ** (4 / 5)) * (pr ** (1 / 3)) * (1 ** 0.14)
-    """else:
-        nu = 1.86 * ((re * pr) ** (1 / 3)) * ((2 * (well.annular_or - well.r2) / well.md[-1]) ** (1 / 3)) * (1 ** (1 / 4))"""
 
     return nu
 
@@ -332,24 +336,28 @@ def calc_formation_temp(well):
     return well.sections, temp_fm
 
 
-def calc_temp(n, trajectory):
-    time = n  # circulating time, h
+def calc_temp(time, trajectory):
     tcirc = time * 3600  # circulating time, s
-    deltat = tcirc / 100
-    tstep = int(tcirc / deltat)
+    time_step = tcirc / 100
+    tstep = int(tcirc / time_step)
     tdata = inputs_dict()
     well = set_well(tdata, trajectory)
-    well.delta_time = deltat
-    add_heat_coefficients(well, deltat)
-    well = add_values(well)
-    temp_list = solve_pentadiagonal_system(well)
-    update_temp(well, temp_list)
+    well.delta_time = time_step
+    well = calc_temperature_distribution(well, time_step)
+    
     for x in range(tstep-1):
         if tstep > 1:
-            add_heat_coefficients(well, deltat)
-            well = add_values(well)
-            temp_list = solve_pentadiagonal_system(well)
-            update_temp(well, temp_list)
+            well = calc_temperature_distribution(well, time_step)
+            
+    return well
+
+
+def calc_temperature_distribution(well, time_step):
+    add_heat_coefficients(well, time_step)
+    well = add_values(well)
+    temp_list = solve_pentadiagonal_system(well)
+    well = update_temp(well, temp_list)
+    
     return well
 
 
@@ -593,7 +601,7 @@ def define_system_section4(well, sections):
         if x == well.cells_no - 1:
             y['N'] = - y['comp_N/S']
             y['W'] = - y['comp_W']
-            y['C'] = y['comp_time'] + y['comp_E'] + y['comp_W'] + 2 * y['comp_N/S']
+            y['C'] = y['comp_time'] + y['comp_E'] + y['comp_W'] + y['comp_N/S']
             y['E'] = 0
             y['S'] = 0
             y['B'] = y['comp_time'] * y['temp'] \
