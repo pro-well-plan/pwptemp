@@ -304,15 +304,6 @@ def set_well(temp_dict, depths, visc_eq=True, units='metric'):
             """
             return depths
 
-        def plot_torque_drag(self, plot='torque'):
-            """
-            Plot torque and drag forces
-            :param plot: 'torque', 'drag' or 'both'
-            :return: a plot
-            """
-            from .plot import plot_torque_drag
-            plot_torque_drag(self, plot)
-
         def define_density(self, ic, cond=0, fric=0.24):
             """
             Calculate the density profile
