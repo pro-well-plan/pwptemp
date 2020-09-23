@@ -1,29 +1,36 @@
-from numpy import interp, linspace, asarray
+import numpy as np
 from math import pi, log
 from copy import deepcopy
+import torque_drag as td
+import plotly.graph_objects as go
 
 
 def create_depth_cells(trajectory):
-    md_new = list(linspace(0, max(trajectory.md), num=100))
+    md_new = list(np.linspace(0, max(trajectory.md), num=100))
     tvd_new, inclination, azimuth = [], [], []
     for i in md_new:
-        tvd_new.append(interp(i, trajectory.md, trajectory.tvd))
-        inclination.append(interp(i, trajectory.md, trajectory.inclination))
-        azimuth.append(interp(i, trajectory.md, trajectory.azimuth))
+        tvd_new.append(np.interp(i, trajectory.md, trajectory.tvd))
+        inclination.append(np.interp(i, trajectory.md, trajectory.inclination))
+        azimuth.append(np.interp(i, trajectory.md, trajectory.azimuth))
     depth_step = md_new[1]
 
     return md_new, tvd_new, depth_step, inclination, azimuth
 
 
 def inputs_dict(casings=None):
-
     inputs = {'temp_inlet': None, 'temp_surface': 15.0, 'water_depth': 0.0,
               'pipe_id': 4.0, 'pipe_od': 4.5, 'riser_id': 17.716, 'riser_od': 21.0, 'fm_diam': 80.0,
-              'q': 700, 'tc_fluid': 0.635, 'tc_csg': 43.3, 'tc_cem': 0.7, 'tc_pipe': 40.0,
-              'tc_fm': 2.249, 'tc_riser': 15.49, 'tc_seawater': 0.6, 'shc_fluid': 3713.0, 'shc_csg': 469.0,
-              'shc_cem': 2000.0, 'shc_pipe': 400.0, 'shc_riser': 464.0,
-              'shc_seawater': 4000.0, 'shc_fm': 800.0, 'rho_fluid': 1.198, 'rho_pipe': 7.8, 'rho_csg': 7.8,
-              'rho_riser': 7.8, 'rho_fm': 2.245, 'rho_seawater': 1.029, 'rho_cem': 2.7,
+              'q': 700,
+
+              'tc_fluid': 0.635, 'tc_csg': 43.3, 'tc_cem': 0.7, 'tc_pipe': 40.0,
+              'tc_fm': 2.249, 'tc_riser': 15.49, 'tc_seawater': 0.6,
+
+              'shc_fluid': 3713.0, 'shc_csg': 469.0, 'shc_cem': 2000.0, 'shc_pipe': 400.0,
+              'shc_riser': 464.0, 'shc_seawater': 4000.0, 'shc_fm': 800.0,
+
+              'rho_fluid': 1.198, 'rho_pipe': 7.8, 'rho_csg': 7.8, 'rho_riser': 7.8,
+              'rho_fm': 2.245, 'rho_seawater': 1.029, 'rho_cem': 2.7,
+
               'th_grad_fm': 0.0238, 'th_grad_seawater': -0.005, 'hole_diam': 0.216,
               'rpm': 100.0, 'tbit': 0.0, 'wob': 0.0, 'rop': 30.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0,
               'thao_o': 1.82, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6,
@@ -37,19 +44,18 @@ def inputs_dict(casings=None):
 def add_casings(casings, inputs):
     if casings is None:
         inputs['casings'] = [[(inputs['hole_diam'] + inputs['riser_od'] * 0.0254), inputs['hole_diam'], 0]]
-        inputs['casings'] = asarray(inputs['casings'])
+        inputs['casings'] = np.asarray(inputs['casings'])
     else:
-        csg_od = sorted([x['od'] * 0.0254 for x in casings])        # in to m
-        csg_id = sorted([x['id'] * 0.0254 for x in casings])        # in to m
+        csg_od = sorted([x['od'] * 0.0254 for x in casings])  # in to m
+        csg_id = sorted([x['id'] * 0.0254 for x in casings])  # in to m
         depth = sorted([x['depth'] for x in casings], reverse=True)
         inputs['casings'] = [[csg_od[x], csg_id[x], depth[x]] for x in range(len(casings))]
-        inputs['casings'] = asarray(inputs['casings'])
+        inputs['casings'] = np.asarray(inputs['casings'])
 
     return inputs
 
 
 def set_well(temp_dict, trajectory):
-
     q_conv = 0.06  # from lpm to m^3/h
     an_conv = 1 / 1500  # from in^2 to m^2
     diameter_conv = 0.0254
@@ -64,12 +70,12 @@ def set_well(temp_dict, trajectory):
             self.cells_no = self.zstep = len(self.md)
             self.casings = temp_dict["casings"]  # casings array
             self.pipe_id = temp_dict["pipe_id"] * diameter_conv  # Drill String Inner  Diameter, m
-            self.pipe_od = temp_dict["pipe_od"] * diameter_conv # Drill String Outer Diameter, m
+            self.pipe_od = temp_dict["pipe_od"] * diameter_conv  # Drill String Outer Diameter, m
             # OFFSHORE
             self.water_depth = temp_dict["water_depth"]  # Water Depth, m
             self.riser_cells = round(self.water_depth / self.depth_step)  # number of grid cells for the riser
-            self.riser_id = temp_dict["riser_id"] * diameter_conv   # Riser diameter Inner Diameter, m
-            self.riser_od = temp_dict["riser_od"] * diameter_conv   # Riser diameter Outer Diameter, m
+            self.riser_id = temp_dict["riser_id"] * diameter_conv  # Riser diameter Inner Diameter, m
+            self.riser_od = temp_dict["riser_od"] * diameter_conv  # Riser diameter Outer Diameter, m
             self.th_grad_seawater = temp_dict["th_grad_seawater"]  # Seawater thermal grad., °C/cell
             # RADIUS (CALCULATED)
             self.r1 = self.pipe_id / 2  # Drill String Inner  Radius, m
@@ -83,7 +89,7 @@ def set_well(temp_dict, trajectory):
             self.sr_diam = self.casings[0, 0]  # Surrounding Space Inner Diameter, m
             self.sr_ir = self.sr_diam / 2  # Surrounding Space Inner Radius m
             self.sr_or = self.sr_od / 2  # Surrounding Space Outer Radius, m
-            self.sr_thickness = self.sr_or - self.sr_ir     # Surrounding thickness, m
+            self.sr_thickness = self.sr_or - self.sr_ir  # Surrounding thickness, m
             self.sr_fractions = get_fractions(self)
             self.fm_rad = self.fm_diam / 2  # Undisturbed Formation Radius, m
 
@@ -100,7 +106,7 @@ def set_well(temp_dict, trajectory):
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the drill pipe
             self.rpm = temp_dict["rpm"]  # Revolutions per minute
             self.tbit = temp_dict["tbit"]  # Torque on the bit, kN*m
-            self.wob = temp_dict["wob"]     # Weight on bit, kN
+            self.wob = temp_dict["wob"]  # Weight on bit, kN
             self.rop = temp_dict["rop"]  # Rate of Penetration, m/h
             self.an = temp_dict["an"] * an_conv  # Area of the nozzles, m^2
             self.bit_n = temp_dict["bit_n"]  # drill bit efficiency
@@ -118,32 +124,31 @@ def set_well(temp_dict, trajectory):
             self.rho_fm = temp_dict["rho_fm"]  # Formation
             self.rho_seawater = temp_dict["rho_seawater"]  # Seawater
 
-            """# Thermal conductivity  W/(m*°C)
-            self.tc_fluid = temp_dict["tc_fluid "]  # Fluid
+            # Thermal conductivity  W/(m*°C)
+            self.tc_fluid = temp_dict["tc_fluid"]  # Fluid
             self.tc_csg = temp_dict["tc_csg"]  # Casing
             self.tc_cem = temp_dict["tc_cem"]  # Cement
             self.tc_pipe = temp_dict["tc_pipe"]  # Drill Pipe
             self.tc_fm = temp_dict["tc_fm"]  # Formation
             self.tc_riser = temp_dict["tc_riser"]  # Riser
-            self.tc_seawater = temp_dict["tc_seawater"]  # Seawater"""
+            self.tc_seawater = temp_dict["tc_seawater"]  # Seawater
 
             self.beta = temp_dict["beta"]  # isothermal bulk modulus, Pa
             self.alpha = temp_dict['alpha']  # Fluid Thermal Expansion Coefficient, 1/°C
 
-            """# Specific heat capacity, J/(kg*°C)
+            # Specific heat capacity, J/(kg*°C)
             self.shc_fluid = temp_dict["shc_fluid"]  # Fluid
             self.shc_csg = temp_dict["shc_csg"]  # Casing
             self.shc_cem = temp_dict["shc_cem"]  # Cement
             self.shc_pipe = temp_dict["shc_pipe"]  # Drill Pipe
             self.shc_riser = temp_dict["shc_riser"]  # Riser
             self.shc_seawater = temp_dict["shc_seawater"]  # Seawater
-            self.shc_fm = temp_dict["shc_fm"]  # Formation"""
+            self.shc_fm = temp_dict["shc_fm"]  # Formation
 
             self.sections = create_system(self)
 
             self.sections, self.temp_fm = calc_formation_temp(self)
 
-            import torque_drag as td
             td_obj = td.calc(self,
                              dimensions={'od_pipe': self.pipe_od, 'id_pipe': self.pipe_id, 'length_pipe': self.md[-1],
                                          'od_annular': self.annular_or * 2},
@@ -152,15 +157,15 @@ def set_well(temp_dict, trajectory):
                              fric=0.24, wob=self.wob, tbit=self.tbit, torque_calc=True)
 
             self.drag = td_obj.force['static']  # drag forces, kN
-            self.torque = td_obj.torque['static']   # torque, kN*m
+            self.torque = td_obj.torque['static']  # torque, kN*m
 
             self.sections, self.h1, self.h2, self.h3, self.h3r = extra_calcs(self)
+            self.temperatures = None
 
     return NewWell()
 
 
 def create_system(well):
-
     section_0, section_1, section_2, section_3, section_4 = [], [], [], [], []
     for x in range(well.cells_no):
         initial_dict = {'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''}
@@ -175,22 +180,26 @@ def create_system(well):
     for x, i in zip(sections, sections_names):
         for y in range(well.cells_no):
             x[y]['material'] = get_material(i, well.md[y], first_casing_depth=well.casings[0, 2])
-            if x[y]['material'] == 'mixture':
+            if x[y]['material'] in 'mixture':
                 pipe_fraction, cement_fraction = get_fractions_at_depth(well, y)
-                x[y]['rho'] = get_mixture_density(pipe_fraction, cement_fraction) * 1000
-                x[y]['tc'] = get_mixture_thermal_conductivity(pipe_fraction, cement_fraction)
-                x[y]['shc'] = get_mixture_heat_capacity(pipe_fraction, cement_fraction)
+                x[y]['rho'] = get_mixture_density(pipe_fraction, cement_fraction, well) * 1000
+                x[y]['tc'] = get_mixture_thermal_conductivity(pipe_fraction, cement_fraction, well)
+                x[y]['shc'] = get_mixture_heat_capacity(pipe_fraction, cement_fraction, well)
+
+            elif x[y]['material'] in 'seawater':
+                x[y]['rho'] = well.rho_seawater
+                x[y]['tc'] = well.tc_seawater
+                x[y]['shc'] = well.shc_seawater
 
             else:
-                x[y]['rho'] = get_density(x[y]['material']) * 1000
-                x[y]['tc'] = get_thermal_conductivity(x[y]['material'])
-                x[y]['shc'] = get_heat_capacity(x[y]['material'])
+                x[y]['rho'] = get_density(x[y]['material'], well) * 1000
+                x[y]['tc'] = get_thermal_conductivity(x[y]['material'], well)
+                x[y]['shc'] = get_heat_capacity(x[y]['material'], well)
 
     return sections
 
 
 def get_fractions_at_depth(well, cell):
-
     the_index = -1
     casing_depths = reversed([x[2] for x in well.casings])
     for x in casing_depths:
@@ -203,77 +212,75 @@ def get_fractions_at_depth(well, cell):
     return pipe_fraction, cement_fraction
 
 
-def get_density(material):
-
-    rho = {'formation': 2.24,
-           'fluid': 1.5,
-           'pipe': 7.8,
-           'seawater': 1.03,
-           'cement': 2.7,
-           'mixture': 2.24}
+def get_density(material, well):
+    rho = {'formation': well.rho_fm,
+           'fluid': well.rho_fluid,
+           'pipe': well.rho_fm,
+           'casing': well.rho_csg,
+           'riser': well.rho_riser,
+           'seawater': well.rho_seawater,
+           'cement': well.rho_cem}
 
     return rho[material]
 
 
-def get_mixture_density(pipe_fraction, cement_fraction):
-
+def get_mixture_density(pipe_fraction, cement_fraction, well):
     formation_fraction = 1 - pipe_fraction - cement_fraction
-    rho = pipe_fraction * get_density('pipe') + \
-        cement_fraction * get_density('cement') + \
-        formation_fraction * get_density('formation')
+    rho = pipe_fraction * get_density('casing', well) + \
+          cement_fraction * get_density('cement', well) + \
+          formation_fraction * get_density('formation', well)
 
     return rho
 
 
-def get_thermal_conductivity(material):
-
-    tc = {'formation': 2.24,
-          'fluid': 0.635,
-          'pipe': 43.3,
-          'seawater': 0.6,
-          'cement': 0.7,
-          'mixture': 2.24}
+def get_thermal_conductivity(material, well):
+    tc = {'formation': well.tc_fm,
+          'fluid': well.tc_fluid,
+          'pipe': well.tc_fm,
+          'casing': well.tc_csg,
+          'riser': well.tc_riser,
+          'seawater': well.tc_seawater,
+          'cement': well.tc_cem}
 
     return tc[material]
 
 
-def get_mixture_thermal_conductivity(pipe_fraction, cement_fraction):
+def get_mixture_thermal_conductivity(pipe_fraction, cement_fraction, well):
     formation_fraction = 1 - pipe_fraction - cement_fraction
-    rho = pipe_fraction * get_thermal_conductivity('pipe') + \
-        cement_fraction * get_thermal_conductivity('cement') + \
-        formation_fraction * get_thermal_conductivity('formation')
+    rho = pipe_fraction * get_thermal_conductivity('casing', well) + \
+          cement_fraction * get_thermal_conductivity('cement', well) + \
+          formation_fraction * get_thermal_conductivity('formation', well)
 
     return rho
 
 
-def get_heat_capacity(material):
+def get_heat_capacity(material, well):
+    shc = {'formation': well.shc_fm,
+           'fluid': well.shc_fluid,
+           'pipe': well.shc_fm,
+           'casing': well.shc_csg,
+           'riser': well.shc_riser,
+           'seawater': well.shc_seawater,
+           'cement': well.shc_cem}
 
-    rho = {'formation': 800,
-           'fluid': 3713,
-           'pipe': 469,
-           'seawater': 4000,
-           'cement': 2000,
-           'mixture': 800}
-
-    return rho[material]
+    return shc[material]
 
 
-def get_mixture_heat_capacity(pipe_fraction, cement_fraction):
+def get_mixture_heat_capacity(pipe_fraction, cement_fraction, well):
     formation_fraction = 1 - pipe_fraction - cement_fraction
-    rho = pipe_fraction * get_heat_capacity('pipe') + \
-        cement_fraction * get_heat_capacity('cement') + \
-        formation_fraction * get_heat_capacity('formation')
+    rho = pipe_fraction * get_heat_capacity('casing', well) + \
+          cement_fraction * get_heat_capacity('cement', well) + \
+          formation_fraction * get_heat_capacity('formation', well)
 
     return rho
 
 
 def get_fractions(well):
-
     fractions = []
     for x in range(len(well.casings) - 1):
         pipe_thickness = (well.casings[x, 0] - well.casings[x, 1]) / 2
         pipe_fraction = pipe_thickness / well.sr_thickness
-        cement_thickness = (well.casings[x+1, 1] - well.casings[x, 0]) / 2
+        cement_thickness = (well.casings[x + 1, 1] - well.casings[x, 0]) / 2
         cement_fraction = cement_thickness / well.sr_thickness
         fractions.append([pipe_fraction, cement_fraction])
 
@@ -295,22 +302,29 @@ def get_fractions(well):
     return fractions_per_section
 
 
-def get_material(section, md, operation='drilling', first_casing_depth=None):
-
+def get_material(section, md, operation='drilling', first_casing_depth=None, water_depth=0):
     if first_casing_depth is None:
         first_casing_depth = -1
 
     if md <= first_casing_depth:
-        section_3 = 'pipe'
+        if md >= water_depth:
+            section_3 = 'casing'
+        else:
+            section_3 = 'riser'
     else:
         section_3 = 'formation'
+
+    if md >= water_depth:
+        section_4 = 'formation'
+    else:
+        section_4 = 'seawater'
 
     if operation == 'drilling':
         component = {'section_0': 'fluid',
                      'section_1': 'pipe',
                      'section_2': 'fluid',
                      'section_3': section_3,
-                     'section_4': 'mixture'}
+                     'section_4': section_4}
     else:
         component = None
     return component[section]
@@ -321,18 +335,18 @@ def extra_calcs(well):
     sections = well.sections.copy()
     for x, y in zip(sections[0], sections[2]):
         # Reynolds number
-        x['re'] = calc_re(well, x['rho'], x['visc'], section=0)     # Section 0
-        y['re'] = calc_re(well, y['rho'], y['visc'], section=2)     # Section 2 - Annulus
+        x['re'] = calc_re(well, x['rho'], x['visc'], section=0)  # Section 0
+        y['re'] = calc_re(well, y['rho'], y['visc'], section=2)  # Section 2 - Annulus
         # Prandtl number
-        x['pr'] = calc_pr(x['shc'], x['tc'], x['visc'])     # Section 0
-        y['pr'] = calc_pr(y['shc'], y['tc'], y['visc'])     # Section 2 - Annulus
+        x['pr'] = calc_pr(x['shc'], x['tc'], x['visc'])  # Section 0
+        y['pr'] = calc_pr(y['shc'], y['tc'], y['visc'])  # Section 2 - Annulus
         # Friction factor
-        x['f'] = calc_friction_factor(x['re'])      # Section 0
-        y['f'] = calc_friction_factor(y['re'])      # Section 2 - Annulus
+        x['f'] = calc_friction_factor(x['re'])  # Section 0
+        y['f'] = calc_friction_factor(y['re'])  # Section 2 - Annulus
         # Nusselt number
-        nu_int = calc_nu(well, x['f'], x['re'], x['pr'], section=1)     # Section 1
-        nu_ext = calc_nu(well, y['f'], y['re'], y['pr'], section=1)     # Section 1
-        nu_ann = calc_nu(well, y['f'], y['re'], y['pr'], section=2)     # Section 2 - Annulus
+        nu_int = calc_nu(well, x['f'], x['re'], x['pr'], section=1)  # Section 1
+        nu_ext = calc_nu(well, y['f'], y['re'], y['pr'], section=1)  # Section 1
+        nu_ann = calc_nu(well, y['f'], y['re'], y['pr'], section=2)  # Section 2 - Annulus
         # Heat transfer coefficients
         h1.append(calc_heat_transfer_coef(x['tc'], nu_int, well.pipe_id))
         h2.append(calc_heat_transfer_coef(x['tc'], nu_ext, well.pipe_od))
@@ -372,7 +386,6 @@ def calc_friction_factor(re):
 
 
 def calc_nu(well, f, re, pr, section=1):
-
     nu = 4.36
     if section != 1 and re < 2300:
         nu = 1.86 * ((re * pr) ** (1 / 3)) * \
@@ -399,10 +412,10 @@ def calc_formation_temp(well):
     for j in range(1, well.cells_no):
 
         if j <= well.riser_cells:
-            th_grad = well.th_grad_seawater    # Water Thermal Gradient for the Riser section
+            th_grad = well.th_grad_seawater  # Water Thermal Gradient for the Riser section
         else:
-            th_grad = well.th_grad_fm      # Geothermal Gradient below the Riser section
-        temp_delta = temp_fm[j - 1] + th_grad*(well.tvd[j]-well.tvd[j-1])
+            th_grad = well.th_grad_fm  # Geothermal Gradient below the Riser section
+        temp_delta = temp_fm[j - 1] + th_grad * (well.tvd[j] - well.tvd[j - 1])
 
         # Generating the Temperature Profile at t=0
         temp_fm.append(temp_delta)
@@ -415,19 +428,31 @@ def calc_formation_temp(well):
     return well.sections, temp_fm
 
 
-def calc_temp(time, trajectory, casings=None):
+def calc_temp(time, trajectory, casings=None, set_inputs=None):
     tcirc = time * 3600  # circulating time, s
     time_step = tcirc / 100
     tstep = int(tcirc / time_step)
+
     tdata = inputs_dict(casings)
+
+    if set_inputs is not None:
+        for x in set_inputs:  # changing default values
+            if x in tdata:
+                tdata[x] = set_inputs[x]
+            else:
+                raise TypeError('%s is not a parameter' % x)
+
     well = set_well(tdata, trajectory)
     well.delta_time = time_step
     well = calc_temperature_distribution(well, time_step)
-    
-    for x in range(tstep-1):
+
+    for x in range(tstep - 1):
         if tstep > 1:
             well = calc_temperature_distribution(well, time_step)
-            
+
+    well = define_temperatures(well)
+    well.time = time
+
     return well
 
 
@@ -436,7 +461,7 @@ def calc_temperature_distribution(well, time_step):
     well = add_values(well)
     temp_list = solve_pentadiagonal_system(well)
     well = update_temp(well, temp_list)
-    
+
     return well
 
 
@@ -477,23 +502,23 @@ def calc_heat_source(well, torque, f, rho_fluid, case='pipe'):
     else:
         qa = (0.085 * (2 * well.k * well.md[-1] / ((well.annular_or - well.r2) * (127.094 * 10 ** 6))) *
               ((2 * (well.n + 1) * well.q) / (well.n * pi * (well.annular_or + well.r2) *
-               (well.annular_or - well.r2) ** 2)) ** well.n) * (1 + (3 / 2) * well.dp_e ** 2) ** 0.5
+                                              (well.annular_or - well.r2) ** 2)) ** well.n) * (
+                         1 + (3 / 2) * well.dp_e ** 2) ** 0.5
         heat_source_term = qa / (pi * ((well.annular_or ** 2) - (well.r2 ** 2)))
 
     return heat_source_term
 
 
 def add_values(well):
+    well = define_system_section0(well, well.sections)  # System section 0
 
-    well = define_system_section0(well, well.sections)      # System section 0
+    well = define_system_section1(well, well.sections)  # System section 1
 
-    well = define_system_section1(well, well.sections)      # System section 1
+    well = define_system_section2(well, well.sections)  # System section 2
 
-    well = define_system_section2(well, well.sections)      # System section 2
+    well = define_system_section3(well, well.sections)  # System section 3
 
-    well = define_system_section3(well, well.sections)      # System section 3
-
-    well = define_system_section4(well, well.sections)      # System section 4
+    well = define_system_section4(well, well.sections)  # System section 4
 
     for x in ['N', 'W', 'C', 'E', 'S', 'B']:
         well.sections[1][-1][x] = well.sections[3][-1][x]
@@ -520,10 +545,10 @@ def define_system_section0(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = 0
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_HeatSource'] \
-                + y['comp_E'] * (sections[1][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[0][x - 1]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[0][x - 1]['temp'])
+                     + y['comp_HeatSource'] \
+                     + y['comp_E'] * (sections[1][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[0][x - 1]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[0][x - 1]['temp'])
 
         if 1 < x <= well.cells_no - 1:
             y['N'] = - y['comp_N/S']
@@ -532,9 +557,9 @@ def define_system_section0(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = 0
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_HeatSource'] \
-                + y['comp_E'] * (sections[1][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[0][x - 1]['temp'] - y['temp'])
+                     + y['comp_HeatSource'] \
+                     + y['comp_E'] * (sections[1][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[0][x - 1]['temp'] - y['temp'])
 
     return well
 
@@ -548,10 +573,10 @@ def define_system_section1(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * (sections[2][x]['temp'] - y['temp']) \
-                + y['comp_W'] * (sections[0][x]['temp'] - y['temp']) \
-                + y['comp_W'] * sections[0][x]['temp'] \
-                + y['comp_N/S'] * (sections[1][x + 1]['temp'] - y['temp'])
+                     + y['comp_E'] * (sections[2][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * (sections[0][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * sections[0][x]['temp'] \
+                     + y['comp_N/S'] * (sections[1][x + 1]['temp'] - y['temp'])
 
         if 0 < x < well.cells_no - 1:
             y['N'] = - y['comp_N/S']
@@ -560,10 +585,10 @@ def define_system_section1(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * (sections[2][x]['temp'] - y['temp']) \
-                + y['comp_W'] * (sections[0][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[1][x-1]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[1][x+1]['temp'] - y['temp'])
+                     + y['comp_E'] * (sections[2][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * (sections[0][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[1][x - 1]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[1][x + 1]['temp'] - y['temp'])
 
         if x == well.cells_no - 1:
             y['N'] = 0
@@ -585,10 +610,10 @@ def define_system_section2(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_HeatSource'] \
-                + y['comp_E'] * (sections[3][x]['temp'] - y['temp']) \
-                + y['comp_W'] * (sections[1][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[2][x + 1]['temp'] - y['temp'])
+                     + y['comp_HeatSource'] \
+                     + y['comp_E'] * (sections[3][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * (sections[1][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[2][x + 1]['temp'] - y['temp'])
 
         if 0 < x < well.cells_no - 1:
             y['N'] = 0
@@ -597,10 +622,10 @@ def define_system_section2(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_HeatSource'] \
-                + y['comp_E'] * (sections[3][x]['temp'] - y['temp']) \
-                + y['comp_W'] * (sections[1][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[2][x+1]['temp'] - y['temp'])
+                     + y['comp_HeatSource'] \
+                     + y['comp_E'] * (sections[3][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * (sections[1][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[2][x + 1]['temp'] - y['temp'])
 
         if x == well.cells_no - 1:
             y['N'] = 0
@@ -622,9 +647,9 @@ def define_system_section3(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * (sections[4][x]['temp'] - y['temp']) \
-                + y['comp_W'] * (sections[2][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[3][x + 1]['temp'] - y['temp'])
+                     + y['comp_E'] * (sections[4][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * (sections[2][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[3][x + 1]['temp'] - y['temp'])
 
         if 0 < x < well.cells_no - 1:
             y['N'] = - y['comp_N/S']
@@ -633,10 +658,10 @@ def define_system_section3(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * (sections[4][x]['temp'] - y['temp']) \
-                + y['comp_W'] * (sections[2][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[3][x-1]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[3][x+1]['temp'] - y['temp'])
+                     + y['comp_E'] * (sections[4][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * (sections[2][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[3][x - 1]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[3][x + 1]['temp'] - y['temp'])
 
         if x == well.cells_no - 1:
             y['N'] = - y['comp_N/S']
@@ -645,9 +670,9 @@ def define_system_section3(well, sections):
             y['E'] = - y['comp_E']
             y['S'] = 0
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * (sections[4][x]['temp'] - y['temp']) \
-                + y['comp_W'] * (sections[2][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[3][x-1]['temp'] - y['temp'])
+                     + y['comp_E'] * (sections[4][x]['temp'] - y['temp']) \
+                     + y['comp_W'] * (sections[2][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[3][x - 1]['temp'] - y['temp'])
 
     return well
 
@@ -661,9 +686,9 @@ def define_system_section4(well, sections):
             y['E'] = 0
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * y['temp_fm'] \
-                + y['comp_W'] * (sections[3][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[4][x + 1]['temp'] - y['temp'])
+                     + y['comp_E'] * y['temp_fm'] \
+                     + y['comp_W'] * (sections[3][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[4][x + 1]['temp'] - y['temp'])
 
         if 0 < x < well.cells_no - 1:
             y['N'] = - y['comp_N/S']
@@ -672,10 +697,10 @@ def define_system_section4(well, sections):
             y['E'] = 0
             y['S'] = - y['comp_N/S']
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * y['temp_fm'] \
-                + y['comp_W'] * (sections[3][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[4][x-1]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[4][x+1]['temp'] - y['temp'])
+                     + y['comp_E'] * y['temp_fm'] \
+                     + y['comp_W'] * (sections[3][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[4][x - 1]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[4][x + 1]['temp'] - y['temp'])
 
         if x == well.cells_no - 1:
             y['N'] = - y['comp_N/S']
@@ -684,16 +709,14 @@ def define_system_section4(well, sections):
             y['E'] = 0
             y['S'] = 0
             y['B'] = y['comp_time'] * y['temp'] \
-                + y['comp_E'] * y['temp_fm'] \
-                + y['comp_W'] * (sections[3][x]['temp'] - y['temp']) \
-                + y['comp_N/S'] * (sections[4][x-1]['temp'] - y['temp'])
+                     + y['comp_E'] * y['temp_fm'] \
+                     + y['comp_W'] * (sections[3][x]['temp'] - y['temp']) \
+                     + y['comp_N/S'] * (sections[4][x - 1]['temp'] - y['temp'])
 
     return well
 
 
 def solve_pentadiagonal_system(well):
-
-    import numpy as np
     # Creating penta-diagonal matrix
     a = np.zeros((5 * well.cells_no, 5 * well.cells_no + 10))
 
@@ -715,10 +738,10 @@ def populate_matrix(matrix, well):
     for x in range(well.cells_no):
         for y in well.sections:
             matrix[row, column_base] = y[x]['N']
-            matrix[row, column_base+4] = y[x]['W']
-            matrix[row, column_base+5] = y[x]['C']
-            matrix[row, column_base+6] = y[x]['E']
-            matrix[row, column_base+10] = y[x]['S']
+            matrix[row, column_base + 4] = y[x]['W']
+            matrix[row, column_base + 5] = y[x]['C']
+            matrix[row, column_base + 6] = y[x]['E']
+            matrix[row, column_base + 10] = y[x]['S']
             row += 1
             column_base += 1
 
@@ -733,12 +756,11 @@ def populate_matrix(matrix, well):
 
 
 def crop_matrix(matrix):
-    from numpy import delete
-    matrix = delete(matrix, 0, axis=0)
-    matrix = delete(matrix, range(6), axis=1)
-    matrix = delete(matrix, [-1, -2, -3, -4, -5], axis=1)
-    matrix = delete(matrix, [-1, -2], axis=0)
-    matrix = delete(matrix, [-1, -2], axis=1)
+    matrix = np.delete(matrix, 0, axis=0)
+    matrix = np.delete(matrix, range(6), axis=1)
+    matrix = np.delete(matrix, [-1, -2, -3, -4, -5], axis=1)
+    matrix = np.delete(matrix, [-1, -2], axis=0)
+    matrix = np.delete(matrix, [-1, -2], axis=1)
 
     matrix[-7, -3] = matrix[-7, -2]
     matrix[-7, -2] = 0
@@ -774,3 +796,85 @@ def update_temp(well, temp_list):
             list_index += 1
 
     return well
+
+
+def define_temperatures(well):
+    new_md = list(np.linspace(0, well.md[-1], num=int(well.md[-1] / 10)))
+    temp_fm = []
+    temp_in_pipe = []
+    temp_pipe = []
+    temp_annulus = []
+    temp_casing = []
+    temp_riser = []
+    temp_sr = []
+    for x in new_md:
+        temp_fm.append(np.interp(x, well.md, well.temp_fm))
+        temp_in_pipe.append(np.interp(x, well.md, [x['temp'] for x in well.sections[0]]))
+        temp_pipe.append(np.interp(x, well.md, [x['temp'] for x in well.sections[1]]))
+        temp_annulus.append(np.interp(x, well.md, [x['temp'] for x in well.sections[2]]))
+        temp_sr.append(np.interp(x, well.md, [x['temp'] for x in well.sections[4]]))
+
+        if well.riser_cells > 0 and x < well.water_depth:
+            temp_casing.append(None)
+            temp_riser.append(np.interp(x, well.md, [x['temp'] for x in well.sections[3]]))
+        else:
+            temp_riser.append(None)
+            if x <= well.casings[0, 2]:
+                temp_casing.append(np.interp(x, well.md, [x['temp'] for x in well.sections[3]]))
+            else:
+                temp_casing.append(None)
+
+    well.temperatures = {'md': new_md,
+                         'formation': temp_fm,
+                         'in_pipe': temp_in_pipe,
+                         'pipe': temp_pipe,
+                         'annulus': temp_annulus,
+                         'casing': temp_casing,
+                         'riser': temp_riser,
+                         'sr': temp_sr}
+
+    return well
+
+
+def plot_distribution(temp_distribution, operation='drilling'):
+    pipe_name = {'drilling': 'Drill String',
+                 'production': 'Production Tubing',
+                 'injection': 'Injection Tubing'}
+
+    # Plotting Temperature PROFILE
+
+    fig = go.Figure()
+    md = temp_distribution.temperatures['md']
+    riser = temp_distribution.riser_cells
+    csg = temp_distribution.casings[0, 2]
+
+    fig.add_trace(go.Scatter(x=temp_distribution.temperatures['in_pipe'], y=md,
+                             mode='lines',
+                             name='Fluid in ' + pipe_name[operation]))
+
+    fig.add_trace(go.Scatter(x=temp_distribution.temperatures['annulus'], y=md,
+                             mode='lines',
+                             name='Fluid in Annulus'))
+
+    if riser > 0:
+        fig.add_trace(go.Scatter(x=temp_distribution.temperatures['riser'], y=md,
+                                 mode='lines',
+                                 name='Riser'))
+    if csg > 0:
+        fig.add_trace(go.Scatter(x=temp_distribution.temperatures['casing'], y=md,
+                                 mode='lines',
+                                 name='Casing'))
+    fig.add_trace(go.Scatter(x=temp_distribution.temperatures['formation'], y=md,
+                             mode='lines',
+                             name='Formation'))  # Temp. due to gradient vs Depth
+
+    fig.update_layout(
+        xaxis_title='Temperature, °C',
+        yaxis_title='Depth, m')
+
+    title = 'Temperature Profile at %1.1f hours' % temp_distribution.time + ' of ' + operation
+    fig.update_layout(title=title)
+
+    fig.update_yaxes(autorange="reversed")
+
+    return fig
