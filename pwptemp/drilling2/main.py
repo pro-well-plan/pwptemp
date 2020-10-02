@@ -20,7 +20,7 @@ def create_depth_cells(trajectory):
 def inputs_dict(casings=None):
     inputs = {'temp_inlet': None, 'temp_surface': 15.0, 'water_depth': 0.0,
               'pipe_id': 4.0, 'pipe_od': 4.5, 'riser_id': 17.716, 'riser_od': 21.0, 'fm_diam': 80.0,
-              'q': 700,
+              'q': 794.933,
 
               'tc_fluid': 0.635, 'tc_csg': 43.3, 'tc_cem': 0.7, 'tc_pipe': 40.0,
               'tc_fm': 2.249, 'tc_riser': 15.49, 'tc_seawater': 0.6,
@@ -168,7 +168,7 @@ def set_well(temp_dict, trajectory):
 def create_system(well):
     section_0, section_1, section_2, section_3, section_4 = [], [], [], [], []
     for x in range(well.cells_no):
-        initial_dict = {'component': '', 'material': '', 'rho': 2.24, 'visc': 0.02, 'tc': '', 'shc': ''}
+        initial_dict = {'component': '', 'material': '', 'rho': 2.24, 'visc': 0.009, 'tc': '', 'shc': ''}
         section_0.append(deepcopy(initial_dict))
         section_1.append(deepcopy(initial_dict))
         section_2.append(deepcopy(initial_dict))
@@ -187,7 +187,7 @@ def create_system(well):
                 x[y]['shc'] = get_mixture_heat_capacity(pipe_fraction, cement_fraction, well)
 
             elif x[y]['material'] in 'seawater':
-                x[y]['rho'] = well.rho_seawater
+                x[y]['rho'] = well.rho_seawater * 1000
                 x[y]['tc'] = well.tc_seawater
                 x[y]['shc'] = well.shc_seawater
 
@@ -430,7 +430,7 @@ def calc_formation_temp(well):
 
 def calc_temp(time, trajectory, casings=None, set_inputs=None):
     tcirc = time * 3600  # circulating time, s
-    time_step = tcirc / 100
+    time_step = tcirc / 120
     tstep = int(tcirc / time_step)
 
     tdata = inputs_dict(casings)
