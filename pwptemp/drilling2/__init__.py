@@ -1,1 +1,2 @@
-from .main import calc_temp, plot_distribution
+from .main import calc_temp
+from .plot import plot_distribution
