@@ -17,9 +17,9 @@ def create_depth_cells(trajectory):
 
 
 def set_well(temp_dict, trajectory):
-    q_conv = 0.06  # from lpm to m^3/h
+    q_conv = 60  # from m^3/min to m^3/h
     an_conv = 1 / 1500  # from in^2 to m^2
-    diameter_conv = 0.0254
+    diameter_conv = 0.0254  # from in to m
 
     class NewWell(object):
         def __init__(self):
@@ -61,7 +61,7 @@ def set_well(temp_dict, trajectory):
             else:
                 self.temp_inlet = temp_dict["temp_inlet"]  # Inlet Fluid temperature, °C
             self.th_grad_fm = temp_dict["th_grad_fm"]  # Geothermal gradient, from °C/m to °C/cell
-            self.q = temp_dict["q"] * q_conv  # Flow rate, m^3/h
+            self.q = temp_dict["flowrate"] * q_conv  # Flow rate, m^3/h
             # Fluid velocity through the annular
             self.va = (self.q / (pi * ((self.annular_or ** 2) - (self.r2 ** 2)))) / 3600
             self.vp = (self.q / (pi * (self.r1 ** 2))) / 3600  # Fluid velocity through the drill pipe

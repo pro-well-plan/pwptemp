@@ -2,23 +2,57 @@ import numpy as np
 
 
 def inputs_dict(casings=None):
-    inputs = {'temp_inlet': None, 'temp_surface': 15.0, 'water_depth': 0.0,
-              'pipe_id': 4.0, 'pipe_od': 4.5, 'riser_id': 17.716, 'riser_od': 21.0, 'fm_diam': 80.0,
-              'q': 794.933,
+    inputs = {'temp_inlet': None,           # fluid inlet temperature, °C
+              'temp_surface': 15.0,         # surface temperature, °C
+              'water_depth': 0.0,           # water depth, m
+              'pipe_id': 4.0,               # pipe inner diameter, in
+              'pipe_od': 4.5,               # pipe outer diameter, in
+              'riser_id': 17.716,           # riser inner diameter, in
+              'riser_od': 21.0,             # riser outer diameter, in
+              'fm_diam': 80.0,              # undisturbed formation diameter, m
+              'flowrate': 0.79,             # flow rate, m3/min
 
-              'tc_fluid': 0.635, 'tc_csg': 43.3, 'tc_cem': 0.7, 'tc_pipe': 40.0,
-              'tc_fm': 2.249, 'tc_riser': 15.49, 'tc_seawater': 0.6,
+              # thermal conductivities, W / (m *°C)
+              'tc_fluid': 0.635,            # fluid in pipe
+              'tc_csg': 43.3,               # casing wall
+              'tc_cem': 0.7,                # cement
+              'tc_pipe': 40.0,              # pipe wall
+              'tc_fm': 2.249,               # formation
+              'tc_riser': 15.49,            # riser wall
+              'tc_seawater': 0.6,           # seawater
 
-              'shc_fluid': 3713.0, 'shc_csg': 469.0, 'shc_cem': 2000.0, 'shc_pipe': 400.0,
-              'shc_riser': 464.0, 'shc_seawater': 4000.0, 'shc_fm': 800.0,
+              # specific heat capacities, J / (kg *°C)
+              'shc_fluid': 3713.0,          # fluid in pipe
+              'shc_csg': 469.0,             # casing wall
+              'shc_cem': 2000.0,            # cement
+              'shc_pipe': 400.0,            # pipe wall
+              'shc_riser': 464.0,           # riser wall
+              'shc_seawater': 4000.0,       # seawater
+              'shc_fm': 800.0,              # formation
 
-              'rho_fluid': 1.198, 'rho_pipe': 7.8, 'rho_csg': 7.8, 'rho_riser': 7.8,
-              'rho_fm': 2.245, 'rho_seawater': 1.029, 'rho_cem': 2.7,
+              # densities, sg
+              'rho_fluid': 1.198,           # fluid in pipe
+              'rho_pipe': 7.8,              # pipe wall
+              'rho_csg': 7.8,               # casing wall
+              'rho_riser': 7.8,             # riser wall
+              'rho_fm': 2.245,              # formation
+              'rho_seawater': 1.029,        # seawater
+              'rho_cem': 2.7,               # cement
 
-              'th_grad_fm': 0.0238, 'th_grad_seawater': -0.005, 'hole_diam': 0.216,
-              'rpm': 100.0, 'tbit': 0.0, 'wob': 0.0, 'rop': 30.4, 'an': 3100.0, 'bit_n': 1.0, 'dp_e': 0.0,
-              'thao_o': 1.82, 'beta': 44983 * 10 ** 5, 'alpha': 960 * 10 ** -6,
-              'k': 0.3832, 'n': 0.7}
+              'th_grad_fm': 0.0238,         # geothermal gradient, °C/m
+              'th_grad_seawater': -0.005,   # seawater thermal gradient, °C/m
+              'hole_diam': 0.216,           # diameter of open hole section, m
+              'rpm': 100.0,                 # revolutions per minute
+              'tbit': 0.0,                  # torque on the bit, kN*m
+              'wob': 0.0,                   # weight on bit, kN
+              'rop': 30.4,                  # rate of penetration, m/h
+              'an': 3100.0,                 # area of the nozzles, in^2
+              'bit_n': 1.0,                 # drill bit efficiency, 0 to 1
+              'dp_e': 0.0,                  # drill pipe eccentricity
+              'thao_o': 1.82,               # yield stress, Pa
+              'beta': 44983 * 10 ** 5,      # isothermal bulk modulus, Pa
+              'alpha': 960 * 10 ** -6,      # expansion coefficient, 1/°C
+              'k': 0.3832, 'n': 0.7}        # consistency index, Pa*s^n
 
     dict_with_casings = add_casings(casings, inputs)
 
