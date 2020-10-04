@@ -38,7 +38,7 @@ def define_temperatures(well):
     takes place, the temperatures will be available as lists.
     :return: a dictionary with lists of temperature values and also a list with respective depth points.
     """
-    new_md = list(np.linspace(0, well.md[-1], num=int(well.md[-1] / 50)))
+    new_md = list(np.linspace(0, well.md[-1], num=int(well.md[-1]/8)))
     temp_fm = []
     temp_in_pipe = []
     temp_pipe = []

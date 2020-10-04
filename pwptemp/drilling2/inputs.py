@@ -52,7 +52,10 @@ def inputs_dict(casings=None):
               'thao_o': 1.82,               # yield stress, Pa
               'beta': 44983 * 10 ** 5,      # isothermal bulk modulus, Pa
               'alpha': 960 * 10 ** -6,      # expansion coefficient, 1/°C
-              'k': 0.3832, 'n': 0.7}        # consistency index, Pa*s^n
+              'k': 0.3832,                  # consistency index, Pa*s^n
+              'n': 0.7,                     # flow behavior index, dimensionless
+              'visc': 0.009                 # fluid viscosity
+              }
 
     dict_with_casings = add_casings(casings, inputs)
 

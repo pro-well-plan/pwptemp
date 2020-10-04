@@ -75,6 +75,7 @@ def set_well(temp_dict, trajectory):
             self.thao_o = temp_dict["thao_o"]
             self.k = temp_dict["k"]
             self.n = temp_dict["n"]
+            self.visc = temp_dict['visc']
 
             # DENSITIES
             self.rho_fluid = temp_dict["rho_fluid"]  # Fluid
@@ -129,7 +130,8 @@ def set_well(temp_dict, trajectory):
 def create_system(well):
     section_0, section_1, section_2, section_3, section_4 = [], [], [], [], []
     for x in range(well.cells_no):
-        initial_dict = {'component': '', 'material': '', 'rho': 2.24, 'visc': 0.009, 'tc': '', 'shc': ''}
+        initial_dict = {'component': '', 'material': '', 'rho': 2.24, 'tc': '', 'shc': '',
+                        'depth': well.md[x]}
         section_0.append(deepcopy(initial_dict))
         section_1.append(deepcopy(initial_dict))
         section_2.append(deepcopy(initial_dict))
@@ -140,22 +142,21 @@ def create_system(well):
 
     for x, i in zip(sections, sections_names):
         for y in range(well.cells_no):
-            x[y]['material'] = get_material(i, well.md[y], first_casing_depth=well.casings[0, 2])
-            if x[y]['material'] in 'mixture':
+            x[y]['material'] = get_material(i, well.md[y],
+                                            first_casing_depth=well.casings[0, 2],
+                                            water_depth=well.water_depth)
+            if x[y]['material'] == 'mixture':
                 pipe_fraction, cement_fraction = get_fractions_at_depth(well, y)
                 x[y]['rho'] = get_mixture_density(pipe_fraction, cement_fraction, well) * 1000
                 x[y]['tc'] = get_mixture_thermal_conductivity(pipe_fraction, cement_fraction, well)
                 x[y]['shc'] = get_mixture_heat_capacity(pipe_fraction, cement_fraction, well)
 
-            elif x[y]['material'] in 'seawater':
-                x[y]['rho'] = well.rho_seawater * 1000
-                x[y]['tc'] = well.tc_seawater
-                x[y]['shc'] = well.shc_seawater
-
             else:
                 x[y]['rho'] = get_density(x[y]['material'], well) * 1000
                 x[y]['tc'] = get_thermal_conductivity(x[y]['material'], well)
                 x[y]['shc'] = get_heat_capacity(x[y]['material'], well)
+                if x[y]['material'] == 'fluid':
+                    x[y]['visc'] = get_viscosity(well)
 
     return sections
 
@@ -192,6 +193,12 @@ def get_mixture_density(pipe_fraction, cement_fraction, well):
         formation_fraction * get_density('formation', well)
 
     return rho
+
+
+def get_viscosity(well):
+    rho = {'fluid': well.visc}
+
+    return rho['fluid']
 
 
 def get_thermal_conductivity(material, well):
@@ -276,7 +283,9 @@ def get_material(section, md, operation='drilling', first_casing_depth=None, wat
         section_3 = 'formation'
 
     if md >= water_depth:
-        section_4 = 'formation'
+        section_4 = 'mixture'
+        if first_casing_depth != -1:
+            section_4 = 'mixture'
     else:
         section_4 = 'seawater'
 
