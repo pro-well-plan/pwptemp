@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.3.0a] - 2020-09-23
+### Added
+- Testing new structure as drilling2
+
+## [v0.2.9] - 2020-09-15
+### Changed
+- Managing annular fluid properties separately
+- Using plotly from now, instead of matplotlib
+- Wellpath module is deprecated
+### Added
+- Input to set the sliding fraction coefficient between DP-wellbore (T&D model)
+- Viscosity variation due to changes in temperature 
+### Fixed
+- Get wellpath from well object
+
+## [v0.1.9] - 2020-05-26
+### Added
+- More formulas for calculating Nusselt number
+- Full integration of Johancsik - Torque & Drag model
+- Logging calculations at every time step 
+### Fixed
+- Loop for torque & drag calculation
+- Heat source terms
+
 ## [v0.1.8] - 2020-05-03
 ### Added
 - English system of units for modules drilling, production and injection
