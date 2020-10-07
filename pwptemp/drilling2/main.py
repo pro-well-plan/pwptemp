@@ -22,15 +22,15 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None):
     well.delta_time = time_step
     well = calc_temperature_distribution(well, time_step)
     well = define_temperatures(well)
-    time = time_step
-    log_temp_values(well, time)
+    time_n = time_step
+    log_temp_values(well, time_n)
     for x in range(time_steps_no - 1):
 
         if time_steps_no > 1:
-            time += time_step
+            time_n += time_step
             well = calc_temperature_distribution(well, time_step)
             well = define_temperatures(well)
-            log_temp_values(well, time)
+            log_temp_values(well, time_n)
 
     well.time = time
 
@@ -94,3 +94,19 @@ def log_temp_values(well, time=0, initial=False):
              'riser': well.temperatures['riser'],
              'sr': well.temperatures['sr']}
         )
+
+
+def temperature_behavior(well):
+    time = [x['time'] for x in well.temp_log]
+    temp_bottom = [x['in_pipe'][-1] for x in well.temp_log]
+    temp_output = [x['annulus'][0] for x in well.temp_log]
+    temp_max = [max(x['annulus']) for x in well.temp_log]
+
+    class TempBehavior(object):
+        def __init__(self):
+            self.time = time
+            self.bottom = temp_bottom
+            self.output = temp_output
+            self.max = temp_max
+
+    return TempBehavior()
