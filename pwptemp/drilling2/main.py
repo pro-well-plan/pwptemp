@@ -1,7 +1,7 @@
 from .inputs import inputs_dict
 from .well_system import set_well
 from .linearsystem import calc_temperature_distribution
-
+from .plot import plot_behavior
 
 def calc_temp(time, trajectory, casings=None, set_inputs=None):
     tcirc = time * 3600     # circulating time, s
@@ -99,14 +99,21 @@ def log_temp_values(well, time=0, initial=False):
 def temperature_behavior(well):
     time = [x['time'] for x in well.temp_log]
     temp_bottom = [x['in_pipe'][-1] for x in well.temp_log]
-    temp_output = [x['annulus'][0] for x in well.temp_log]
+    temp_outlet = [x['annulus'][0] for x in well.temp_log]
     temp_max = [max(x['annulus']) for x in well.temp_log]
+    temp_fm = [well.temp_fm[-1]] * len(time)
 
     class TempBehavior(object):
         def __init__(self):
             self.time = time
             self.bottom = temp_bottom
-            self.output = temp_output
+            self.outlet = temp_outlet
             self.max = temp_max
+            self.formation_td = temp_fm
+
+        def plot(self, title=True):
+            fig = plot_behavior(self, title)
+
+            return fig
 
     return TempBehavior()

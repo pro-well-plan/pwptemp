@@ -43,3 +43,18 @@ def plot_distribution(temp_distribution, operation='drilling'):
     fig.update_yaxes(autorange="reversed")
 
     return fig
+
+
+def plot_behavior(temp_behavior, title=True):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=temp_behavior.time, y=temp_behavior.bottom, mode='lines', name='Bottom'))
+    fig.add_trace(go.Scatter(x=temp_behavior.time, y=temp_behavior.outlet, mode='lines', name='Outlet - annulus'))
+    fig.add_trace(go.Scatter(x=temp_behavior.time, y=temp_behavior.max, mode='lines', name='Max. temp'))
+    fig.add_trace(go.Scatter(x=temp_behavior.time, y=temp_behavior.formation_td, mode='lines', name='Formation at TD'))
+    fig.update_layout(
+        xaxis_title='time, h',
+        yaxis_title='Temperature, °C')
+    if title:
+        fig.update_layout(title=str(temp_behavior.time[-1]) + ' hours of operation')
+
+    return fig
