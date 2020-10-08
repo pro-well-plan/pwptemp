@@ -1,47 +1,47 @@
 from math import pi, log
 
 
-def add_heat_coefficients(well, delta_time):
-    for x, y in enumerate(well.sections[0]):
+def add_heat_coefficients(well, delta_time, bit_position):
+    for x, y in enumerate(well.sections[0][:bit_position+1]):
         y['comp_N/S'] = ((y['rho'] * y['shc'] * well.vp) / well.depth_step) / 2
         y['comp_E'] = (2 * well.h1[x] / well.r1) / 2
         y['comp_HeatSource'] = calc_heat_source(well, well.torque[x], y['f'], y['rho'], case='pipe',
                                                 operation=well.op)
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
-    for x, y in enumerate(well.sections[1]):
+    for x, y in enumerate(well.sections[1][:bit_position+1]):
         y['comp_N/S'] = (y['tc'] / (well.depth_step ** 2)) / 2
         y['comp_E'] = (2 * well.r2 * well.h2[x] / ((well.r2 ** 2) - (well.r1 ** 2))) / 2
         y['comp_W'] = (2 * well.r1 * well.h1[x] / ((well.r2 ** 2) - (well.r1 ** 2))) / 2
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
-    for x, y in enumerate(well.sections[2]):
+    for x, y in enumerate(well.sections[2][:bit_position+1]):
         y['comp_N/S'] = (y['rho'] * y['shc'] * well.va / well.depth_step) / 2
         y['comp_E'] = (2 * well.annular_or * well.h3[x] / ((well.annular_or ** 2) - (well.r2 ** 2))) / 2
         y['comp_W'] = (2 * well.r2 * well.h2[x] / ((well.annular_or ** 2) - (well.r2 ** 2))) / 2
         y['comp_HeatSource'] = calc_heat_source(well, well.torque[x], y['f'], y['rho'], case='annular',
                                                 operation=well.op)
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
-    for x, y in enumerate(well.sections[3]):
+    for x, y in enumerate(well.sections[3][:bit_position+1]):
         y['comp_N/S'] = (y['tc'] / (well.depth_step ** 2)) / 2
         y['comp_E'] = (2 * y['tc'] / ((well.sr_ir ** 2) - (well.annular_or ** 2))) / 2
         y['comp_W'] = (2 * well.annular_or * well.h3[x] / ((well.sr_ir ** 2) - (well.annular_or ** 2))) / 2
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
-    for x, y in enumerate(well.sections[4]):
+    for x, y in enumerate(well.sections[4][:bit_position+1]):
         y['comp_N/S'] = (y['tc'] / (well.depth_step ** 2)) / 2
         y['comp_E'] = (y['tc'] / (well.sr_or * (well.sr_or - well.sr_ir) * log(well.sr_or / well.sr_ir))) / 2
         y['comp_W'] = (y['tc'] / (well.sr_or * (well.sr_or - well.sr_ir) * log(well.fm_rad / well.sr_or))) / 2
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
 
-    if well.op == 'drilling':
+    """if well.op == 'drilling':
         # heat coefficients at drill bit
         joule = 4.1868  # Joule's constant  [Nm/cal]
-        bit_cell = well.sections[0][-1]
+        bit_cell = well.sections[0][bit_position]
         q_bit = (1 / joule) * (1 - well.bit_n) * (well.wob * (well.rop / 3600) + 2 * pi * (well.rpm / 60) * well.tbit) \
             + 0.7 * (well.q / 3600) * (bit_cell['rho'] / (2 * 9.81)) * ((well.q / 3600) / (0.95 * well.an)) ** 2
         v_bit = well.q / well.an
         bit_cell['comp_N/S'] = ((bit_cell['rho'] * bit_cell['shc'] * v_bit) / well.depth_step) / 2
-        bit_cell['comp_E'] = (2 * well.h1[-1] / well.annular_or) / 2  # East component
+        bit_cell['comp_E'] = (2 * well.h1[bit_position] / well.annular_or) / 2  # East component
         bit_cell['comp_HeatSource'] = q_bit / well.an  # Heat source term
-        bit_cell['comp_time'] = bit_cell['rho'] * bit_cell['shc'] / delta_time  # Time component
+        bit_cell['comp_time'] = bit_cell['rho'] * bit_cell['shc'] / delta_time  # Time component"""
 
 
 def calc_heat_source(well, torque, f, rho_fluid, case='pipe', operation='drilling'):

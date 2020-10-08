@@ -1,7 +1,7 @@
 from .inputs import inputs_dict
 from .well_system import set_well
 from .linearsystem import calc_temperature_distribution
-from .plot import plot_behavior
+from .plot import plot_behavior, plot_distribution
 
 
 def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilling'):
@@ -14,8 +14,9 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilli
     :param operation: define operation type. ('drilling', 'circulating')
     :return: a well temperature distribution object
     """
+
     tcirc = time * 3600     # circulating time, s
-    time_steps_no = 120     # dividing time in 120 steps
+    time_steps_no = 1200     # dividing time in 120 steps
     time_step = tcirc / time_steps_no       # seconds per time step
 
     tdata = inputs_dict(casings)
@@ -27,37 +28,48 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilli
             else:
                 raise TypeError('%s is not a parameter' % x)
 
+    md_initial = 1000
+    md_final = trajectory.md[-1]
+    rop = (md_final - md_initial) / tcirc       # m/s
+
     well = set_well(tdata, trajectory)
     log_temp_values(well, initial=True)     # log initial temperature distribution
     well.delta_time = time_step
-    well.op = operation
-    well = calc_temperature_distribution(well, time_step)
-    well = define_temperatures(well)
     time_n = time_step
+    bit_position = int((rop * time_n + md_initial) / well.depth_step)  # drill bit position, cell
+    print(bit_position)
+    well.op = operation
+    well = calc_temperature_distribution(well, time_step, bit_position)
+    well = define_temperatures(well, bit_position)
     log_temp_values(well, time_n)
     for x in range(time_steps_no - 1):
 
         if time_steps_no > 1:
             time_n += time_step
-            well = calc_temperature_distribution(well, time_step)
-            well = define_temperatures(well)
+            bit_position = int((rop * time_n + md_initial) / well.depth_step)  # drill bit position, cell
+            well = calc_temperature_distribution(well, time_step, bit_position)
+            well = define_temperatures(well, bit_position)
             log_temp_values(well, time_n)
+            well.time = time_n
+            #if x in [30, 50, 80, 100]:
+                #plot_distribution(well).show()
 
     well.time = time
+    print(bit_position)
 
     return well
 
 
-def define_temperatures(well):
+def define_temperatures(well, bit_position):
     """
     Make the temperature values more reachable since they are is a dictionary along the entire well. Once this function
     takes place, the temperatures will be available as lists.
     :return: a dictionary with lists of temperature values and also a list with respective depth points.
     """
 
-    temp_in_pipe = [x['temp'] for x in well.sections[0]]
-    temp_pipe = [x['temp'] for x in well.sections[1]]
-    temp_annulus = [x['temp'] for x in well.sections[2]]
+    temp_in_pipe = [x['temp'] for x in well.sections[0][:bit_position+1]] + [None] * (well.cells_no - (bit_position + 1))
+    temp_pipe = [x['temp'] for x in well.sections[1][:bit_position+1]] + [None] * (well.cells_no - (bit_position + 1))
+    temp_annulus = [x['temp'] for x in well.sections[2][:bit_position+1]] + [None] * (well.cells_no - (bit_position + 1))
     temp_casing = []
     temp_riser = []
     temp_sr = [x['temp'] for x in well.sections[4]]
