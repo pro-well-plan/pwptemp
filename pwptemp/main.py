@@ -4,13 +4,14 @@ from .linearsystem import calc_temperature_distribution
 from .plot import plot_behavior
 
 
-def calc_temp(time, trajectory, casings=None, set_inputs=None):
+def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilling'):
     """
-    Function to calculate the well temperature distribution during drilling at a certain circulation time n.
-    :param time: drilling time, hours
+    Function to calculate the well temperature distribution during a specific operation at a certain time.
+    :param time: operational time, hours
     :param trajectory: wellbore trajectory object
     :param casings: list of dictionaries with casings characteristics (od, id and depth)
     :param set_inputs: dictionary with parameters to set.
+    :param operation: define operation type. ('drilling', 'circulating')
     :return: a well temperature distribution object
     """
     tcirc = time * 3600     # circulating time, s
@@ -29,6 +30,7 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None):
     well = set_well(tdata, trajectory)
     log_temp_values(well, initial=True)     # log initial temperature distribution
     well.delta_time = time_step
+    well.op = operation
     well = calc_temperature_distribution(well, time_step)
     well = define_temperatures(well)
     time_n = time_step

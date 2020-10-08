@@ -101,8 +101,10 @@ def behavior(behavior_obj, operation='drilling'):
     return fig
 
 
-def plot_distribution(temp_distribution, operation='drilling'):
+def plot_distribution(temp_distribution):
+    operation = temp_distribution.op
     pipe_name = {'drilling': 'Drill String',
+                 'circulating': 'Pipe',
                  'production': 'Production Tubing',
                  'injection': 'Injection Tubing'}
 
