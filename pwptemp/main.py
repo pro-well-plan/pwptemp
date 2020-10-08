@@ -3,7 +3,16 @@ from .well_system import set_well
 from .linearsystem import calc_temperature_distribution
 from .plot import plot_behavior
 
+
 def calc_temp(time, trajectory, casings=None, set_inputs=None):
+    """
+    Function to calculate the well temperature distribution during drilling at a certain circulation time n.
+    :param time: drilling time, hours
+    :param trajectory: wellbore trajectory object
+    :param casings: list of dictionaries with casings characteristics (od, id and depth)
+    :param set_inputs: dictionary with parameters to set.
+    :return: a well temperature distribution object
+    """
     tcirc = time * 3600     # circulating time, s
     time_steps_no = 120     # dividing time in 120 steps
     time_step = tcirc / time_steps_no       # seconds per time step
