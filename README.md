@@ -1,5 +1,9 @@
 ![](https://user-images.githubusercontent.com/52009346/69100304-2eb3e800-0a5d-11ea-9a3a-8e502af2120b.png)
 
+[![PyPI version](https://badge.fury.io/py/pwptemp.svg)](https://badge.fury.io/py/pwptemp)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Webapp](https://img.shields.io/badge/WebApp-under_construction-yellow.svg)](https://pwp-opensource.herokuapp.com/)
+
 ## Contributors
 
 * **Juan Camilo Gonzalez Angarita** - [jcamiloangarita](https://github.com/jcamiloangarita)
