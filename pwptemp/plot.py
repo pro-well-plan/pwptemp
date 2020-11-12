@@ -101,7 +101,21 @@ def behavior(behavior_obj, operation='drilling'):
     return fig
 
 
-def plot_distribution(temp_distribution):
+def plot_distribution(temp_distribution, time=None):
+    """
+    Plot the well temperature distribution.
+
+    Arguments:
+        temp_distribution (obj): well object with temperature data
+        time (int or float): set respective time in hours
+
+    Returns:
+        plotly figure
+    """
+
+    if time is None:
+        time = temp_distribution.time
+
     operation = temp_distribution.op
     pipe_name = {'drilling': 'Drill String',
                  'circulating': 'Pipe',
@@ -139,7 +153,7 @@ def plot_distribution(temp_distribution):
         xaxis_title='Temperature, °C',
         yaxis_title='Depth, m')
 
-    title = 'Temperature Profile at %1.1f hours' % temp_distribution.time + ' of ' + operation
+    title = 'Temperature Profile at %1.1f hours' % time + ' of ' + operation
     fig.update_layout(title=title)
 
     fig.update_yaxes(autorange="reversed")

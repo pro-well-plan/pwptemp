@@ -21,5 +21,5 @@ setup(
                  'Topic :: Software Development',
                  'Topic :: Software Development :: Libraries',
                  'Topic :: Utilities'],
-    install_requires=['numpy', 'plotly', 'torque_drag']
+    install_requires=['numpy', 'plotly', 'torque_drag', 'scipy']
 )

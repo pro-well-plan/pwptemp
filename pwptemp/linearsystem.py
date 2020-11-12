@@ -2,8 +2,8 @@ import numpy as np
 from .heat_coefficients import add_heat_coefficients
 
 
-def define_system_section0(well, sections):
-    for x, y in enumerate(sections[0]):
+def define_system_section0(well, sections, bit_position):
+    for x, y in enumerate(sections[0][:bit_position+1]):
         if x == 0:
             y['N'] = 0
             y['W'] = 0
@@ -25,7 +25,7 @@ def define_system_section0(well, sections):
                 + y['comp_N/S'] * (sections[0][x - 1]['temp'] - y['temp']) \
                 + y['comp_N/S'] * (sections[0][x - 1]['temp'])
 
-        if 1 < x <= well.cells_no - 1:
+        if 1 < x <= bit_position:
             y['N'] = - y['comp_N/S']
             y['W'] = 0
             y['C'] = y['comp_time'] + y['comp_E'] + y['comp_N/S']
@@ -39,8 +39,8 @@ def define_system_section0(well, sections):
     return well
 
 
-def define_system_section1(well, sections):
-    for x, y in enumerate(sections[1]):
+def define_system_section1(well, sections, bit_position):
+    for x, y in enumerate(sections[1][:bit_position+1]):
         if x == 0:
             y['N'] = 0
             y['W'] = 0
@@ -53,7 +53,7 @@ def define_system_section1(well, sections):
                 + y['comp_W'] * sections[0][x]['temp'] \
                 + y['comp_N/S'] * (sections[1][x + 1]['temp'] - y['temp'])
 
-        if 0 < x < well.cells_no - 1:
+        if 0 < x < bit_position:
             y['N'] = - y['comp_N/S']
             y['W'] = - y['comp_W']
             y['C'] = y['comp_time'] + y['comp_E'] + y['comp_W'] + 2 * y['comp_N/S']
@@ -65,7 +65,7 @@ def define_system_section1(well, sections):
                 + y['comp_N/S'] * (sections[1][x - 1]['temp'] - y['temp']) \
                 + y['comp_N/S'] * (sections[1][x + 1]['temp'] - y['temp'])
 
-        if x == well.cells_no - 1:
+        if x == bit_position:
             y['N'] = 0
             y['W'] = 0
             y['C'] = 0
@@ -76,8 +76,8 @@ def define_system_section1(well, sections):
     return well
 
 
-def define_system_section2(well, sections):
-    for x, y in enumerate(sections[2]):
+def define_system_section2(well, sections, bit_position):
+    for x, y in enumerate(sections[2][:bit_position+1]):
         if x < well.cells_no - 1:
             y['N'] = 0
             y['W'] = - y['comp_W']
@@ -90,7 +90,7 @@ def define_system_section2(well, sections):
                 + y['comp_W'] * (sections[1][x]['temp'] - y['temp']) \
                 + y['comp_N/S'] * (sections[2][x + 1]['temp'] - y['temp'])
 
-        if x == well.cells_no - 1:
+        if x == bit_position:
             y['N'] = 0
             y['W'] = 0
             y['C'] = 0
@@ -101,8 +101,8 @@ def define_system_section2(well, sections):
     return well
 
 
-def define_system_section3(well, sections):
-    for x, y in enumerate(sections[3]):
+def define_system_section3(well, sections, bit_position):
+    for x, y in enumerate(sections[3][:bit_position+1]):
         if x == 0:
             y['N'] = 0
             y['W'] = - y['comp_W']
@@ -114,7 +114,7 @@ def define_system_section3(well, sections):
                 + y['comp_W'] * (sections[2][x]['temp'] - y['temp']) \
                 + y['comp_N/S'] * (sections[3][x + 1]['temp'] - y['temp'])
 
-        if 0 < x < well.cells_no - 1:
+        if 0 < x < bit_position:
             y['N'] = - y['comp_N/S']
             y['W'] = - y['comp_W']
             y['C'] = y['comp_time'] + y['comp_E'] + y['comp_W'] + 2 * y['comp_N/S']
@@ -126,7 +126,7 @@ def define_system_section3(well, sections):
                 + y['comp_N/S'] * (sections[3][x - 1]['temp'] - y['temp']) \
                 + y['comp_N/S'] * (sections[3][x + 1]['temp'] - y['temp'])
 
-        if x == well.cells_no - 1:
+        if x == bit_position:
             y['N'] = - y['comp_N/S']
             y['W'] = - y['comp_W']
             y['C'] = y['comp_time'] + y['comp_E'] + y['comp_W'] + y['comp_N/S']
@@ -140,8 +140,8 @@ def define_system_section3(well, sections):
     return well
 
 
-def define_system_section4(well, sections):
-    for x, y in enumerate(sections[4]):
+def define_system_section4(well, sections, bit_position):
+    for x, y in enumerate(sections[4][:bit_position+1]):
         if x == 0:
             y['N'] = 0
             y['W'] = - y['comp_W']
@@ -153,7 +153,7 @@ def define_system_section4(well, sections):
                 + y['comp_W'] * (sections[3][x]['temp'] - y['temp']) \
                 + y['comp_N/S'] * (sections[4][x + 1]['temp'] - y['temp'])
 
-        if 0 < x < well.cells_no - 1:
+        if 0 < x < bit_position:
             y['N'] = - y['comp_N/S']
             y['W'] = - y['comp_W']
             y['C'] = y['comp_time'] + y['comp_E'] + y['comp_W'] + 2 * y['comp_N/S']
@@ -165,7 +165,7 @@ def define_system_section4(well, sections):
                 + y['comp_N/S'] * (sections[4][x - 1]['temp'] - y['temp']) \
                 + y['comp_N/S'] * (sections[4][x + 1]['temp'] - y['temp'])
 
-        if x == well.cells_no - 1:
+        if x == bit_position:
             y['N'] = - y['comp_N/S']
             y['W'] = - y['comp_W']
             y['C'] = y['comp_time'] + y['comp_E'] + y['comp_W'] + y['comp_N/S']
@@ -179,26 +179,27 @@ def define_system_section4(well, sections):
     return well
 
 
-def solve_pentadiagonal_system(well):
+def solve_pentadiagonal_system(well, bit_position):
     # Creating penta-diagonal matrix
-    a = np.zeros((5 * well.cells_no, 5 * well.cells_no + 10))
+    number_of_cells = bit_position + 1
+    a = np.zeros((5 * number_of_cells, 5 * number_of_cells + 10))
 
-    matrix = populate_matrix(a, well)
+    matrix = populate_matrix(a, well, bit_position)
 
     matrix = crop_matrix(matrix)
 
-    constant_values = define_b_list(well)
+    constant_values = define_b_list(well, bit_position)
 
     temp_list = np.linalg.solve(matrix, constant_values)
 
     return temp_list
 
 
-def populate_matrix(matrix, well):
+def populate_matrix(matrix, well, bit_position):
     row = 0
     column_base = 0
 
-    for x in range(well.cells_no):
+    for x in range(bit_position + 1):
         for y in well.sections:
             matrix[row, column_base] = y[x]['N']
             matrix[row, column_base + 4] = y[x]['W']
@@ -238,10 +239,10 @@ def crop_matrix(matrix):
     return matrix
 
 
-def define_b_list(well):
+def define_b_list(well, bit_position):
     b_list = []
 
-    for x in range(well.cells_no):
+    for x in range(bit_position + 1):
         for y in well.sections:
             b_list.append(y[x]['B'])
 
@@ -250,38 +251,38 @@ def define_b_list(well):
     return b_list
 
 
-def calc_temperature_distribution(well, time_step):
-    add_heat_coefficients(well, time_step)
-    well = add_values(well)
-    temp_list = solve_pentadiagonal_system(well)
-    well = update_temp(well, temp_list)
+def calc_temperature_distribution(well, time_step, bit_position):
+    add_heat_coefficients(well, time_step, bit_position)
+    well = add_values(well, bit_position)
+    temp_list = solve_pentadiagonal_system(well, bit_position)
+    well = update_temp(well, temp_list, bit_position)
 
     return well
 
 
-def add_values(well):
-    well = define_system_section0(well, well.sections)  # System section 0
+def add_values(well, bit_position):
+    well = define_system_section0(well, well.sections, bit_position)  # System section 0
 
-    well = define_system_section1(well, well.sections)  # System section 1
+    well = define_system_section1(well, well.sections, bit_position)  # System section 1
 
-    well = define_system_section2(well, well.sections)  # System section 2
+    well = define_system_section2(well, well.sections, bit_position)  # System section 2
 
-    well = define_system_section3(well, well.sections)  # System section 3
+    well = define_system_section3(well, well.sections, bit_position)  # System section 3
 
-    well = define_system_section4(well, well.sections)  # System section 4
+    well = define_system_section4(well, well.sections, bit_position)  # System section 4
 
     for x in ['N', 'W', 'C', 'E', 'S', 'B']:
-        well.sections[1][-1][x] = well.sections[3][-1][x]
-        well.sections[2][-1][x] = well.sections[4][-1][x]
+        well.sections[1][bit_position][x] = well.sections[3][bit_position][x]
+        well.sections[2][bit_position][x] = well.sections[4][bit_position][x]
 
     return well
 
 
-def update_temp(well, temp_list):
+def update_temp(well, temp_list, bit_position):
     rebuilt = [well.temp_inlet] + list(temp_list[:-3]) + [temp_list[-3]] * 3 + list(temp_list[-2:])
 
     list_index = 0
-    for x in range(well.cells_no):
+    for x in range(bit_position + 1):
         for y in well.sections:
             y[x]['temp'] = rebuilt[list_index]
             list_index += 1
