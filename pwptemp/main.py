@@ -1,7 +1,9 @@
 from .inputs import inputs_dict
 from .well_system import set_well
 from .linearsystem import calc_temperature_distribution
-from .plot import plot_behavior, plot_distribution
+from .plot import plot_behavior  # , plot_distribution
+from scipy.interpolate import make_interp_spline
+import numpy as np
 
 
 def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilling'):
@@ -16,7 +18,7 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilli
     """
 
     tcirc = time * 3600     # circulating time, s
-    time_steps_no = 1200     # dividing time in 120 steps
+    time_steps_no = 120     # dividing time in 120 steps
     time_step = tcirc / time_steps_no       # seconds per time step
 
     tdata = inputs_dict(casings)
@@ -37,7 +39,6 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilli
     well.delta_time = time_step
     time_n = time_step
     bit_position = int((rop * time_n + md_initial) / well.depth_step)  # drill bit position, cell
-    print(bit_position)
     well.op = operation
     well = calc_temperature_distribution(well, time_step, bit_position)
     well = define_temperatures(well, bit_position)
@@ -51,11 +52,12 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilli
             well = define_temperatures(well, bit_position)
             log_temp_values(well, time_n)
             well.time = time_n
-            #if x in [30, 50, 80, 100]:
-                #plot_distribution(well).show()
+            # Uncomment the following code to check some snapshots of the distribution during drilling
+            # if x in [30, 50, 80, 100]:
+            #    plot_distribution(well, time_n/3600).show()
 
     well.time = time
-    print(bit_position)
+    smooth_results(well, time)
 
     return well
 
@@ -67,9 +69,12 @@ def define_temperatures(well, bit_position):
     :return: a dictionary with lists of temperature values and also a list with respective depth points.
     """
 
-    temp_in_pipe = [x['temp'] for x in well.sections[0][:bit_position+1]] + [None] * (well.cells_no - (bit_position + 1))
-    temp_pipe = [x['temp'] for x in well.sections[1][:bit_position+1]] + [None] * (well.cells_no - (bit_position + 1))
-    temp_annulus = [x['temp'] for x in well.sections[2][:bit_position+1]] + [None] * (well.cells_no - (bit_position + 1))
+    temp_in_pipe = [x['temp'] for x in well.sections[0][:bit_position+1]] + \
+                   [None] * (well.cells_no - (bit_position + 1))
+    temp_pipe = [x['temp'] for x in well.sections[1][:bit_position+1]] + \
+                [None] * (well.cells_no - (bit_position + 1))
+    temp_annulus = [x['temp'] for x in well.sections[2][:bit_position+1]] + \
+                   [None] * (well.cells_no - (bit_position + 1))
     temp_casing = []
     temp_riser = []
     temp_sr = [x['temp'] for x in well.sections[4]]
@@ -140,3 +145,27 @@ def temperature_behavior(well):
             return fig
 
     return TempBehavior()
+
+
+def smooth_results(well, time):
+    cells = len(well.md) - well.temperatures['in_pipe'].count(None)
+    ref = int(0.9 * cells - time)
+    t_bottom = np.mean(well.temperatures['annulus'][ref:])
+
+    xnew = well.md[ref:]
+
+    # Smooth annulus
+    interp_ann = make_interp_spline([well.md[ref - 1], well.md[ref], well.md[-1]],
+                                    [well.temperatures['annulus'][ref - 1], well.temperatures['annulus'][ref],
+                                     t_bottom],
+                                    k=2)
+    temp_annulus = interp_ann(xnew)
+
+    # Smooth in_pipe
+    interp_in_pipe = make_interp_spline([well.md[ref - 1], well.md[ref], well.md[-1]],
+                                        well.temperatures['in_pipe'][ref - 1:ref + 1] + [t_bottom],
+                                        k=2)
+    temp_in_pipe = interp_in_pipe(xnew)
+
+    well.temperatures['in_pipe'] = well.temperatures['in_pipe'][:ref] + list(temp_in_pipe)
+    well.temperatures['annulus'] = well.temperatures['annulus'][:ref] + list(temp_annulus)
