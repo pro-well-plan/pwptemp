@@ -139,8 +139,8 @@ def set_well(temp_dict, depths, units='metric'):
             # DEPTH
             self.md = depths.md
             self.tvd = depths.tvd
-            self.deltaz = depths.deltaz
-            self.zstep = depths.zstep
+            self.deltaz = self.md[-1] - self.md[-2]
+            self.zstep = depths.cells_no
             self.sections = depths.sections
             self.north = depths.north
             self.east = depths.east

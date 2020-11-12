@@ -102,6 +102,16 @@ def behavior(behavior_obj, operation='drilling'):
 
 
 def plot_distribution(temp_distribution, time=None):
+    """
+    Plot the well temperature distribution.
+
+    Arguments:
+        temp_distribution (obj): well object with temperature data
+        time (int or float): set respective time in hours
+
+    Returns:
+        plotly figure
+    """
 
     if time is None:
         time = temp_distribution.time

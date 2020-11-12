@@ -31,7 +31,7 @@ def add_heat_coefficients(well, delta_time, bit_position):
         y['comp_W'] = (y['tc'] / (well.sr_or * (well.sr_or - well.sr_ir) * log(well.fm_rad / well.sr_or))) / 2
         y['comp_time'] = y['rho'] * y['shc'] / delta_time
 
-    """if well.op == 'drilling':
+    if well.op == 'drilling':
         # heat coefficients at drill bit
         joule = 4.1868  # Joule's constant  [Nm/cal]
         bit_cell = well.sections[0][bit_position]
@@ -41,7 +41,7 @@ def add_heat_coefficients(well, delta_time, bit_position):
         bit_cell['comp_N/S'] = ((bit_cell['rho'] * bit_cell['shc'] * v_bit) / well.depth_step) / 2
         bit_cell['comp_E'] = (2 * well.h1[bit_position] / well.annular_or) / 2  # East component
         bit_cell['comp_HeatSource'] = q_bit / well.an  # Heat source term
-        bit_cell['comp_time'] = bit_cell['rho'] * bit_cell['shc'] / delta_time  # Time component"""
+        bit_cell['comp_time'] = bit_cell['rho'] * bit_cell['shc'] / delta_time  # Time component
 
 
 def calc_heat_source(well, torque, f, rho_fluid, case='pipe', operation='drilling'):

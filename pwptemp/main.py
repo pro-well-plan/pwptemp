@@ -9,12 +9,16 @@ import numpy as np
 def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilling'):
     """
     Function to calculate the well temperature distribution during a specific operation at a certain time.
-    :param time: operational time, hours
-    :param trajectory: wellbore trajectory object
-    :param casings: list of dictionaries with casings characteristics (od, id and depth)
-    :param set_inputs: dictionary with parameters to set.
-    :param operation: define operation type. ('drilling', 'circulating')
-    :return: a well temperature distribution object
+
+    Arguments:
+        time (int or float): operational time, hours
+        trajectory (obj): wellbore trajectory object
+        casings: list of dictionaries with casings characteristics (od, id and depth)
+        set_inputs: dictionary with parameters to set.
+        operation: define operation type. ('drilling', 'circulating')
+
+    Returns:
+        Well temperature distribution object
     """
 
     tcirc = time * 3600     # circulating time, s
@@ -102,7 +106,7 @@ def define_temperatures(well, bit_position):
     return well
 
 
-def log_temp_values(well, time=0, initial=False):
+def log_temp_values(well, time=0.0, initial=False):
     time = round(time/3600, 2)
     if initial:
         well.temp_log = [{'time': time,
@@ -152,20 +156,20 @@ def smooth_results(well, time):
     ref = int(0.9 * cells - time)
     t_bottom = np.mean(well.temperatures['annulus'][ref:])
 
-    xnew = well.md[ref:]
+    x_new = well.md[ref:]
 
     # Smooth annulus
     interp_ann = make_interp_spline([well.md[ref - 1], well.md[ref], well.md[-1]],
                                     [well.temperatures['annulus'][ref - 1], well.temperatures['annulus'][ref],
                                      t_bottom],
                                     k=2)
-    temp_annulus = interp_ann(xnew)
+    temp_annulus = interp_ann(x_new)
 
     # Smooth in_pipe
     interp_in_pipe = make_interp_spline([well.md[ref - 1], well.md[ref], well.md[-1]],
                                         well.temperatures['in_pipe'][ref - 1:ref + 1] + [t_bottom],
                                         k=2)
-    temp_in_pipe = interp_in_pipe(xnew)
+    temp_in_pipe = interp_in_pipe(x_new)
 
     well.temperatures['in_pipe'] = well.temperatures['in_pipe'][:ref] + list(temp_in_pipe)
     well.temperatures['annulus'] = well.temperatures['annulus'][:ref] + list(temp_annulus)
