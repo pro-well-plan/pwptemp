@@ -68,7 +68,8 @@ def set_well(temp_dict, trajectory):
             self.rpm = temp_dict["rpm"]  # Revolutions per minute
             self.tbit = temp_dict["tbit"]  # Torque on the bit, kN*m
             self.wob = temp_dict["wob"]  # Weight on bit, kN
-            self.rop = temp_dict["rop"]  # Rate of Penetration, m/h
+            self.rop_list = temp_dict["rop"]
+            self.rop = temp_dict["rop"][0]  # Rate of Penetration, m/h
             self.an = temp_dict["an"] * an_conv  # Area of the nozzles, m^2
             self.bit_n = temp_dict["bit_n"]  # drill bit efficiency
             self.dp_e = temp_dict["dp_e"]  # drill pipe eccentricity

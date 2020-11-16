@@ -17,7 +17,8 @@ class TestSetWell(TestCase):
         for x, value in tdata.items():
             if value is None:
                 value = 0
-            self.assertEqual(value - value, 0)
+            if value is float:
+                self.assertEqual(value - value, 0)
 
         # without casings
         tdata = inputs.inputs_dict()
@@ -27,7 +28,8 @@ class TestSetWell(TestCase):
         for x, value in tdata.items():
             if value is None:
                 value = 0
-            self.assertEqual(value - value, 0)
+            if value is float:
+                self.assertEqual(value - value, 0)
 
     def test_set_well_production(self):
         from pwptemp.production import input

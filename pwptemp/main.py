@@ -6,12 +6,11 @@ from scipy.interpolate import make_interp_spline
 import numpy as np
 
 
-def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilling'):
+def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
     """
     Function to calculate the well temperature distribution during a specific operation at a certain time.
 
     Arguments:
-        time (int or float): operational time, hours
         trajectory (obj): wellbore trajectory object
         casings: list of dictionaries with casings characteristics (od, id and depth)
         set_inputs: dictionary with parameters to set.
@@ -20,10 +19,6 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilli
     Returns:
         Well temperature distribution object
     """
-
-    tcirc = time * 3600     # circulating time, s
-    time_steps_no = 120     # dividing time in 120 steps
-    time_step = tcirc / time_steps_no       # seconds per time step
 
     tdata = inputs_dict(casings)
 
@@ -34,34 +29,85 @@ def calc_temp(time, trajectory, casings=None, set_inputs=None, operation='drilli
             else:
                 raise TypeError('%s is not a parameter' % x)
 
-    md_initial = 1000
+    md_initial = tdata['water_depth']
     md_final = trajectory.md[-1]
-    rop = (md_final - md_initial) / tcirc       # m/s
 
     well = set_well(tdata, trajectory)
+
+    prev_point = md_initial
+    time = []
+    cummulative_time = []
+    depths = sorted([x[2] for x in well.casings])
+    for x in range(len(depths)):
+        distance = depths[x] - prev_point
+        time_section = distance/well.rop_list[x]
+        time.append(time_section)
+        cummulative_time.append(sum(time))
+        prev_point = depths[x]
+    time.append((md_final-prev_point)/well.rop_list[-1])
+    cummulative_time.append(sum(time))
+    depths = list(depths) + [md_final]
+    if depths[0] == 0:
+        depths = depths[1:]
+        time = time[1:]
+        cummulative_time = cummulative_time[1:]
+
+    tcirc = sum(time) * 3600  # circulating time, s
+    time_steps_no = 200  # dividing time in 120 steps
+    time_step = tcirc / time_steps_no  # seconds per time step
+
+    rop_steps = []
+    for x in cummulative_time:
+        rop_steps.append(round(x * 3600 / time_step))
+
     log_temp_values(well, initial=True)     # log initial temperature distribution
     well.delta_time = time_step
     time_n = time_step
-    bit_position = int((rop * time_n + md_initial) / well.depth_step)  # drill bit position, cell
     well.op = operation
-    well = calc_temperature_distribution(well, time_step, bit_position)
-    well = define_temperatures(well, bit_position)
-    log_temp_values(well, time_n)
-    for x in range(time_steps_no - 1):
+
+    d = depths[0]
+    rop = well.rop_list[0]
+    t = time[0] * 3600
+    for x in range(time_steps_no):
+
+        for y in range(len(time)):
+            if time_n < sum(time[:y+1])*3600:
+                d = depths[y]
+                if len(well.rop_list) > 1:
+                    rop = well.rop_list[y]/3600
+                t = sum(time[:y+1])*3600
+                break
+        bit_depth = d - rop * (t - time_n)
+        bit_position = round(bit_depth / well.depth_step)
 
         if time_steps_no > 1:
-            time_n += time_step
-            bit_position = int((rop * time_n + md_initial) / well.depth_step)  # drill bit position, cell
-            well = calc_temperature_distribution(well, time_step, bit_position)
-            well = define_temperatures(well, bit_position)
-            log_temp_values(well, time_n)
+
+            if bit_position > 0:
+                well = calc_temperature_distribution(well, time_step, bit_position)
+                well = define_temperatures(well, bit_position)
+                log_temp_values(well, time_n)
             well.time = time_n
             # Uncomment the following code to check some snapshots of the distribution during drilling
-            # if x in [30, 50, 80, 100]:
-            #    plot_distribution(well, time_n/3600).show()
+            if x in rop_steps:
+                well.temperatures['in_pipe'] = well.temp_fm
+                well.temperatures['pipe'] = well.temp_fm
+                well.temperatures['annulus'] = well.temp_fm
+                well.temperatures['casing'] = well.temp_fm
+                well.temperatures['riser'] = well.temp_fm
+                well.temperatures['sr'] = well.temp_fm
+                for i in well.sections:
+                    for j in range(well.cells_no):
+                        i[j]['temp'] = well.temp_fm[j]
+                        i[j]['temp_fm'] = well.temp_fm[j]
 
-    well.time = time
-    smooth_results(well, time)
+            # Uncomment the following two lines to check behavior while drilling
+            # if x in [1,10,50,100,150,200]:
+                # plot_distribution(well, time_n/3600).show()
+
+        time_n += time_step
+
+    well.time = tcirc / 3600
+    smooth_results(well)
 
     return well
 
@@ -151,9 +197,14 @@ def temperature_behavior(well):
     return TempBehavior()
 
 
-def smooth_results(well, time):
+def smooth_results(well):
+    import scipy.signal
+
+    well.temperatures['in_pipe'] = list(scipy.signal.savgol_filter(well.temperatures['in_pipe'], 15, 3))
+    well.temperatures['annulus'] = list(scipy.signal.savgol_filter(well.temperatures['annulus'], 15, 2))
+
     cells = len(well.md) - well.temperatures['in_pipe'].count(None)
-    ref = int(0.9 * cells - time)
+    ref = int(0.9 * cells - well.time*0.2)
     t_bottom = np.mean(well.temperatures['annulus'][ref:])
 
     x_new = well.md[ref:]
@@ -166,8 +217,8 @@ def smooth_results(well, time):
     temp_annulus = interp_ann(x_new)
 
     # Smooth in_pipe
-    interp_in_pipe = make_interp_spline([well.md[ref - 1], well.md[ref], well.md[-1]],
-                                        well.temperatures['in_pipe'][ref - 1:ref + 1] + [t_bottom],
+    interp_in_pipe = make_interp_spline(well.md[:ref-2] + [well.md[-1]],
+                                        well.temperatures['in_pipe'][:ref-2] + [t_bottom],
                                         k=2)
     temp_in_pipe = interp_in_pipe(x_new)
 

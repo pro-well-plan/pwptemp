@@ -44,8 +44,8 @@ def inputs_dict(casings=None):
               'hole_diam': 0.216,           # diameter of open hole section, m
               'rpm': 100.0,                 # revolutions per minute
               'tbit': 5.0,                  # torque on the bit, kN*m
-              'wob': 90.0,                   # weight on bit, kN
-              'rop': 30.4,                  # rate of penetration, m/h
+              'wob': 90.0,                  # weight on bit, kN
+              'rop': [30.4],                # rate of penetration, m/h
               'an': 3100.0,                 # area of the nozzles, in^2
               'bit_n': 1.0,                 # drill bit efficiency, 0 to 1
               'dp_e': 0.0,                  # drill pipe eccentricity

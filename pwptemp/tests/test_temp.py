@@ -9,7 +9,7 @@ trajectory = wp.load('trajectory1.xlsx')
 
 class TestHC(TestCase):
     def test_temp_drilling(self):
-        t = pt.calc_temp(1, trajectory)
+        t = pt.calc_temp(trajectory)
         tdsi = t.temperatures['in_pipe']
         tds = t.temperatures['pipe']
         ta = t.temperatures['annulus']

@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/pwptemp.svg)](https://badge.fury.io/py/pwptemp)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
-[![Webapp](https://img.shields.io/badge/WebApp-under_construction-yellow.svg)](https://pwp-opensource.herokuapp.com/)
+[![Webapp](https://img.shields.io/badge/WebApp-On-green.svg)](https://share.streamlit.io/jcamiloangarita/opensource_apps/app.py)
 
 ## Contributors
 
@@ -19,6 +19,10 @@ temperature distribution along the well. Features are added as they
 are needed; suggestions and contributions of all kinds are very welcome.
 
 To catch up on the latest development and features, see the [changelog](CHANGELOG.md).
+
+## Documentation
+
+See here for the [complete pwptemp package documentation](https://pwptemp.readthedocs.io/en/latest/).
 
 ## Getting Started
 
