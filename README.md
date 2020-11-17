@@ -4,6 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/pwptemp.svg)](https://badge.fury.io/py/pwptemp)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 [![Webapp](https://img.shields.io/badge/WebApp-On-green.svg)](https://share.streamlit.io/jcamiloangarita/opensource_apps/app.py)
+[![Documentation Status](https://readthedocs.org/projects/pwptemp/badge/?version=latest)](http://pwptemp.readthedocs.io/?badge=latest)
 
 ## Contributors
 
