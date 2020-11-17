@@ -59,10 +59,6 @@ The table below shows the available inputs that can be set when using the parame
 +------------------+------------------+
 | flowrate         | m3/min           |
 +------------------+------------------+
-| water_depth      | column 2         |
-+------------------+------------------+
-| water_depth      | column 2         |
-+------------------+------------------+
 | Thermal Conductivities              |
 +------------------+------------------+
 | tc_fluid         |  W / (m °C)      |
