@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('.'))
 
 
 # -- Project information -----------------------------------------------------
@@ -22,7 +22,7 @@ copyright = '2020, Pro Well Plan AS'
 author = 'Pro Well Plan AS'
 
 # The full version, including alpha/beta/rc tags
-release = '0.3.0b2'
+release = '0.3.0'
 
 
 # -- General configuration ---------------------------------------------------

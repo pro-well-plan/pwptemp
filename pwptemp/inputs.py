@@ -9,7 +9,7 @@ def inputs_dict(casings=None):
               'pipe_od': 4.5,               # pipe outer diameter, in
               'riser_id': 17.716,           # riser inner diameter, in
               'riser_od': 21.0,             # riser outer diameter, in
-              'fm_diam': 80.0,              # undisturbed formation diameter, m
+              'fm_diam': 80.0,              # undisturbed formation diameter, in
               'flowrate': 0.79,             # flow rate, m3/min
 
               # thermal conductivities, W / (m *°C)

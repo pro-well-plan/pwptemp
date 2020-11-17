@@ -52,7 +52,7 @@ def set_well(temp_dict, trajectory):
             self.sr_or = self.sr_od / 2  # Surrounding Space Outer Radius, m
             self.sr_thickness = self.sr_or - self.sr_ir  # Surrounding thickness, m
             self.sr_fractions = get_fractions(self)
-            self.fm_rad = self.fm_diam / 2  # Undisturbed Formation Radius, m
+            self.fm_rad = self.fm_diam * diameter_conv / 2  # Undisturbed Formation Radius, m
 
             # OPERATIONAL
             self.temp_surface = temp_dict["temp_surface"]  # Surface Temperature (RKB), °C
@@ -124,6 +124,9 @@ def set_well(temp_dict, trajectory):
 
             self.sections, self.h1, self.h2, self.h3, self.h3r = extra_calcs(self)
             self.temperatures = None
+
+            if len(self.casings) != len(self.rop_list) - 1:
+                raise ValueError('ROP must be set for all the sections.')
 
     return NewWell()
 
