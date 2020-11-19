@@ -1,9 +1,10 @@
 from .inputs import inputs_dict
 from .well_system import set_well
 from .linearsystem import calc_temperature_distribution
-from .plot import plot_behavior  # , plot_distribution
+from .plot import plot_behavior, plot_distribution
 from scipy.interpolate import make_interp_spline
 import numpy as np
+import scipy.signal
 
 
 def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
@@ -85,9 +86,10 @@ def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
             if bit_position > 0:
                 well = calc_temperature_distribution(well, time_step, bit_position)
                 well = define_temperatures(well, bit_position)
+
                 log_temp_values(well, time_n)
-            well.time = time_n
-            # Uncomment the following code to check some snapshots of the distribution during drilling
+            well.time = time_n / 3600
+
             if x in rop_steps:
                 well.temperatures['in_pipe'] = well.temp_fm
                 well.temperatures['pipe'] = well.temp_fm
@@ -100,13 +102,8 @@ def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
                         i[j]['temp'] = well.temp_fm[j]
                         i[j]['temp_fm'] = well.temp_fm[j]
 
-            # Uncomment the following two lines to check behavior while drilling
-            # if x in [1,10,50,100,150,200]:
-                # plot_distribution(well, time_n/3600).show()
-
         time_n += time_step
 
-    well.time = tcirc / 3600
     smooth_results(well)
 
     return well
@@ -175,11 +172,25 @@ def log_temp_values(well, time=0.0, initial=False):
 
 
 def temperature_behavior(well):
-    time = [x['time'] for x in well.temp_log]
-    temp_bottom = [x['in_pipe'][-1] for x in well.temp_log]
-    temp_outlet = [x['annulus'][0] for x in well.temp_log]
-    temp_max = [max(x['annulus']) for x in well.temp_log]
-    temp_fm = [well.temp_fm[-1]] * len(time)
+
+    time = []
+    temp_bottom = []
+    temp_outlet = []
+    temp_max = []
+    temp_fm = []
+
+    for x in well.temp_log[1:]:
+        cells = len(well.md) - x['annulus'].count(None)
+        time.append(x['time'])
+        temp_bottom.append(x['in_pipe'][cells-1])
+        temp_outlet.append(x['annulus'][0])
+        temp_max.append(max(x['annulus'][:cells-1]))
+        temp_fm.append(well.temp_fm[cells-1])
+
+    temp_bottom = list(scipy.signal.savgol_filter(temp_bottom, 59, 3))
+    temp_max = list(scipy.signal.savgol_filter(temp_max, 59, 3))
+    temp_outlet = list(scipy.signal.savgol_filter(temp_outlet, 59, 3))
+    temp_fm = list(scipy.signal.savgol_filter(temp_fm, 59, 3))
 
     class TempBehavior(object):
         def __init__(self):
@@ -198,12 +209,11 @@ def temperature_behavior(well):
 
 
 def smooth_results(well):
-    import scipy.signal
 
     well.temperatures['in_pipe'] = list(scipy.signal.savgol_filter(well.temperatures['in_pipe'], 15, 3))
     well.temperatures['annulus'] = list(scipy.signal.savgol_filter(well.temperatures['annulus'], 15, 2))
 
-    cells = len(well.md) - well.temperatures['in_pipe'].count(None)
+    cells = len(well.md) - np.count_nonzero(np.isnan(well.temperatures['annulus']))
     ref = int(0.9 * cells - well.time*0.2)
     t_bottom = np.mean(well.temperatures['annulus'][ref:])
 

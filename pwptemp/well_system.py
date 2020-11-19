@@ -125,7 +125,7 @@ def set_well(temp_dict, trajectory):
             self.sections, self.h1, self.h2, self.h3, self.h3r = extra_calcs(self)
             self.temperatures = None
 
-            if len(self.casings) != len(self.rop_list) - 1:
+            if len(self.casings) != len(self.rop_list) - 1 and self.casings[0, 2] != 0:
                 raise ValueError('ROP must be set for all the sections.')
 
     return NewWell()
