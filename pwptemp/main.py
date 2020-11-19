@@ -172,6 +172,15 @@ def log_temp_values(well, time=0.0, initial=False):
 
 
 def temperature_behavior(well):
+    """
+    Function to simulate the temperature behavior.
+
+    Arguments:
+        well (obj): well temperature distribution object
+
+    Returns:
+        temperature behavior object
+    """
 
     time = []
     temp_bottom = []
