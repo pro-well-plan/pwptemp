@@ -3,6 +3,8 @@ Well Temperature Distribution while Drilling
 
 .. autofunction:: pwptemp.calc_temp
 
+.. autofunction:: pwptemp.temperature_behavior
+
 Example
 -------
 
@@ -27,7 +29,12 @@ Example
 
 |temp_drill|
 
+|temp_behavior|
+
 .. |temp_drill| image:: /figures/temp_drill.png
+                    :scale: 85%
+
+.. |temp_behavior| image:: /figures/temp_behavior.png
                     :scale: 85%
 
 .. admonition:: Notice!
@@ -59,7 +66,7 @@ The table below shows the available inputs that can be set when using the parame
 +------------------+------------------+
 | flowrate         | m3/min           |
 +------------------+------------------+
-| Thermal Conductivities              |
+| Thermal Conductivities------------- |
 +------------------+------------------+
 | tc_fluid         |  W / (m °C)      |
 +------------------+------------------+
@@ -75,7 +82,7 @@ The table below shows the available inputs that can be set when using the parame
 +------------------+------------------+
 | tc_seawater      | W / (m °C)       |
 +------------------+------------------+
-| Specific Heat Capacities            |
+| Specific Heat Capacities----------- |
 +------------------+------------------+
 | shc_fluid        | J / (kg °C)      |
 +------------------+------------------+
@@ -91,7 +98,7 @@ The table below shows the available inputs that can be set when using the parame
 +------------------+------------------+
 | shc_fm           | J / (kg °C)      |
 +------------------+------------------+
-| Densities                           |
+| Densities-------------------------- |
 +------------------+------------------+
 | rho_fluid        | sg               |
 +------------------+------------------+
@@ -107,7 +114,7 @@ The table below shows the available inputs that can be set when using the parame
 +------------------+------------------+
 | rho_cem          | sg               |
 +------------------+------------------+
-| Others                              |
+| Others----------------------------- |
 +------------------+------------------+
 | th_grad_fm       | °C/m             |
 +------------------+------------------+

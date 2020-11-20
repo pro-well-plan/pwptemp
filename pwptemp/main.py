@@ -1,7 +1,7 @@
 from .inputs import inputs_dict
 from .well_system import set_well
 from .linearsystem import calc_temperature_distribution
-from .plot import plot_behavior, plot_distribution
+from .plot import plot_behavior
 from scipy.interpolate import make_interp_spline
 import numpy as np
 import scipy.signal

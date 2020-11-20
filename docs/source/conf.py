@@ -22,7 +22,7 @@ copyright = '2020, Pro Well Plan AS'
 author = 'Pro Well Plan AS'
 
 # The full version, including alpha/beta/rc tags
-release = '0.3.0'
+release = '0.3.1'
 
 
 # -- General configuration ---------------------------------------------------
