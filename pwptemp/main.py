@@ -7,7 +7,7 @@ import numpy as np
 import scipy.signal
 
 
-def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
+def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling', time_steps=210, smooth=True):
     """
     Function to calculate the well temperature distribution during a specific operation at a certain time.
 
@@ -16,6 +16,8 @@ def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
         casings: list of dictionaries with casings characteristics (od, id and depth)
         set_inputs: dictionary with parameters to set.
         operation: define operation type. ('drilling', 'circulating')
+        time_steps: number of time steps to run calculations.
+        smooth: smooth the temperature profiles.
 
     Returns:
         Well temperature distribution object
@@ -53,8 +55,11 @@ def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
         time = time[1:]
         cummulative_time = cummulative_time[1:]
 
-    tcirc = sum(time) * 3600  # circulating time, s
-    time_steps_no = 200  # dividing time in 120 steps
+    if operation == 'drilling':
+        tcirc = sum(time) * 3600  # drilling time, s
+    else:
+        tcirc = tdata['time'] * 3600    # circulating time, s
+    time_steps_no = time_steps  # dividing time in 120 steps
     time_step = tcirc / time_steps_no  # seconds per time step
 
     rop_steps = []
@@ -69,23 +74,28 @@ def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
     d = depths[0]
     rop = well.rop_list[0]
     t = time[0] * 3600
+    td = well.cells_no-1
+
     for x in range(time_steps_no):
 
-        for y in range(len(time)):
-            if time_n < sum(time[:y+1])*3600:
-                d = depths[y]
-                if len(well.rop_list) > 1:
-                    rop = well.rop_list[y]/3600
-                t = sum(time[:y+1])*3600
-                break
-        bit_depth = d - rop * (t - time_n)
-        bit_position = round(bit_depth / well.depth_step)
+        if well.op == 'drilling':
+            for y in range(len(time)):
+                if time_n < sum(time[:y+1])*3600:
+                    d = depths[y]
+                    if len(well.rop_list) > 1:
+                        rop = well.rop_list[y]/3600
+                    t = sum(time[:y+1])*3600
+                    break
+
+            bit_depth = d - rop * (t - time_n)
+            bit_position = round(bit_depth / well.depth_step)
+            td = bit_position
 
         if time_steps_no > 1:
 
-            if bit_position > 0:
-                well = calc_temperature_distribution(well, time_step, bit_position)
-                well = define_temperatures(well, bit_position)
+            if td > 0:
+                well = calc_temperature_distribution(well, time_step, td)
+                well = define_temperatures(well, td)
 
                 log_temp_values(well, time_n)
             well.time = time_n / 3600
@@ -104,7 +114,8 @@ def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling'):
 
         time_n += time_step
 
-    smooth_results(well)
+    if smooth:
+        smooth_results(well)
 
     return well
 

@@ -11,6 +11,7 @@ def inputs_dict(casings=None):
               'riser_od': 21.0,             # riser outer diameter, in
               'fm_diam': 80.0,              # undisturbed formation diameter, in
               'flowrate': 0.79,             # flow rate, m3/min
+              'time': 10,                   # operation time if circulating, h
 
               # thermal conductivities, W / (m *°C)
               'tc_fluid': 0.635,            # fluid in pipe
