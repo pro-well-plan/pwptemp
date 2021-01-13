@@ -7,7 +7,7 @@ trajectory = wp.load('trajectory1.xlsx')
 class TestHC(TestCase):
     def test_heat_coef_drilling(self):
         from pwptemp import well_system, inputs, heat_coefficients
-        well = well_system.set_well(inputs.inputs_dict(), trajectory)
+        well = well_system.set_well(inputs.inputs_dict(), trajectory, 'drilling')
         well.op = 'drilling'
         bit_pos = 1
         heat_coefficients.add_heat_coefficients(well, 600, bit_pos)
