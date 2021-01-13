@@ -16,7 +16,7 @@ def create_depth_cells(trajectory):
     return md_new, tvd_new, depth_step, inclination, azimuth
 
 
-def set_well(temp_dict, trajectory):
+def set_well(temp_dict, trajectory, operation):
     q_conv = 60  # from m^3/min to m^3/h
     an_conv = 1 / 1500  # from in^2 to m^2
     diameter_conv = 0.0254  # from in to m
@@ -125,8 +125,9 @@ def set_well(temp_dict, trajectory):
             self.sections, self.h1, self.h2, self.h3, self.h3r = extra_calcs(self)
             self.temperatures = None
 
-            if len(self.casings) != len(self.rop_list) - 1 and self.casings[0, 2] != 0:
-                raise ValueError('ROP must be set for all the sections.')
+            if operation == 'drilling':
+                if len(self.casings) != len(self.rop_list) - 1 and self.casings[0, 2] != 0:
+                    raise ValueError('ROP must be set for all the sections.')
 
     return NewWell()
 

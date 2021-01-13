@@ -35,7 +35,7 @@ def calc_temp(trajectory, casings=None, set_inputs=None, operation='drilling', t
     md_initial = tdata['water_depth']
     md_final = trajectory.md[-1]
 
-    well = set_well(tdata, trajectory)
+    well = set_well(tdata, trajectory, operation)
 
     prev_point = md_initial
     time = []
