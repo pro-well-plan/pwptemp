@@ -4,9 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [v0.3.0a] - 2020-09-23
+## [v0.3.3] - 2021-01-13
+### Fixed
+- raise ROP error only for drilling op
+
+## [v0.3.2] - 2021-01-12
 ### Added
+- Input to set the nuber of time steps for the calculations.
+
+## [v0.3.1] - 2020-11-19
+### Added
+- Filter patch for temperature behavior results
+
+## [v0.3.0] - 2020-11-17
+### Added
+- Circulating operation
+- Temperature_behavior calcs and plot on new structure
 - Testing new structure as drilling2
+### Changed
+- Drilling is calculated from ROP
 
 ## [v0.2.9] - 2020-09-15
 ### Changed
